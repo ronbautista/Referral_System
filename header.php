@@ -171,7 +171,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
     <div class="toast-header">
       <strong class="me-auto">Notification</strong>
       <small>Just Now</small>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <button type="button" class="btn-close" id="toast-close" data-bs-dismiss="#liveToast" aria-label="Close"></button>
     </div>
     <div class="toast-body">
     <p class="toast-message">Hello, world! This is a toast message.</p> 

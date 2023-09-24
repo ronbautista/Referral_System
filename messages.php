@@ -54,6 +54,7 @@ $messages = messages();
     flex-direction: column;
     background-color: rgb(211, 211, 211, 0.3);
     justify-content: space-between; /* Add this line */
+    max-width:70%;
 }
 .messages-header{
   background-color: #fff;
@@ -70,7 +71,7 @@ $messages = messages();
     max-width: 100%;
 }
 
-.message {
+.sent {
     background-color: #0084ff;
     color: white;
     padding: 10px;
@@ -80,7 +81,19 @@ $messages = messages();
     margin-bottom: 10px;
     margin-left: auto;
     word-wrap: break-word;
-    max-width: 70%; /* Set a reasonable max-width value */
+    max-width: 60%;
+}
+.received {
+    background-color: #0084ff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 10px;
+    margin-right: auto;
+    word-wrap: break-word;
+    max-width: 60%;
 }
 
 #message-form {
@@ -113,18 +126,21 @@ $messages = messages();
     background-color: #0056b3;
 }
 
+
 </style>
 <div class="messages-feed">
 <div class="containers">
         <div class="contacts">
             <h2>Contacts</h2>
-            <?php 
+            <?php
             foreach ($contacts as $contact) {
                 $contact_name = $contact['fclt_name'];
                 $contact_id = $contact['fclt_id'];
+
+                // Add your condition here, for example, to skip a specific row:
+                if ($contact_id != $fclt_id) {
             ?>
-                <div class="referral-card" data-contact-name="<?php echo $contact_name; ?>"
-                data-contact-id="<?php echo $contact_id; ?>">
+                <div class="referral-card"  id="message-contact" data-contact-name="<?php echo $contact_name; ?>" data-contact-id="<?php echo $contact_id; ?>">
                     <div class="mini-referral-logo" id="message-logo">
                         <img src="images/person.png" alt="Logo" class="logo">
                     </div>
@@ -134,9 +150,9 @@ $messages = messages();
                     </div>
                 </div>
             <?php
+                }
             }
             ?>
-     
 </div>
 <div class="messages" id="messages">
 <nav class="messages-header">
@@ -151,14 +167,7 @@ $messages = messages();
     </div>
 </nav>
             <div class="message-container" id="message-container">
-            <?php 
-            foreach ($messages as $messages) {
-                $message = $messages['message'];
-            ?>
-             <div class="message"><?php echo $message; ?></div>
-            <?php
-            }
-            ?>
+                
             </div>
             <div class="input-container">
             <form id="message-form">
@@ -172,34 +181,7 @@ $messages = messages();
     
 <script>
 
-var referralCards = document.querySelectorAll('.referral-card');
-var contactName = document.getElementById('contact_name');
-var contactID = document.getElementById('contact_id');
 
-referralCards.forEach(function(card) {
-    card.addEventListener('click', function() {
-        var contactNameValue = card.getAttribute('data-contact-name');
-        var contactIDValue = card.getAttribute('data-contact-id');
-        console.log(contactIDValue);
-
-        // Set the contact_name as the text content of #contact_name
-        contactName.textContent = contactNameValue;
-
-        // Make an AJAX request using the contactIDValue as a data parameter
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Handle the AJAX response here
-                var responseData = xhr.responseText;
-                console.log('Data for contact ID ' + contactIDValue + ': ' + responseData);
-            }
-        };
-
-        // Replace 'your_server_endpoint.php' with the actual URL to your server-side script
-        xhr.open('GET', 'new_function.php?contact_id=' + contactIDValue, true);
-        xhr.send();
-    });
-});
 
 
 </script>

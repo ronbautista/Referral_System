@@ -13,33 +13,48 @@ $getreferral = getAllReferrals();
 
 
 <div id="yourDivId" class="yourDivClass">
-      <?php
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Facility</th>
+      <th scope="col">Name</th>
+      <th scope="col">Date Accepted</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php
       $count=0;
-              // Loop through the referrals and display each patient in a table row
-              foreach ($displayreferrals as  $displayreferrals) {
-                  $rffrl_id = $displayreferrals['rfrrl_id'];
-                  $fclt_name = $displayreferrals['fclt_name'];
-                  $Name = $displayreferrals['Name'];
-                  $Sex = $displayreferrals['Sex'];
+            // Loop through the referrals and display each patient in a table row
+            foreach ($displayreferrals as  $displayreferrals) {
+                $rffrl_id = $displayreferrals['rfrrl_id'];
+                $fclt_name = $displayreferrals['fclt_name'];
+                $Name = $displayreferrals['Name'];
+                $Sex = $displayreferrals['Sex'];
+                $date = $displayreferrals['date'];
+                $time = $displayreferrals['time'];
 
-        echo '<div class="card border-success mb-3">
-        <div class="card-header bg-transparent border-success">From: ' .$fclt_name. ' </div>
-        <div class="card-body text-success">
-        <h5 class="card-title">Name: ' .$Name.'</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the cards content.</p>
-        </div>
-        <div class="card-footer bg-transparent border-success">
-        <button type="button" value="'.$rffrl_id.'" class="viewRecord btn btn-outline-success">View</button></div>
-      </div>';
+        echo '<tr>
+              <th scope="row">'.$rffrl_id.'</th>
+              <td>'.$fclt_name.'</td>
+              <td>'.$Name.'</td>
+              <td>'.$date.' • '.$time.'</td>
+              <td>Edit</td>
+            </tr>';
       $count++;
         }
         if($count==0){
           echo"no records found";
-        }
-      
+        }    
       ?>
+  </tbody>
+</table>
+
   </div>
   </div>
+
+
       
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
   <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">

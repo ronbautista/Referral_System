@@ -404,6 +404,7 @@ if (isset($_POST['decline_referral'])) {
 
 if (isset($_POST['send_message'])) {
     $message = mysqli_real_escape_string($conn, $_POST['message']);
+    $contact_id = mysqli_real_escape_string($conn, $_POST['contact_id']); // Get the contact ID
 
     if ($message == NULL) {
         $res = [
@@ -412,14 +413,18 @@ if (isset($_POST['send_message'])) {
         ];
         echo json_encode($res);
         return false;
-    }
-    else{
+    } else {
+        date_default_timezone_set('Asia/Manila');
+        $date = date("Y-m-d");
+        $time = date("h:i:s A");
 
-        $query = "INSERT INTO messages (user1, message, user2) VALUES ('$fclt_id', '$message',  '$fclt_id')";
+        // Use $contact_id in your SQL query
+        $query = "INSERT INTO messages (user1, message, user2, date, time) VALUES ('$fclt_id', '$message', '$contact_id', '$date', '$time')";
         $query_run = mysqli_query($conn, $query);
     }
 
     if ($query_run) {
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Message from ' . $fclt_name));
         $res = [
             'status' => 200,
             'message' => 'Message successfully sent'
@@ -432,38 +437,44 @@ if (isset($_POST['send_message'])) {
             'message' => 'Message failed'
         ];
         echo json_encode($res);
-
         return false;
     }
 }
 
 
 if (isset($_GET['contact_id'])) {
-
     $contactId = mysqli_real_escape_string($conn, $_GET['contact_id']);
 
-    $query = "SELECT * FROM messages WHERE user1 = '$contactId' OR user2 = '$contactId'"; // Replace 'your_table' with your actual table name
+    $responseData = [];
+
+    // Modify your SQL query to include ORDER BY time
+    $query = "SELECT * FROM messages WHERE (user1 = '$fclt_id' AND user2 = '$contactId') OR (user1 = '$contactId' AND user2 = '$fclt_id') ORDER BY time ASC";
     $query_run = mysqli_query($conn, $query);
 
     if ($query_run) {
-        $responseData = [];
-
         while ($row = mysqli_fetch_assoc($query_run)) {
+            // Add a 'type' property to indicate if it's a sent or received message
+            $messageType = ($row['user1'] == $fclt_id) ? 'sent' : 'received';
             
-            $responseData[] = $row['message'];
+            $responseData[] = [
+                'message' => $row['message'],
+                'type' => $messageType,
+            ];
         }
 
-        if (!empty($responseData)) {
-
-            echo json_encode($responseData);
-        } else {
-            
-            echo 'No data found for the contact ID';
-        }
+        echo json_encode($responseData);
     } else {
-
         echo 'Query error: ' . mysqli_error($conn);
     }
 }
+
+
+
+
+
+
+
+
+
 
 
