@@ -3,7 +3,7 @@ include_once 'header.php';
 include_once 'includes/referral_functions.inc.php';
 
 // Call the function and fetch all the referrals
-$displayreferrals = displayAllReferralsAccepted();
+$displayreferrals = displayAllReferralTransaction();
 $getreferral = getAllReferrals();
 ?>
 <div class="feed">
@@ -13,43 +13,50 @@ $getreferral = getAllReferrals();
 
 
 <div id="yourDivId" class="yourDivClass">
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Facility</th>
-      <th scope="col">Name</th>
-      <th scope="col">Date Accepted</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php
-      $count=0;
-            // Loop through the referrals and display each patient in a table row
-            foreach ($displayreferrals as  $displayreferrals) {
-                $rffrl_id = $displayreferrals['rfrrl_id'];
-                $fclt_name = $displayreferrals['fclt_name'];
-                $Name = $displayreferrals['Name'];
-                $Sex = $displayreferrals['Sex'];
-                $date = $displayreferrals['date'];
-                $time = $displayreferrals['time'];
+<div class="table-responsive">
+    <table class="table equal-width-table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Facility</th>
+          <th scope="col">Name</th>
+          <th scope="col" class="action-column">Status</th>
+          <th scope="col">Date • Time</th>
+          <th scope="col" class="action-column">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $count = 0;
+        // Loop through the referrals and display each patient in a table row
+        foreach ($displayreferrals as $displayreferral) {
+          $count++;
+          $rffrl_id = $displayreferral['rfrrl_id'];
+          $fclt_name = $displayreferral['fclt_name'];
+          $Name = $displayreferral['Name'];
+          $date = $displayreferral['date'];
+          $time = $displayreferral['time'];
+          $status = $displayreferral['status'];
 
-        echo '<tr>
-              <th scope="row">'.$rffrl_id.'</th>
-              <td>'.$fclt_name.'</td>
-              <td>'.$Name.'</td>
-              <td>'.$date.' • '.$time.'</td>
-              <td>Edit</td>
-            </tr>';
-      $count++;
+          echo '<tr>
+            <th scope="row">' . $rffrl_id . '</th>
+            <td>' . $fclt_name . '</td>
+            <td>' . $Name . '</td>
+            <td class="action-column" id="'.$status.'-column"><p>' . $status . '</p></td>
+            <td>' . $date . ' • ' . $time . '</td>
+            <td class="action-column">
+            <button id="icon-btn" type="button" value="'.$rffrl_id.'" class="viewRecord"><i class="fi fi-rr-eye"></i></button>
+            </td>
+          </tr>';
+
         }
-        if($count==0){
-          echo"no records found";
-        }    
-      ?>
-  </tbody>
-</table>
+        if ($count == 0) {
+          echo "no records found";
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
 
   </div>
   </div>
@@ -110,7 +117,6 @@ $getreferral = getAllReferrals();
             </div>
               <div class="modal-footer">
               <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn2" id="decline_button">Decline Referral</button>
               </div>
     </form>
         </div>

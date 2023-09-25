@@ -73,18 +73,43 @@ if ($result1 && $result2) {
               foreach ($getminireferral as  $referrals) {
                   $fclt_name = $referrals['fclt_name'];
                   $time = $referrals['time'];
+                  $referral_records_time = $referrals['referral_records_time'];
+                  $referral_transaction_time = $referrals['referral_transaction_time'];
                   $name = $referrals['Name'];
                   $status = $referrals['status'];
-        echo '<div class="referral-card">
+                  ?>
+      <div class="referral-card">
               <div class="mini-referral-logo" id="referral-logo">
                 <img src="images/referral.png" alt="Logo" class="logo">
               </div>
                 <div class="info">
-                    <div class="name">'.$fclt_name.'</div>
-                    <div class="description">'.$name.' • '.$time.'</div>
+                    <div class="name"><?= $fclt_name ?></div>
+                  <?php
+                    if($referral_transaction_time == NULL){
+                      ?>
+                      <div class="description"><?= $name ?> • <?= $referral_records_time?></div>
+                      <?php
+                    }else{
+                      ?>
+                  <div class="description"><?= $name ?> • <?= $referral_transaction_time?></div>
+                      <?php
+                    }
+                  ?>
                 </div>
-                <button class="confirm-button" id="'.$status.'btn">'.$status.'</button>
-            </div>';
+                <?php 
+                if($status == NULL){
+                  ?>
+                  <button class="confirm-button" id="Pendingbtn">Pending</button>
+                  <?php
+                }else{
+                  ?>
+                  <button class="confirm-button" id="<?= $status ?>btn"><?= $status ?></button>
+                  <?php
+                }
+                ?>
+                
+            </div>
+            <?php
       $count++;
         }
         if($count==0){
@@ -296,6 +321,7 @@ if ($result1 && $result2) {
         <input type="password" class="form-control" name="pwd" placeholder="Password">
     </div>
     <div class="modal-footer">
+        <a class="btn btn2" href="includes/fclt_logout.inc.php" role="button" style="margin-right:auto">Logout Facility</a>
         <a class="btn btn1" href="signup.php" role="button">Sign Up</a>
         <button type="submit" class="btn btn2">Login</button>
     </div>

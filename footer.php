@@ -84,11 +84,6 @@ if (secondAccountEmpty) {
 }
 
 
-  // Enable Pusher logging - don't include this in production
-  //Pusher.logToConsole = true;
-
-
-
 function showToast(message) {
   var toast = document.getElementById("liveToast");
   var toastMessage = toast.querySelector(".toast-message");
@@ -669,13 +664,10 @@ function loadMessages(contactIDValue) {
     xhr.send();
 }
 
-
-
 function scrollMessageContainerToBottom() {
     var container = document.getElementById('message-container');
     container.scrollTop = container.scrollHeight;
 }
-
 
     if (referralCards.length > 0) {
         var firstCard = referralCards[0];
@@ -730,9 +722,6 @@ function scrollMessageContainerToBottom() {
             });
         }
     });
-
-
-
 
 </script>
 

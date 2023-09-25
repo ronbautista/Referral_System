@@ -87,26 +87,34 @@ function emptyInputLogin($username, $pwd){
     }return $result;
 }
 
-function loginUser($conn, $username, $pwd){
-    $uidExist = uidExist($conn, $username, $username);
+function loginUser($conn, $username, $password){
+    session_start(); // Start the session
 
-    if($uidExist === false){
-        header("Location: ../login.php?error=wronglogin");
+    // Validate user input (e.g., check for empty fields)
+    if (empty($username) || empty($password)) {
+        header("Location: ../login.php?error=emptyfields");
         exit();
     }
 
-    $pwdHashed = $uidExist["usersPwd"];
-    $checkPwd = password_verify($pwd, $pwdHashed);
+    $user = getUserData($conn, $username);
 
-    if($checkPwd === false){
-        header("Location: ../login.php?error=wronglogin");
+    if (!$user) {
+        header("Location: ../login.php?error=usernotfound");
         exit();
-    }else if($checkPwd === true){
-        session_start();
-        $_SESSION["second_account"] = true; // Set a session variable to indicate the first account is logged in
-        $_SESSION["userid"] = $uidExist["usersId"];
-        $_SESSION["usersname"] = $uidExist["usersName"];
-        $_SESSION["usersuid"] = $uidExist["usersUid"];
+    }
+
+    $pwdHashed = $user["usersPwd"];
+    $checkPwd = password_verify($password, $pwdHashed);
+
+    if (!$checkPwd) {
+        header("Location: ../login.php?error=wrongpassword");
+        exit();
+    } else {
+        $_SESSION["second_account"] = true;
+        $_SESSION["userid"] = $user["usersId"];
+        $_SESSION["usersname"] = $user["usersName"];
+        $_SESSION["usersuid"] = $user["usersUid"];
+        $_SESSION["usersrole"] = $user["usersrole"];
         header("Location: ../index.php");
         exit();
     }

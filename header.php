@@ -47,7 +47,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
             </li>
             <?php 
             if (isset($_SESSION["first_account"])) {
-                if ($_SESSION["facility"] == 'Birthing Home') {
+                if ($_SESSION["facility"] == 'Birthing Home' || $_SESSION["facility"] == 'Provincial Hospital') {
                     echo '<li>
                     <a href="referrals.php"class="sidebarbtn" id="referrals-link">
                     <i class="fi fi-sr-document"></i><span class="sidebar-label">Referrals</span>
@@ -64,12 +64,6 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                 <li>
                   <a href="accepted_referrals.php"class="sidebarbtn"id="accepted-referrals-link">
                   <i class="fi fi-sr-vote-yea"></i><span class="sidebar-label">Accepted Referrals</span>
-                  </a
-                  >
-                </li>
-                <li>
-                  <a href="declined_referrals.php"class="sidebarbtn"id="accepted-referrals-link">
-                  <i class="fi fi-sr-vote-nay"></i><span class="sidebar-label">Declined Referrals</span>
                   </a
                   >
                 </li>';
@@ -92,7 +86,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
               </li>
               <?php 
               if (isset($_SESSION["second_account"])) {
-                  if ($_SESSION["usersuid"] == 'admin') {
+                  if ($_SESSION["usersrole"] == 'Admin') {
                       echo '<li>
                       <a href="settings.php" class="sidebarbtn" id="settings-link"
                         ><i class="fi fi-sr-settings"></i>Settings</a
@@ -143,7 +137,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                       </div>
                       <div class="button-container">
                       <a href="#" role="button" class="user-name">' . $_SESSION["usersname"] . '<i class="fi fi-sr-angle-small-down"></i></a>
-                      <p class="user-description">Admin</p>
+                      <p class="user-description">'. $_SESSION["usersrole"].'</p>
                     </div>
                   
                     <div class="dropdown-content">

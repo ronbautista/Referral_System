@@ -5,9 +5,11 @@ function displayAllReferralsPending() {
     global $conn, $fclt_id; // Access the existing database connection
 
     // Perform the query to fetch all rows from the "referrals" table
-    $sql = "SELECT * FROM referral_forms 
-    JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
-    JOIN facilities ON facilities.fclt_id = referral_records.fclt_id where referral_records.status = 'pending'";
+    $sql = "SELECT referral_forms.*, referral_records.*, facilities.*, referral_transaction.status
+    FROM referral_forms LEFT JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
+    LEFT JOIN facilities ON facilities.fclt_id = referral_records.fclt_id
+    LEFT JOIN referral_transaction ON referral_records.rfrrl_id = referral_transaction.rfrrl_id
+    WHERE referral_transaction.status IS NULL";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful
@@ -29,11 +31,15 @@ function displayAllReferralsPending() {
     return array();
 }
 
-function displayAllReferralsAccepted() {
+function displayAllReferralTransaction() {
     global $conn, $fclt_id; // Access the existing database connection
 
     // Perform the query to fetch all rows from the "referrals" table
-    $sql = "SELECT * FROM referral_forms RIGHT JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id RIGHT JOIN accepted_referrals ON referral_forms.id = accepted_referrals.rfrrl_id RIGHT JOIN facilities ON referral_records.fclt_id = facilities.fclt_id WHERE accepted_referrals.fclt_id = $fclt_id";
+    $sql = "SELECT * FROM referral_forms
+    RIGHT JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
+    RIGHT JOIN referral_transaction ON referral_forms.id = referral_transaction.rfrrl_id
+    RIGHT JOIN facilities ON referral_records.fclt_id = facilities.fclt_id WHERE referral_transaction.fclt_id = $fclt_id
+    ORDER BY referral_transaction.date DESC, referral_transaction.time ASC";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful
@@ -170,9 +176,11 @@ function minireferrals() {
     global $conn, $fclt_id;
 
     // Perform the query to fetch all rows from the "referrals" table
-    $sql = "SELECT * FROM `referral_records`
-    INNER JOIN referral_forms ON referral_records.rfrrl_id = referral_forms.id
-    INNER JOIN facilities ON facilities.fclt_id = referral_records.fclt_id";
+    $sql = "SELECT referral_forms.*, referral_records.*, facilities.*, referral_transaction.status, referral_records.time AS referral_records_time, referral_transaction.time AS referral_transaction_time
+    FROM referral_forms LEFT JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
+    LEFT JOIN facilities ON facilities.fclt_id = referral_records.fclt_id
+    LEFT JOIN referral_transaction ON referral_records.rfrrl_id = referral_transaction.rfrrl_id
+    ORDER BY referral_transaction.date ASC, referral_transaction.time ASC LIMIT 5";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful

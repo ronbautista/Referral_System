@@ -11,7 +11,7 @@ $getreferral = getAllReferrals();
 <h2 class="left-heading mb-4">Your Referrals</h2>
 <?php 
 if (isset($_SESSION["first_account"])) {
-    if ($_SESSION["facility"] == 'Birthing Home') {
+    if ($_SESSION["facility"] == 'Birthing Home' || $_SESSION["facility"] == 'Provincial Hospital') {
         echo '<button type="button" class="right-button btn " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bx bx-plus"></i>Create Referral</button>';
     }
 }

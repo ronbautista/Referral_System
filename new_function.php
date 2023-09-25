@@ -119,7 +119,7 @@ if (isset($_POST['create_referral'])) {
         $time = date("h:i A");
 
         // Insert into another table
-        $query_another_table = "INSERT INTO referral_records (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$new_inserted_id', 'Pending' , '$date', '$time')";
+        $query_another_table = "INSERT INTO referral_records (fclt_id, rfrrl_id, date, time) VALUES ('$fclt_id', '$new_inserted_id', '$date', '$time')";
         $query_another_table_run = mysqli_query($conn, $query_another_table);
 
         $notify_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time, is_displayed) VALUES ('New referral', '$new_inserted_id', 
@@ -219,6 +219,7 @@ if (isset($_POST['login'])) {
                 $_SESSION["userid"] = $user["usersId"];
                 $_SESSION["usersname"] = $user["usersName"];
                 $_SESSION["usersuid"] = $user["usersUid"];
+                $_SESSION["usersrole"] = $user["usersrole"];
 
                 // Return a JSON response for a successful login
                 $res = [
@@ -321,19 +322,14 @@ if (isset($_POST['accept_referral'])) {
     $date = date("Y-m-d");
     $time = date("h:i A");
 
-
-    // Execute the first query
-    $query = "UPDATE referral_records SET status='Accepted' WHERE rfrrl_id = $rfrrl_id";
-    $query_run = mysqli_query($conn, $query);
-
     // Execute the second query
-    $second_query = "INSERT INTO accepted_referrals (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time')";
+    $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time')";
     $second_query_run = mysqli_query($conn, $second_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Accepted', '$rfrrl_id', '$fclt_id', '$date', '$time')";
     $third_query_run = mysqli_query($conn, $third_query);
 
-    if ($query_run && $second_query_run && $third_query_run) {
+    if ($second_query_run && $third_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -371,18 +367,14 @@ if (isset($_POST['decline_referral'])) {
     $date = date("Y-m-d");
     $time = date("h:i A");
 
-    // Execute the first query
-    $query = "UPDATE referral_records SET status='Pending' WHERE rfrrl_id = $rfrrl_id";
-    $query_run = mysqli_query($conn, $query);
-
     // Execute the second query
-    $second_query = "DELETE FROM accepted_referrals WHERE rfrrl_id = $rfrrl_id";
+    $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Declined', '$date', '$time')";
     $second_query_run = mysqli_query($conn, $second_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Declined', '$rfrrl_id', '$fclt_id', '$date', '$time')";
     $third_query_run = mysqli_query($conn, $third_query);
 
-    if ($query_run && $second_query_run && $third_query_run) {
+    if ($second_query_run && $third_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -448,7 +440,7 @@ if (isset($_GET['contact_id'])) {
     $responseData = [];
 
     // Modify your SQL query to include ORDER BY time
-    $query = "SELECT * FROM messages WHERE (user1 = '$fclt_id' AND user2 = '$contactId') OR (user1 = '$contactId' AND user2 = '$fclt_id') ORDER BY time ASC";
+    $query = "SELECT * FROM messages WHERE (user1 = '$fclt_id' AND user2 = '$contactId') OR (user1 = '$contactId' AND user2 = '$fclt_id') ORDER BY date ASC, time ASC";
     $query_run = mysqli_query($conn, $query);
 
     if ($query_run) {
