@@ -103,6 +103,9 @@ if (isset($_POST['create_referral'])) {
         }
     }
 
+    // Retrieve the selected value from the <select> element and assign it to the 'referred_hospital' column
+    $referred_hospital = mysqli_real_escape_string($conn, $_POST['referred_hospital']); // Assuming you named it 'referred_hospital'
+
     // Build the SQL query to insert data into the referral_forms table
     $columns = implode(', ', array_keys($data));
     $values = "'" . implode("', '", $data) . "'";
@@ -111,15 +114,15 @@ if (isset($_POST['create_referral'])) {
     // Execute the query
     if (mysqli_query($conn, $sql)) {
         // Additional actions after successful insertion
-        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral from ' . $fclt_name));
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral from ' . $data['fclt_name'])); // Use $data['fclt_name'] instead of $fclt_name
         $new_inserted_id = mysqli_insert_id($conn);
 
         date_default_timezone_set('Asia/Manila');
         $date = date("Y-m-d");
         $time = date("h:i A");
 
-        // Insert into another table
-        $query_another_table = "INSERT INTO referral_records (fclt_id, rfrrl_id, date, time) VALUES ('$fclt_id', '$new_inserted_id', '$date', '$time')";
+        // Insert into another table (referral_records) and include the referred_hospital value
+        $query_another_table = "INSERT INTO referral_records (fclt_id, rfrrl_id, date, time, referred_hospital) VALUES ('$fclt_id', '$new_inserted_id', '$date', '$time', '$referred_hospital')";
         $query_another_table_run = mysqli_query($conn, $query_another_table);
 
         $notify_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time, is_displayed) VALUES ('New referral', '$new_inserted_id', 
@@ -150,7 +153,6 @@ if (isset($_POST['create_referral'])) {
     // Return JSON response to your AJAX request
     echo json_encode($response);
 }
-
 
 
 if (isset($_POST['add_patient'])) {

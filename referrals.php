@@ -12,7 +12,7 @@ $getreferral = getAllReferrals();
 <?php 
 if (isset($_SESSION["first_account"])) {
     if ($_SESSION["facility"] == 'Birthing Home' || $_SESSION["facility"] == 'Provincial Hospital') {
-        echo '<button type="button" class="right-button btn " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bx bx-plus"></i>Create Referral</button>';
+        echo '<button type="button" class="right-button btn " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Create Referral</button>';
     }
 }
 ?>
@@ -116,11 +116,26 @@ if (isset($_SESSION["first_account"])) {
             }
         }
     }
-
       ?>
+      <div class="col-sm-12 col-md-6 col-lg-3">
+      <label>Select Refer Hospital</label>
+      <select class="form-select" name="referred_hospital">
+      <?php 
+        $query = "SELECT * FROM facilities";
+        $query_run = mysqli_query($conn, $query);
+
+        if (mysqli_num_rows($query_run) > 0) {
+          while ($row = mysqli_fetch_assoc($query_run)) {
+      ?>
+          <option value="<?= $row['fclt_name'] ?>"><?= $row['fclt_name'] ?></option>
+      <?php
+          }
+        }
+      ?>
+    </select>
+      </div>
         </div>
-
-
+    
     </div>
     <div class="modal-footer">
     <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
