@@ -62,7 +62,7 @@ if ($result1 && $result2) {
   <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
         <div class="head">
               <h3 class="left-heading mb-4">New Referrals</h3>
-              <a class="see_all" href="referrals.php" role="button">View All</a>
+              <a class="see_all" href="#" role="button">View All</a>
             </div>
           <div class="home-feed">
           <div class="yourDivClass">
@@ -123,7 +123,7 @@ if ($result1 && $result2) {
     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
     <div class="head">
           <h3 class="left-heading mb-4">Prenatal</h3>
-          <a class="see_all" href="prenatal.php" role="button">View All</a>
+          <a class="see_all" href="#" role="button">View All</a>
         </div>
       <div class="home-feed">
         <div class="yourDivClass">
@@ -164,7 +164,7 @@ if ($result1 && $result2) {
     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
     <div class="head">
           <h3 class="left-heading mb-4">Messages</h3>
-          <a class="see_all" href="messages.php" role="button">View All</a>
+          <a class="see_all" href="#" role="button">View All</a>
         </div>
       <div class="home-feed">
         <div class="yourDivClass">

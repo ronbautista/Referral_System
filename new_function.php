@@ -94,19 +94,47 @@ if(isset($_GET['rffrl_id'])){
     }
 }
 
+if(isset($_GET['myrecord_rffrl_id'])){
+    $rffrl_id = mysqli_real_escape_string($conn, $_GET['myrecord_rffrl_id']);
+
+    $query = "SELECT referral_forms.*, referral_records.*, facilities.*
+    FROM referral_forms
+    INNER JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
+    INNER JOIN facilities ON facilities.fclt_id = referral_records.referred_hospital
+    WHERE rfrrl_id = '$rffrl_id'";
+    $query_run = mysqli_query($conn, $query);
+
+    if(mysqli_num_rows($query_run) == 1){
+        $rffrl = mysqli_fetch_array($query_run);
+        
+        $res = [
+            'status' => 200,
+            'message' => 'Referral fetch successfully by id',
+            'data' => $rffrl
+        ];
+        echo json_encode($res);
+        return false;
+    }else{
+        $res = [
+            'status' => 404,
+            'message' => 'No id found'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+}
+
 if (isset($_POST['create_referral'])) {
     // Sanitize and retrieve data from the form fields
     $data = [];
     foreach ($_POST as $field => $value) {
-        if ($field !== 'create_referral') {
+        if ($field !== 'create_referral' && $field !== 'referred_hospital') {
             $data[$field] = mysqli_real_escape_string($conn, $value);
         }
     }
 
-    // Retrieve the selected value from the <select> element and assign it to the 'referred_hospital' column
-    $referred_hospital = mysqli_real_escape_string($conn, $_POST['referred_hospital']); // Assuming you named it 'referred_hospital'
+    $referred_hospital = mysqli_real_escape_string($conn, $_POST['referred_hospital']);
 
-    // Build the SQL query to insert data into the referral_forms table
     $columns = implode(', ', array_keys($data));
     $values = "'" . implode("', '", $data) . "'";
     $sql = "INSERT INTO referral_forms ($columns) VALUES ($values)";
@@ -114,7 +142,7 @@ if (isset($_POST['create_referral'])) {
     // Execute the query
     if (mysqli_query($conn, $sql)) {
         // Additional actions after successful insertion
-        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral from ' . $data['fclt_name'])); // Use $data['fclt_name'] instead of $fclt_name
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral from ' . $fclt_name));
         $new_inserted_id = mysqli_insert_id($conn);
 
         date_default_timezone_set('Asia/Manila');
@@ -122,7 +150,8 @@ if (isset($_POST['create_referral'])) {
         $time = date("h:i A");
 
         // Insert into another table (referral_records) and include the referred_hospital value
-        $query_another_table = "INSERT INTO referral_records (fclt_id, rfrrl_id, date, time, referred_hospital) VALUES ('$fclt_id', '$new_inserted_id', '$date', '$time', '$referred_hospital')";
+        $query_another_table = "INSERT INTO referral_records (fclt_id, rfrrl_id, date, time, referred_hospital, status)
+        VALUES ('$fclt_id', '$new_inserted_id', '$date', '$time', '$referred_hospital', 'Pending')";
         $query_another_table_run = mysqli_query($conn, $query_another_table);
 
         $notify_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time, is_displayed) VALUES ('New referral', '$new_inserted_id', 
@@ -271,13 +300,10 @@ if (isset($_POST['save_field'])) {
     }
 
     if (!preg_match('/^\d+$/', $field)) {
-        // Execute the first query
-        $query = "INSERT INTO referral_format (field_name, fclt_id) VALUES ('$field',  '$fclt_id')";
-        $query_run = mysqli_query($conn, $query);
 
         // Execute the second query
-        $second_query = "ALTER TABLE referral_forms ADD $field varchar(255)";
-        $second_query_run = mysqli_query($conn, $second_query);
+        $query = "ALTER TABLE referral_forms ADD $field varchar(255)";
+        $query_run = mysqli_query($conn, $second_query);
     } else {
         $res = [
             'status' => 300,
@@ -287,7 +313,7 @@ if (isset($_POST['save_field'])) {
         return false;
     }
 
-    if ($query_run && $second_query_run) {
+    if ($query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -324,6 +350,9 @@ if (isset($_POST['accept_referral'])) {
     $date = date("Y-m-d");
     $time = date("h:i A");
 
+    $query = "UPDATE referral_records SET status ='Accepted' WHERE rfrrl_id='$rfrrl_id'";
+    $query_run = mysqli_query($conn, $query);
+
     // Execute the second query
     $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time')";
     $second_query_run = mysqli_query($conn, $second_query);
@@ -331,7 +360,7 @@ if (isset($_POST['accept_referral'])) {
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Accepted', '$rfrrl_id', '$fclt_id', '$date', '$time')";
     $third_query_run = mysqli_query($conn, $third_query);
 
-    if ($second_query_run && $third_query_run) {
+    if ($query_run && $second_query_run && $third_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -369,6 +398,9 @@ if (isset($_POST['decline_referral'])) {
     $date = date("Y-m-d");
     $time = date("h:i A");
 
+    $query = "UPDATE referral_records SET status ='Declined' WHERE rfrrl_id='$rfrrl_id'";
+    $query_run = mysqli_query($conn, $query);
+
     // Execute the second query
     $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Declined', '$date', '$time')";
     $second_query_run = mysqli_query($conn, $second_query);
@@ -376,7 +408,7 @@ if (isset($_POST['decline_referral'])) {
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Declined', '$rfrrl_id', '$fclt_id', '$date', '$time')";
     $third_query_run = mysqli_query($conn, $third_query);
 
-    if ($second_query_run && $third_query_run) {
+    if ($query_run && $second_query_run && $third_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -435,7 +467,6 @@ if (isset($_POST['send_message'])) {
     }
 }
 
-
 if (isset($_GET['contact_id'])) {
     $contactId = mysqli_real_escape_string($conn, $_GET['contact_id']);
 
@@ -460,6 +491,43 @@ if (isset($_GET['contact_id'])) {
     } else {
         echo 'Query error: ' . mysqli_error($conn);
     }
+}
+
+if (isset($_GET['message_contact_id'])) {
+    $contactId = mysqli_real_escape_string($conn, $_GET['message_contact_id']);
+
+    $responseData = [];
+
+    // Modify your SQL query to include ORDER BY time
+    $query = "SELECT * FROM messages 
+          WHERE (user1 = '$fclt_id' AND user2 = '$contactId') 
+          OR (user1 = '$contactId' AND user2 = '$fclt_id') 
+          ORDER BY date DESC, time DESC 
+          LIMIT 1";
+    $query_run = mysqli_query($conn, $query);
+
+    if ($query_run) {
+        if ($query_run->num_rows > 0) {
+            $row = $query_run->fetch_assoc();
+            $latestMessage = $row["message"];
+            $time = $row["time"]; // Get the time value
+            
+            // Create an array to hold the latest message and time
+            $response = array(
+                'latestMessage' => $latestMessage,
+                'time' => $time
+            );
+            
+            // Send the response as JSON
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        }
+    }else {
+        // Handle the case where there was an error in the query
+        echo json_encode(array('error' => 'Error executing the query.'));
+    }
+    
+    $conn->close();
 }
 
 

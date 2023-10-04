@@ -18,33 +18,72 @@ if (isset($_SESSION["first_account"])) {
 ?>
 </div>
 
-<div id="yourDivId" class="yourDivClass">
-      <?php
-      $count=0;
-              // Loop through the referrals and display each patient in a table row
-              foreach ($displayreferrals as  $displayreferrals) {
-                  $rffrl_id = $displayreferrals['rfrrl_id'];
-                  $fclt_name = $displayreferrals['fclt_name'];
-                  $Name = $displayreferrals['Name'];
 
-        echo '<div class="card border-success mb-3 shadow-sm mb-5 bg-white rounded">
-        <div class="card-header bg-transparent border-success">From: ' .$fclt_name. ' </div>
-        <div class="card-body text-success">
-        <h5 class="card-title">Name: ' .$Name.'</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the cards content.</p>
-        </div>
-        <div class="card-footer bg-transparent border-success">
-        <button type="button" value="'.$rffrl_id.'" class="viewRecord btn btn-outline-success">View</button></div>
-      </div>';
-      $count++;
+<div id="yourDivId" class="yourDivClass">
+<div class="table-responsive">
+    <table class="table equal-width-table">
+      <thead>
+        <tr>
+          <th scope="col">Count</th>
+          <th scope="col">Referred Hospital</th>
+          <th scope="col">Name</th>
+          <th scope="col">Date • Time</th>
+          <th scope="col" class="action-column">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $count = 0;
+        // Loop through the referrals and display each patient in a table row
+        foreach ($displayreferrals as $displayreferrals) {
+          $count++;
+          $rffrl_id = $displayreferrals['rfrrl_id'];
+          $rfrrd_hospital = $displayreferrals['fclt_name'];
+          $Name = $displayreferrals['Name'];
+          $date = $displayreferrals['date'];
+          $time = $displayreferrals['time'];
+
+          echo '<tr>
+            <th scope="row">' . $count . '</th>
+            <td>' . $rfrrd_hospital . '</td>
+            <td>' . $Name . '</td>
+            <td>' . $date . ' • ' . $time . '</td>
+            <td class="action-column">
+            <button id="icon-btn" type="button" value="'.$rffrl_id.'" class="viewMyRecord"><i class="fi fi-rr-eye"></i></button>
+            </td>
+          </tr>';
+
         }
-        if($count==0){
-          echo"no records found";
+        if ($count == 0) {
+          echo "no records found";
         }
+        ?>
+      </tbody>
+    </table>
+  </div>
+
+  </div>
+  </div>
+
+
       
-      ?>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <small>Just Now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+    <p class="toast-message">Hello, world! This is a toast message.</p> 
+    <div class="mt-2 pt-2 border-top">
+    <a class="btn btn-primary btn-sm" href="accepted_referrals.php" role="button">View</a>
+    </div>
   </div>
   </div>
+</div>
+    </div>
+
 
     
     <!-- Form Content  -->
@@ -52,30 +91,29 @@ if (isset($_SESSION["first_account"])) {
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">From: <span id="fclt_name"></span></h5>
+          <h5 class="modal-title">Referred Hospital: <span id="fclt_name"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
         </div>
     <div class="modal-body">
     <form id="referral_form">
     <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-3">
-        <label for="rffrl_id">Patient's ID</label>
-        <input type="text" readonly name="rffrl_id" id="rffrl_id" class="form-control">
-        </div>
+        <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
         <?php 
-          $query = "SELECT * FROM referral_format";
+          $query = "SHOW COLUMNS FROM referral_forms";
           $query_run = mysqli_query($conn, $query);
 
           if (mysqli_num_rows($query_run) > 0) {
               foreach ($query_run as $field) {
-                  $fieldNameLabel = str_replace('_', ' ', $field['field_name']);
+                if ($field['Field'] !== 'id') {
+                  $fieldNameLabel = str_replace('_', ' ', $field['Field']);
           ?>
                   <div class="col-sm-12 col-md-6 col-lg-3">
-                      <label for="<?= $field['field_name'] ?>"><?= $fieldNameLabel ?></label>
-                      <input type="text" readonly name="<?= $field['field_name'] ?>" id="<?= $field['field_name'] ?>" class="form-control">
+                      <label for="<?= $field['Field'] ?>"><?= $fieldNameLabel ?></label>
+                      <input type="text" disabled readonly name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
                   </div>
           <?php
               }
+            }
           }
 
         ?>
@@ -108,10 +146,10 @@ if (isset($_SESSION["first_account"])) {
             if ($field['Field'] !== 'id') {
                 $fieldLabel = str_replace('_', ' ', $field['Field']);
     ?>
-                <div class="col-sm-12 col-md-6 col-lg-3">
-                    <label for="<?= $field['Field'] ?>"><?= $fieldLabel ?></label>
-                    <input type="text" name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
-                </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+        <label for="<?= $field['Field'] ?>"><?= $fieldLabel ?></label>
+        <input type="text" name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
+        </div>
     <?php
             }
         }
@@ -127,7 +165,7 @@ if (isset($_SESSION["first_account"])) {
         if (mysqli_num_rows($query_run) > 0) {
           while ($row = mysqli_fetch_assoc($query_run)) {
       ?>
-          <option value="<?= $row['fclt_name'] ?>"><?= $row['fclt_name'] ?></option>
+          <option value="<?= $row['fclt_id'] ?>"><?= $row['fclt_name'] ?></option>
       <?php
           }
         }
@@ -135,7 +173,6 @@ if (isset($_SESSION["first_account"])) {
     </select>
       </div>
         </div>
-    
     </div>
     <div class="modal-footer">
     <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
@@ -145,35 +182,6 @@ if (isset($_SESSION["first_account"])) {
     </form>
     </div>
     </div>
-
-    <!-- Modal -->
-<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-      <h3>STAFF LOGIN</h3>
-      </div>
-      <div class="modal-body" id="modalContent">
-      <div class="alert alert-warning d-none" id="errorMessage"></div>
-      <form id="loginStaff">
-    <div class="mb-3">
-        <input type="text" class="form-control" name="uid" placeholder="Facility Name/ID">
-    </div>
-    <div class="mb-3">
-        <input type="password" class="form-control" name="pwd" placeholder="Password">
-    </div>
-    <div class="modal-footer">
-        <a class="btn btn1" href="signup.php" role="button">Sign Up</a>
-        <button type="submit" class="btn btn2">Login</button>
-    </div>
-</form>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
 <?php
 include_once 'footer.php'

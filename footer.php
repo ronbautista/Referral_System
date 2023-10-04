@@ -176,6 +176,7 @@ $(document).on("submit", "#createReferral", function (e) {
     contentType: false,
     success: function (response) {
       var res = jQuery.parseJSON(response);
+      console.log(response);
       if (res.status == 422) {
         $("#errorMessage").removeClass("d-none");
         $("#errorMessage").text(res.message);
@@ -190,6 +191,7 @@ $(document).on("submit", "#createReferral", function (e) {
     },
   });
 });
+
 
 $(document).on("submit", "#loginStaff", function (e) {
     e.preventDefault();
@@ -316,6 +318,38 @@ var rffrl_id = $(this).val();
 $.ajax({
     type:"GET",
     url:"new_function.php?rffrl_id=" + rffrl_id,
+    success: function(response){
+
+var res = jQuery.parseJSON(response);
+if(res.status == 422){
+    alert(res.message);
+}else if(res.status == 200){
+$('#fclt_name').text(res.data.fclt_name);
+$('#rffrl_id').val(res.data.id);
+<?php 
+$query = "SELECT * FROM referral_format";
+$query_run = mysqli_query($conn, $query);
+
+if(mysqli_num_rows($query_run) > 0){
+foreach($query_run as $field){
+?>
+$('#<?=  $field['field_name'] ?>').val(res.data.<?=  $field['field_name'] ?>);
+<?php 
+}
+}
+?>
+$('#referralModal').modal('show');
+        }
+    }
+});
+});
+
+$(document).on('click', '.viewMyRecord', function(){
+
+var rffrl_id = $(this).val();
+$.ajax({
+    type:"GET",
+    url:"new_function.php?myrecord_rffrl_id=" + rffrl_id,
     success: function(response){
 
 var res = jQuery.parseJSON(response);
@@ -611,25 +645,32 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 var pusher = new Pusher('4c140a667948d3f0c3b4', {
-cluster: 'ap1'
+    cluster: 'ap1'
 });
 
 var channel = pusher.subscribe('my-channel');
-channel.bind('my-event', function(data) { 
-  
-$.ajax({url: "includes/referral_functions.inc.php", success: function($referrals){
- $('#yourDivId').load(location.href + " #yourDivId");
- //$('#message-container').load(location.href + " #message-container");
- $('#referralsTable').load(location.href + " #referralsTable");
- loadMessages(contactIDValue);
- showToast(data.message);
- }});
+channel.bind('my-event', function (data) {
+    // Assuming 'contactIDValue' contains the contact ID of the currently selected contact
+    loadLatestMessage(contactIDValue);
+    loadMessages(contactIDValue);
+
+    $.ajax({
+        url: "includes/referral_functions.inc.php",
+        success: function ($referrals) {
+            $('#yourDivId').load(location.href + " #yourDivId");
+            //$('#message-container').load(location.href + " #message-container");
+            $('#referralsTable').load(location.href + " #referralsTable");
+            showToast(data.message);
+        }
+    });
 });
+
 
 var referralCards = document.querySelectorAll('.referral-card');
 var contactName = document.getElementById('contact_name');
 var contactID = document.getElementById('contact_id');
 var messageContainer = document.getElementById('message-container');
+var latestMessageContainer = document.getElementById('latestMessage');
 var contactIDValue = null; // Declare it here
 
 function loadMessages(contactIDValue) {
@@ -664,32 +705,88 @@ function loadMessages(contactIDValue) {
     xhr.send();
 }
 
+function loadLatestMessageForContact(contactIDValue) {
+    // Call the loadLatestMessage function for the specific contact
+    loadLatestMessage(contactIDValue);
+}
+
+if (referralCards.length > 0) {
+    var firstCard = referralCards[0];
+    contactIDValue = firstCard.getAttribute('data-contact-id');
+    console.log("Contact ID: " + contactIDValue);
+    firstCard.click();
+    loadMessages(contactIDValue);
+    displayFirstContactName();
+}
+
+referralCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+        var contactNameValue = card.getAttribute('data-contact-name');
+        contactIDValue = card.getAttribute('data-contact-id');
+        console.log("Contact ID: " + contactIDValue);
+        contactName.textContent = contactNameValue;
+        loadMessages(contactIDValue);
+    });
+    
+    // Call the function to load the latest message for each contact
+    var contactIDForLatestMessage = card.getAttribute('data-contact-id');
+    loadLatestMessageForContact(contactIDForLatestMessage);
+});
+
+function loadLatestMessage(contactID) {
+    // Make an AJAX request to retrieve the latest message for the given contactID
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Handle the AJAX response here
+            var response = JSON.parse(xhr.responseText);
+            var latestMessage = response.latestMessage;
+            var time = response.time; // Get the time from the response
+
+            // Log the latest message and time to the console
+            console.log("Latest Message: " + latestMessage);
+            console.log("Time: " + time);
+
+            // Update the latest message for the specific contact card
+            setLatestMessage(contactID, latestMessage, time);
+        }
+    };
+
+    // Replace 'new_function.php' with the actual URL to retrieve the latest message
+    xhr.open('GET', 'new_function.php?message_contact_id=' + contactID, true);
+    xhr.send();
+}
+
+function setLatestMessage(contactID, latestMessage, time) {
+    // Find the contact card with the matching contact ID
+    var contactCard = document.querySelector(`[data-contact-id="${contactID}"]`);
+
+    // Find the latest message element within the contact card
+    var latestMessageElement = contactCard.querySelector('.description');
+
+    // Split the time string to keep only hours, minutes, and AM/PM
+    var timeParts = time.split(' '); // Split by space to separate time and AM/PM
+    var timeComponents = timeParts[0].split(':'); // Split the time part by colon
+    var hours = timeComponents[0];
+    var minutes = timeComponents[1];
+    var amPm = timeParts[1];
+
+    // Create the modified time string with AM/PM
+    var modifiedTime = hours + ':' + minutes + ' ' + amPm;
+
+    // Set the latest message text with the modified time
+    latestMessageElement.textContent = latestMessage + ' • ' + modifiedTime;
+}
+
+function displayFirstContactName() {
+    var firstContactName = referralCards[0].getAttribute('data-contact-name');
+    contactName.textContent = firstContactName;
+}
+
 function scrollMessageContainerToBottom() {
     var container = document.getElementById('message-container');
     container.scrollTop = container.scrollHeight;
 }
-
-    if (referralCards.length > 0) {
-        var firstCard = referralCards[0];
-        contactIDValue = firstCard.getAttribute('data-contact-id'); // Get the contact ID
-        console.log("Contact ID: " + contactIDValue); // Log the contact ID
-        firstCard.click(); // Simulate a click event
-        loadMessages(contactIDValue); 
-    }
-
-    referralCards.forEach(function (card) {
-        card.addEventListener('click', function () {
-            var contactNameValue = card.getAttribute('data-contact-name');
-            contactIDValue = card.getAttribute('data-contact-id'); // Set contactIDValue
-            console.log("Contact ID: " + contactIDValue); // Log the contact ID
-
-            // Set the contact_name as the text content of #contact_name
-            contactName.textContent = contactNameValue;
-
-            loadMessages(contactIDValue);
-            
-        });
-    });
 
     $(document).on("submit", "#message-form", function (e) {
         e.preventDefault();

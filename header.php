@@ -47,14 +47,14 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
             </li>
             <?php 
             if (isset($_SESSION["first_account"])) {
-                if ($_SESSION["facility"] == 'Birthing Home' || $_SESSION["facility"] == 'Provincial Hospital') {
+                if ($_SESSION["facility"] == 'Birthing Home' ) {
                     echo '<li>
                     <a href="referrals.php"class="sidebarbtn" id="referrals-link">
                     <i class="fi fi-sr-document"></i><span class="sidebar-label">Referrals</span>
                     </a
                     >
                   </li>';
-                }else if ($_SESSION["facility"] == 'Hospital') {
+                }else if ($_SESSION["facility"] == 'Hospital' || $_SESSION["facility"] == 'Provincial Hospital') {
                   echo '<li>
                   <a href="new_referrals.php"class="sidebarbtn" id="new-referrals-link">
                   <i class="fi fi-sr-document"></i><span class="sidebar-label">New Referrals</span>
@@ -63,7 +63,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                 </li>
                 <li>
                   <a href="accepted_referrals.php"class="sidebarbtn"id="accepted-referrals-link">
-                  <i class="fi fi-sr-vote-yea"></i><span class="sidebar-label">Accepted Referrals</span>
+                  <i class="fi fi-sr-vote-yea"></i><span class="sidebar-label">Referral Transactions</span>
                   </a
                   >
                 </li>';

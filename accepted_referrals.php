@@ -39,7 +39,7 @@ $getreferral = getAllReferrals();
           $status = $displayreferral['status'];
 
           echo '<tr>
-            <th scope="row">' . $rffrl_id . '</th>
+            <th scope="row">' . $count . '</th>
             <td>' . $fclt_name . '</td>
             <td>' . $Name . '</td>
             <td class="action-column" id="'.$status.'-column"><p>' . $status . '</p></td>
@@ -92,10 +92,7 @@ $getreferral = getAllReferrals();
         <div class="modal-body">
     <form id="referral_form">
     <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-3">
-        <label for="rffrl_id">Patient's ID</label>
-        <input type="text" readonly name="rffrl_id" id="rffrl_id" class="form-control">
-        </div>
+        <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
         <?php 
           $query = "SELECT * FROM referral_format";
           $query_run = mysqli_query($conn, $query);
@@ -106,7 +103,7 @@ $getreferral = getAllReferrals();
           ?>
                   <div class="col-sm-12 col-md-6 col-lg-3">
                       <label for="<?= $field['field_name'] ?>"><?= $fieldNameLabel ?></label>
-                      <input type="text" readonly name="<?= $field['field_name'] ?>" id="<?= $field['field_name'] ?>" class="form-control">
+                      <input type="text" disabled readonly name="<?= $field['field_name'] ?>" id="<?= $field['field_name'] ?>" class="form-control">
                   </div>
           <?php
               }

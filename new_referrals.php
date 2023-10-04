@@ -3,7 +3,8 @@ include_once 'header.php';
 include_once 'includes/referral_functions.inc.php';
 
 // Call the function and fetch all the referrals
-$displayreferrals = displayAllReferralsPending();
+$ProvHos = ProvHosPendingReferrals();
+$Hospital = HospitalPendingReferrals();
 $getreferral = getAllReferrals();
 ?>
 <div class="feed">
@@ -19,32 +20,41 @@ if (isset($_SESSION["first_account"])) {
 </div>
 
 <div id="yourDivId" class="yourDivClass">
-      <?php
-      $count=0;
-              // Loop through the referrals and display each patient in a table row
-              foreach ($displayreferrals as  $displayreferrals) {
-                  $rffrl_id = $displayreferrals['rfrrl_id'];
-                  $fclt_name = $displayreferrals['fclt_name'];
-                  $Name = $displayreferrals['Name'];
+<?php
+$count = 0;
 
-        echo '<div class="card border-success mb-3 shadow-sm mb-5 bg-white rounded">
-        <div class="card-header bg-transparent border-success">From: ' .$fclt_name. ' </div>
+if ($_SESSION["facility"] == 'Hospital') {
+    $dataArray = $Hospital;
+} elseif ($_SESSION["facility"] == 'Provincial Hospital') {
+    $dataArray = $ProvHos;
+} else {
+    $dataArray = array(); // Handle other cases or provide a default value
+}
+
+// Loop through the referrals and display each patient in a table row
+foreach ($dataArray as $data) {
+    $rffrl_id = $data['rfrrl_id'];
+    $fclt_name = $data['fclt_name'];
+    $Name = $data['Name'];
+
+    echo '<div class="card border-success mb-3 shadow-sm mb-5 bg-white rounded">
+        <div class="card-header bg-transparent border-success">From: ' . $fclt_name . ' </div>
         <div class="card-body text-success">
-        <h5 class="card-title">Name: ' .$Name.'</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the cards content.</p>
+            <h5 class="card-title">Name: ' . $Name . '</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the cards content.</p>
         </div>
         <div class="card-footer bg-transparent border-success">
-        <button type="button" value="'.$rffrl_id.'" class="viewRecord btn btn-outline-success">View</button></div>
-      </div>';
-      $count++;
-        }
-        if($count==0){
-          echo"no records found";
-        }
-      
-      ?>
-  </div>
-  </div>
+            <button type="button" value="' . $rffrl_id . '" class="viewRecord btn btn-outline-success">View</button>
+        </div>
+    </div>';
+    $count++;
+}
+
+if ($count == 0) {
+    echo "no records found";
+}
+?>
+</div>
   
 
     
@@ -61,20 +71,22 @@ if (isset($_SESSION["first_account"])) {
     <div class="row">
         <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
         <?php 
-          $query = "SELECT * FROM referral_format";
+          $query = "SHOW COLUMNS FROM referral_forms";
           $query_run = mysqli_query($conn, $query);
 
           if (mysqli_num_rows($query_run) > 0) {
               foreach ($query_run as $field) {
-                  $fieldNameLabel = str_replace('_', ' ', $field['field_name']);
+                if ($field['Field'] !== 'id') {
+                  $fieldNameLabel = str_replace('_', ' ', $field['Field']);
           ?>
                   <div class="col-sm-12 col-md-6 col-lg-3">
-                      <label for="<?= $field['field_name'] ?>"><?= $fieldNameLabel ?></label>
-                      <input type="text" disabled readonly name="<?= $field['field_name'] ?>" id="<?= $field['field_name'] ?>" class="form-control">
+                      <label for="<?= $field['Field'] ?>"><?= $fieldNameLabel ?></label>
+                      <input type="text" disabled readonly name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
                   </div>
           <?php
               }
           }
+        }
 
         ?>
         </div>

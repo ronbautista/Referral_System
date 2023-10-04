@@ -74,26 +74,24 @@ $messages = messages();
 .sent {
     background-color: #0084ff;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
-    display: inline-block;
-    vertical-align: top;
-    margin-bottom: 10px;
+    padding: 7px 15px;
+    border-radius: 10px;
+    margin-bottom: 5px;
     margin-left: auto;
     word-wrap: break-word;
     max-width: 60%;
+    text-align: center;
 }
 .received {
     background-color: #0084ff;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
-    display: inline-block;
-    vertical-align: top;
-    margin-bottom: 10px;
+    padding: 7px 15px;
+    border-radius: 10px;
+    margin-bottom: 5px;
     margin-right: auto;
     word-wrap: break-word;
     max-width: 60%;
+    text-align: center;
 }
 
 #message-form {
@@ -125,6 +123,12 @@ $messages = messages();
 #send-button:hover {
     background-color: #0056b3;
 }
+.three-dots {
+    display: inline-block; /* Display the three dots as inline elements */
+    vertical-align: middle; /* Align the three dots vertically in the middle */
+    margin-left: 5px; /* Add some spacing between the message and the three dots */
+    /* You can further customize the styles of the three dots as needed */
+}
 
 
 </style>
@@ -140,13 +144,13 @@ $messages = messages();
                 // Add your condition here, for example, to skip a specific row:
                 if ($contact_id != $fclt_id) {
             ?>
-                <div class="referral-card"  id="message-contact" data-contact-name="<?php echo $contact_name; ?>" data-contact-id="<?php echo $contact_id; ?>">
+                <div class="referral-card" id="message-contact" data-contact-name="<?php echo $contact_name; ?>" data-contact-id="<?php echo $contact_id; ?>">
                     <div class="mini-referral-logo" id="message-logo">
                         <img src="images/person.png" alt="Logo" class="logo">
                     </div>
                     <div class="info">
                         <div class="name"><?php echo $contact_name; ?></div>
-                        <div class="description">Ambobo mo tanga • 2:35 PM</div>
+                        <div class="description" id="latestMessage"></div>
                     </div>
                 </div>
             <?php
@@ -161,7 +165,7 @@ $messages = messages();
             <img src="images/person.png" alt="Logo" class="logo">
         </div>
         <div class="info">
-            <div class="name" id="contact_name">Caraga Hospital</div>
+            <div class="name" id="contact_name"></div>
             <div class="description">Active</div>
         </div>
     </div>
@@ -178,13 +182,7 @@ $messages = messages();
         </div>
     </div>
     </div>
-    
-<script>
 
-
-
-
-</script>
 <?php
 include_once 'footer.php'
 ?>
