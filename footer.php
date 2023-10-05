@@ -250,6 +250,43 @@ $(document).on("submit", "#addPatient", function (e) {
   });
 });
 
+$(document).on("submit", "#patients_details", function (e) {
+  e.preventDefault();
+
+  // Get the patient ID from the hidden input field
+  var patientID = $("input[name='patient_id']").val();
+
+  var formData = new FormData(this);
+  formData.append("patients_details", true);
+
+  // Add the patient ID to the formData
+  formData.append("patient_id", patientID);
+
+  $.ajax({
+    type: "POST",
+    url: "new_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if (res.status == 422) {
+        console.log(res); // Log the response for debugging
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      } else if (res.status == 200) {
+        $("#errorMessage").addClass("d-none");
+        $("#staticBackdrop").modal("hide");
+        console.log(response);
+        $("#addPatient")[0].reset();
+
+        $("#table").load(location.href + " #table");
+      }
+    },
+  });
+});
+
+
 
 $(document).on("click", ".deleteField", function (e) {
   e.preventDefault();

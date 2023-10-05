@@ -188,9 +188,10 @@ if (isset($_POST['add_patient'])) {
     $fname = mysqli_real_escape_string($conn, $_POST['fname']);
     $mname = mysqli_real_escape_string($conn, $_POST['mname']);
     $lname = mysqli_real_escape_string($conn, $_POST['lname']);
-    $age = mysqli_real_escape_string($conn, $_POST['age']);
+    $contactNum = mysqli_real_escape_string($conn, $_POST['contactNum']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
 
-    if ($fname == NULL || $lname == NULL || $age == NULL) {
+    if ($fname == NULL || $lname == NULL || $contactNum == NULL) {
         $res = [
             'status' => 422,
             'message' => 'Field is mandatory'
@@ -198,7 +199,7 @@ if (isset($_POST['add_patient'])) {
         echo json_encode($res);
         return false;
     }
-    $query = "INSERT INTO patients (fname, mname, lname, age) VALUES ('$fname',  '$mname', '$lname',  '$age')";
+    $query = "INSERT INTO patients (fname, mname, lname, contact, address, fclt_id) VALUES ('$fname',  '$mname', '$lname',  '$contactNum', '$address' , '$fclt_id')";
     $query_run = mysqli_query($conn, $query);
 
     if ($query_run) {
@@ -220,6 +221,52 @@ if (isset($_POST['add_patient'])) {
     header('Content-Type: application/json');
     echo json_encode($responseArray);
 }
+
+if (isset($_POST['patients_details'])) {
+    $patientID = mysqli_real_escape_string($conn, $_POST['patient_id']);
+    $petsa_unang_checkup = mysqli_real_escape_string($conn, $_POST['petsa_unang_checkup']);
+    $edad = mysqli_real_escape_string($conn, $_POST['edad']);
+    $timbang = mysqli_real_escape_string($conn, $_POST['timbang']);
+    $taas = mysqli_real_escape_string($conn, $_POST['taas']);
+    $kalagayan_kalusugan = mysqli_real_escape_string($conn, $_POST['kalagayan_kalusugan']);
+    $petsa_huling_regla = mysqli_real_escape_string($conn, $_POST['petsa_huling_regla']);
+    $kailan_manganganak = mysqli_real_escape_string($conn, $_POST['kailan_manganganak']);
+    $ilang_pagbubuntis = mysqli_real_escape_string($conn, $_POST['ilang_pagbubuntis']);
+
+    if ($patientID == NULL || $petsa_unang_checkup == NULL || $edad == NULL) {
+        $res = [
+            'status' => 422,
+            'message' => 'Fields are mandatory'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+
+    $query = "INSERT INTO patients_details (patients_id, petsa_unang_checkup, edad, timbang, taas, kalagayan_kalusugan, petsa_huling_regla, kailan_manganganak, ilang_pagbubuntis)
+                VALUES ('$patientID', '$petsa_unang_checkup', '$edad', '$timbang', '$taas', '$kalagayan_kalusugan', '$petsa_huling_regla', '$kailan_manganganak', '$ilang_pagbubuntis')";
+
+    $query_run = mysqli_query($conn, $query);
+
+    if ($query_run) {
+        $res = [
+            'status' => 200,
+            'message' => 'Patient added successfully'
+        ];
+        echo json_encode($res);
+        return false;
+    } else {
+        // At least one query failed
+        $res = [
+            'status' => 500,
+            'message' => 'Patient not created successfully'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+    header('Content-Type: application/json');
+    echo json_encode($responseArray);
+}
+
 
 if (isset($_POST['login'])) {
     $uid = mysqli_real_escape_string($conn, $_POST['uid']);

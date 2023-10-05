@@ -3,10 +3,10 @@
 include 'db_conn.php';
 
 function getAllPatients() {
-    global $conn; // Access the existing database connection
+    global $conn, $fclt_id; // Access the existing database connection
 
     // Perform the query to fetch all rows from the "referrals" table
-    $sql = "SELECT * FROM patients";
+    $sql = "SELECT * FROM patients WHERE fclt_id = $fclt_id";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful

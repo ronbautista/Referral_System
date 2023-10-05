@@ -29,7 +29,10 @@ $patients = getAllPatients();
     <input class="form-control" type="text" name="lname" placeholder="last Name">
   </div>
   <div class="mb-3">
-    <input class="form-control" type="tex" name="age" placeholder="Age">
+    <input class="form-control" type="tex" name="contactNum" placeholder="Contact Number">
+  </div>
+  <div class="mb-3">
+    <input class="form-control" type="tex" name="address" placeholder="Address">
   </div>
       </div>
       <div class="modal-footer">
@@ -67,12 +70,12 @@ $patients = getAllPatients();
             $fname = $patients['fname'];
             $mname = $patients['mname'];
             $lname = $patients['lname'];
-            $age = $patients['age'];
+            $address = $patients['address'];
 
             echo "<tr>";
             echo "<th scope='row'>" . ($key + 1) . "</th>";
             echo "<td>$lname, $fname $mname</td>";
-            echo "<td>$age</td>";
+            echo "<td>$address</td>";
             echo '<td><a class="btn btn-primary" href="add_prenatal.php?id='.$id.'" role="button">View</a></td>';
             // Add more table cells for other patient details if needed
             echo "</tr>";

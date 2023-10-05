@@ -16,7 +16,7 @@ $messages = messages();
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    height: 85vh;
+    height: 88vh;
     background-color: #f2f2f2;
     border-radius: 10px;
 }
@@ -70,7 +70,6 @@ $messages = messages();
     overflow-y: auto; /* Enable vertical scroll when messages exceed max-height */
     max-width: 100%;
 }
-
 .sent {
     background-color: #0084ff;
     color: white;
@@ -129,7 +128,30 @@ $messages = messages();
     margin-left: 5px; /* Add some spacing between the message and the three dots */
     /* You can further customize the styles of the three dots as needed */
 }
+.messages-head {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  transition: all 0.3s;
+  border-radius: 10px;
+}
 
+.messages-head-logo {
+  width: 50px; /* Reduce the width to make the logo smaller */
+  height: 50px; /* Reduce the height to make the logo smaller */
+  padding: 10px;
+  border-radius: 50%;
+  margin-right: 16px;
+  margin-left: 0;
+  object-fit: cover;
+  display: flex; /* Center its contents vertically and horizontally */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+.messages-head img {
+  width: 25px; /* Adjust the width of the logo within the mini-referral-logo */
+  height: 25px; /* Adjust the height of the logo within the mini-referral-logo */
+}
 
 </style>
 <div class="messages-feed">
@@ -160,8 +182,8 @@ $messages = messages();
 </div>
 <div class="messages" id="messages">
 <nav class="messages-header">
-    <div class="referral-card" data-contact-name="">
-        <div class="mini-referral-logo" id="message-logo">
+    <div class="messages-head" data-contact-name="">
+        <div class="messages-head-logo" id="message-logo">
             <img src="images/person.png" alt="Logo" class="logo">
         </div>
         <div class="info">

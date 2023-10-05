@@ -6,85 +6,110 @@ include_once 'header.php';
 
 include 'db_conn.php';
 
-// Check if the ID is provided in the URL
 if (isset($_GET['id'])) {
-    $patientID = $_GET['id'];
+  $patientID = $_GET['id'];
 
-    // Retrieve patient information from the database using the provided ID
-    $sql = "SELECT * FROM patients WHERE id = ?;";
-    $stmt = mysqli_stmt_init($conn);
+  // Retrieve patient information from the database using the provided ID
+  $sql = "SELECT * FROM patients LEFT JOIN patients_details ON patients.id = patients_details.patients_id WHERE patients.id = ?";
+  $stmt = mysqli_stmt_init($conn);
 
-    if (!mysqli_stmt_prepare($stmt, $sql)) {
-        // Handle the error appropriately (e.g., show an error message)
-        die("Statement preparation failed.");
-    }
+  if (!mysqli_stmt_prepare($stmt, $sql)) {
+      // Handle the error appropriately (e.g., show an error message)
+      die("Statement preparation failed: " . mysqli_error($conn));
+  }
 
-    mysqli_stmt_bind_param($stmt, "i", $patientID);
-    mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_param($stmt, "i", $patientID);
+  mysqli_stmt_execute($stmt);
 
-    $result = mysqli_stmt_get_result($stmt);
+  $result = mysqli_stmt_get_result($stmt);
 
-    // Check if a patient is found with the provided ID
-    if ($row = mysqli_fetch_assoc($result)) {
-        // Display patient information here
-        echo "Patient ID: " . $row['id'] . "<br>";
-    } else {
-        // Handle the case when no patient is found with the provided ID
-        echo "Patient not found.";
-    }
+  // Check if a patient is found with the provided ID
+  if ($row = mysqli_fetch_assoc($result)) {
+      // Display patient information here
+      echo "Patient ID: " . $row['id'] . "<br>";
+      // You can output other patient information as needed
+  } else {
+      // Handle the case when no patient is found with the provided ID
+      echo "Patient not found.";
+  }
 
-    mysqli_stmt_close($stmt);
+  mysqli_stmt_close($stmt);
 } else {
-    // Handle the case when no ID is provided in the URL
-    echo "Invalid patient ID.";
+  // Handle the case when no ID is provided in the URL
+  echo "Invalid patient ID.";
 }
-?>
 
-         <!-- Card Content  -->
+?>
+<!-- Card Content -->
 <div class="firstSec">
     <div class="head">
-      <?php echo '<h2 class="mb-4"> Patient Name: '.$row['lname'] .', '.$row['fname'] .' '.$row['mname'] .'</h2> '?>
-    <a href="prenatal.php"><button type="button" class="right-button btn">Back</button></a>
+        <?php
+        if ($row) {
+            echo '<h2 class="mb-4"> Patient Name: ' . $row['lname'] . ', ' . $row['fname'] . ' ' . $row['mname'] . '</h2> ';
+        }
+        ?>
+        <a href="prenatal.php"><button type="button" class="right-button btn">Back</button></a>
     </div>
 
     <div class="card">
-  <div class="card-header">
-    Fill the Fields
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <form>
-    <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputEmail4">Petsa ng unang check-up</label>
-        <input type="text" class="form-control" id="inputEmail4">
+        <div class="card-header">
+            Fill the Fields
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputPassword4">Timbang (weight)</label>
-        <input type="text" class="form-control" id="inputPassword4"  >
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputPassword4">Taas (height)</label>
-        <input type="text" class="form-control" id="inputPassword4" >
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputEmail4">Kalagayan ng kalusugan</label>
-        <input type="email" class="form-control" id="inputEmail4">
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputPassword4">Petsa ng huling regla</label>
-        <input type="text" class="form-control" id="inputPassword4" >
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputPassword4">Kelan ako manganganak</label>
-        <input type="text" class="form-control" id="inputPassword4"  >
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-        <label for="inputPassword4">Pang-ilan na pagbubuntis</label>
-        <input type="text" class="form-control" id="inputPassword4"  >
-        </div>
+        <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <form id="patients_details">
+                <input type="hidden" name="patient_id" value="<?php echo $patientID; ?>">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['petsa_unang_checkup'] : ''; ?>"
+                            name="petsa_unang_checkup">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['edad'] : ''; ?>"
+                            name="edad">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['timbang'] : ''; ?>"
+                            name="timbang">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['taas'] : ''; ?>"
+                            name="taas">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['kalagayan_kalusugan'] : ''; ?>"
+                            name="kalagayan_kalusugan">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['petsa_huling_regla'] : ''; ?>"
+                            name="petsa_huling_regla">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['kailan_manganganak'] : ''; ?>"
+                            name="kailan_manganganak">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <label for="inputEmail4">Petsa ng unang check-up</label>
+                        <input type="text" class="form-control" id="inputEmail4"
+                            value="<?php echo ($row) ? $row['ilang_pagbubuntis'] : ''; ?>"
+                            name="ilang_pagbubuntis">
+                    </div>
     </div>
-    <button type="button" class="btn btn-primary" style="margin-top:20px">Submit</button>
+    <button type="submit" class="btn btn-primary" name="submit" style="margin-top:20px">Submit</button>
     </form>
   </div>
 </div>
