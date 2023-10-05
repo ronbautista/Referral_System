@@ -189,9 +189,8 @@ if (isset($_POST['add_patient'])) {
     $mname = mysqli_real_escape_string($conn, $_POST['mname']);
     $lname = mysqli_real_escape_string($conn, $_POST['lname']);
     $age = mysqli_real_escape_string($conn, $_POST['age']);
-    $sex = mysqli_real_escape_string($conn, $_POST['sex']);
 
-    if ($fname == NULL || $lname == NULL || $age == NULL || $sex == 'Sex') {
+    if ($fname == NULL || $lname == NULL || $age == NULL) {
         $res = [
             'status' => 422,
             'message' => 'Field is mandatory'
@@ -199,7 +198,7 @@ if (isset($_POST['add_patient'])) {
         echo json_encode($res);
         return false;
     }
-    $query = "INSERT INTO patients (fname, mname, lname, age, sex) VALUES ('$fname',  '$mname', '$lname',  '$age', '$sex')";
+    $query = "INSERT INTO patients (fname, mname, lname, age) VALUES ('$fname',  '$mname', '$lname',  '$age')";
     $query_run = mysqli_query($conn, $query);
 
     if ($query_run) {

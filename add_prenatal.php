@@ -44,13 +44,191 @@ if (isset($_GET['id'])) {
 <div class="firstSec">
     <div class="head">
       <?php echo '<h2 class="mb-4"> Patient Name: '.$row['lname'] .', '.$row['fname'] .' '.$row['mname'] .'</h2> '?>
-    <a href="prenatal.php"><button type="button" class="right-button btn"><i class='bx bx-arrow-back'></i>Back</button></a>
+    <a href="prenatal.php"><button type="button" class="right-button btn">Back</button></a>
     </div>
+
+    <div class="card">
+  <div class="card-header">
+    Fill the Fields
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Special title treatment</h5>
+    <form>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputEmail4">Petsa ng unang check-up</label>
+        <input type="text" class="form-control" id="inputEmail4">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputPassword4">Timbang (weight)</label>
+        <input type="text" class="form-control" id="inputPassword4"  >
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputPassword4">Taas (height)</label>
+        <input type="text" class="form-control" id="inputPassword4" >
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputEmail4">Kalagayan ng kalusugan</label>
+        <input type="email" class="form-control" id="inputEmail4">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputPassword4">Petsa ng huling regla</label>
+        <input type="text" class="form-control" id="inputPassword4" >
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputPassword4">Kelan ako manganganak</label>
+        <input type="text" class="form-control" id="inputPassword4"  >
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+        <label for="inputPassword4">Pang-ilan na pagbubuntis</label>
+        <input type="text" class="form-control" id="inputPassword4"  >
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" style="margin-top:20px">Submit</button>
+    </form>
+  </div>
 </div>
 
 
-
-   <!-- INSERT HERE!!!  -->
+<div class="secodSec">
+<h3>Karanasan sa mga Naunang Pagbubuntis at Panganganak</h3>
+<div class="card">
+<div class="card-header">Fill the Fields</div>
+  <div class="card-body">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Column 1</th>
+        <th scope="col">Column 2</th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Date of delivery:</th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th rowspan="2">Type of delivery:</th>
+        <td>Normal(check) or</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Caesarean Delivery(C/S)</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <th rowspan="3">Birth Outcome:</th>
+        <td>Alive</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Misscarriage</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Stillbirth</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <th rowspan="3">Number of child/children delivered:</th>
+        <td>Single</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Twins</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Multiple Birth (No.)</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <th rowspan="3">Pregnancy-related Conditions/Compications:</th>
+        <td>Pregnancy Induced Hypertension (PIH) (Y/N)</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Preeclamsia/Ecllampsia (PE/E) (Y/N)</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+      <tr>
+        <td>Bleeding during pregnancy or after delivery (Y/N)</td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+        <td class="text-center"><input class="custom-textbox" type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-primary">Submit</button>
+  </div>
+</div>
+</div>
+</div>
 
    
 

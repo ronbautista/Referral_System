@@ -31,13 +31,6 @@ $patients = getAllPatients();
   <div class="mb-3">
     <input class="form-control" type="tex" name="age" placeholder="Age">
   </div>
-  <div class="mb-3">
-  <select class="form-select" name="sex" aria-label="Default select example">
-        <option selected>Sex</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-    </select>
-  </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
@@ -52,7 +45,7 @@ $patients = getAllPatients();
 <div class="feed">
 <div class="head">
 <h2 class="left-heading mb-4">Prenatal List</h2>
-<button type="button" class="right-button btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add Prenatal</button>
+<button type="button" class="right-button btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Prenatal</button>
 
 </div>
          <!-- Card Content  -->
@@ -63,7 +56,6 @@ $patients = getAllPatients();
       <th scope="col">#</th>
       <th scope="col">Full Name</th>
       <th scope="col">Age</th>
-      <th scope="col">Sex</th>
       <th scope="col">Action</th>
     </tr>
   </thead>
@@ -76,14 +68,12 @@ $patients = getAllPatients();
             $mname = $patients['mname'];
             $lname = $patients['lname'];
             $age = $patients['age'];
-            $sex = $patients['sex'];
 
             echo "<tr>";
             echo "<th scope='row'>" . ($key + 1) . "</th>";
             echo "<td>$lname, $fname $mname</td>";
             echo "<td>$age</td>";
-            echo "<td>$sex</td>";
-            echo '<td><a class="btn btn-primary" href="add_prenatal.php?id='.$id.'" role="button">Edit</a></td>';
+            echo '<td><a class="btn btn-primary" href="add_prenatal.php?id='.$id.'" role="button">View</a></td>';
             // Add more table cells for other patient details if needed
             echo "</tr>";
         }
