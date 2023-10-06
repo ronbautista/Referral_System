@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2023 at 12:04 PM
+-- Generation Time: Oct 06, 2023 at 09:40 PM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -203,10 +203,7 @@ CREATE TABLE `referral_format` (
 
 INSERT INTO `referral_format` (`id`, `field_name`, `fclt_id`) VALUES
 (67, 'Name', 8),
-(68, 'Age', 8),
-(121, 'Sex', 3),
-(175, 'Hobby', 3),
-(178, 'Trip', 3);
+(68, 'Age', 8);
 
 -- --------------------------------------------------------
 
@@ -217,21 +214,20 @@ INSERT INTO `referral_format` (`id`, `field_name`, `fclt_id`) VALUES
 CREATE TABLE `referral_forms` (
   `id` int(11) NOT NULL,
   `Name` varchar(255) DEFAULT NULL,
-  `Age` varchar(255) DEFAULT NULL,
-  `Sex` varchar(255) DEFAULT NULL,
-  `Hobby` varchar(255) DEFAULT NULL,
-  `Trip` varchar(255) DEFAULT NULL
+  `Age` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `referral_forms`
 --
 
-INSERT INTO `referral_forms` (`id`, `Name`, `Age`, `Sex`, `Hobby`, `Trip`) VALUES
-(158, 'vvv', 'vv', 'vv', 'vv', NULL),
-(159, 'Ronald', 'ads', 'adad', 'asda', NULL),
-(160, 'asda', 'asda', 'asda', 'asd', NULL),
-(161, 'qweqeq', 'qweq', 'qweqqw', 'qweq', NULL);
+INSERT INTO `referral_forms` (`id`, `Name`, `Age`) VALUES
+(158, 'vvv', 'vv'),
+(159, 'Ronald', 'ads'),
+(160, 'asda', 'asda'),
+(161, 'qweqeq', 'qweq'),
+(162, 'asd', 'asda'),
+(163, 'asadw', 'asdawd');
 
 -- --------------------------------------------------------
 
@@ -335,7 +331,14 @@ INSERT INTO `referral_notification` (`id`, `message`, `rfrrl_id`, `fclt_id`, `da
 (489, 'Referral Declined', 158, 3, '2023-09-22', '01:20 PM', 0),
 (490, 'Referral Accepted', 160, 3, '2023-09-22', '01:21 PM', 0),
 (491, 'New referral', 161, 8, '2023-09-22', '01:42 PM', 0),
-(492, 'Referral Accepted', 161, 3, '2023-09-22', '04:56 PM', 0);
+(492, 'Referral Accepted', 161, 3, '2023-09-22', '04:56 PM', 0),
+(493, 'New referral', 162, 8, '2023-10-07', '03:33 AM', 0),
+(494, 'Referral Accepted', 162, 10, '2023-10-07', '03:34 AM', 0),
+(495, 'Referral Accepted', 162, 3, '2023-10-07', '03:36 AM', 0),
+(496, 'New referral', 163, 8, '2023-10-07', '03:38 AM', 0),
+(497, 'Referral Accepted', 163, 10, '2023-10-07', '03:38 AM', 0),
+(498, 'Referral Declined', 162, 10, '2023-10-07', '03:38 AM', 0),
+(499, 'Referral Accepted', 162, 3, '2023-10-07', '03:39 AM', 0);
 
 -- --------------------------------------------------------
 
@@ -347,20 +350,43 @@ CREATE TABLE `referral_records` (
   `id` int(11) NOT NULL,
   `fclt_id` int(11) NOT NULL,
   `rfrrl_id` int(11) NOT NULL,
-  `status` varchar(255) NOT NULL,
   `date` varchar(255) NOT NULL,
-  `time` varchar(255) NOT NULL
+  `time` varchar(255) NOT NULL,
+  `referred_hospital` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `referral_records`
 --
 
-INSERT INTO `referral_records` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`) VALUES
-(152, 8, 158, 'Pending', '2023-09-21', '02:27 PM'),
-(153, 8, 159, 'Pending', '2023-09-21', '02:43 PM'),
-(154, 8, 160, 'Accepted', '2023-09-21', '02:53 PM'),
-(155, 8, 161, 'Accepted', '2023-09-22', '01:42 PM');
+INSERT INTO `referral_records` (`id`, `fclt_id`, `rfrrl_id`, `date`, `time`, `referred_hospital`, `status`) VALUES
+(156, 8, 162, '2023-10-07', '03:33 AM', 10, 'Accepted'),
+(157, 8, 163, '2023-10-07', '03:38 AM', 10, 'Accepted');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `referral_transaction`
+--
+
+CREATE TABLE `referral_transaction` (
+  `id` int(11) NOT NULL,
+  `fclt_id` int(11) NOT NULL,
+  `rfrrl_id` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `date` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `referral_transaction`
+--
+
+INSERT INTO `referral_transaction` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`) VALUES
+(3, 10, 163, 'Accepted', '2023-10-07', '03:38 AM'),
+(4, 10, 162, 'Declined', '2023-10-07', '03:38 AM'),
+(5, 3, 162, 'Accepted', '2023-10-07', '03:39 AM');
 
 -- --------------------------------------------------------
 
@@ -454,6 +480,7 @@ CREATE TABLE `users` (
   `usersName` varchar(128) NOT NULL,
   `usersEmail` varchar(128) NOT NULL,
   `usersUid` varchar(128) NOT NULL,
+  `usersrole` varchar(255) NOT NULL,
   `usersPwd` varchar(128) NOT NULL,
   `fclt_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -462,9 +489,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`usersId`, `usersName`, `usersEmail`, `usersUid`, `usersPwd`, `fclt_id`) VALUES
-(7, 'Jezrael Salino', 'jezraelsalino@gmail.com', 'admin', '$2y$10$zyga/EpPBf7Gw8iGIdELGOwxGVV5cKsMPcTG7G7DmDqhop6tdZpBK', 0),
-(8, 'Jezmahboi', 'jezraelsalino@yahoo.com', 'Jezipoo', '$2y$10$KHzZQ20quKBf7qR/AGUSz.BTjnZjYpm5pHrVOinVYz3Rbo1Ab251i', 0);
+INSERT INTO `users` (`usersId`, `usersName`, `usersEmail`, `usersUid`, `usersrole`, `usersPwd`, `fclt_id`) VALUES
+(7, 'Jezrael Salino', 'jezraelsalino@gmail.com', 'admin', 'Admin', '$2y$10$zyga/EpPBf7Gw8iGIdELGOwxGVV5cKsMPcTG7G7DmDqhop6tdZpBK', 0),
+(8, 'Jezmahboi', 'jezraelsalino@yahoo.com', 'Jezipoo', 'Staff', '$2y$10$KHzZQ20quKBf7qR/AGUSz.BTjnZjYpm5pHrVOinVYz3Rbo1Ab251i', 0);
 
 --
 -- Indexes for dumped tables
@@ -528,6 +555,12 @@ ALTER TABLE `referral_notification`
 -- Indexes for table `referral_records`
 --
 ALTER TABLE `referral_records`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `referral_transaction`
+--
+ALTER TABLE `referral_transaction`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -598,19 +631,25 @@ ALTER TABLE `referral_format`
 -- AUTO_INCREMENT for table `referral_forms`
 --
 ALTER TABLE `referral_forms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `referral_notification`
 --
 ALTER TABLE `referral_notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=493;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=500;
 
 --
 -- AUTO_INCREMENT for table `referral_records`
 --
 ALTER TABLE `referral_records`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+
+--
+-- AUTO_INCREMENT for table `referral_transaction`
+--
+ALTER TABLE `referral_transaction`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `second_trimester`
