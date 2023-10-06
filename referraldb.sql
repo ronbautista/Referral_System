@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2023 at 09:40 PM
+-- Generation Time: Oct 06, 2023 at 10:12 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -126,17 +126,18 @@ CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
   `user1` varchar(255) NOT NULL,
   `message` text NOT NULL,
-  `user2` varchar(255) NOT NULL
+  `user2` varchar(255) NOT NULL,
+  `date` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `user1`, `message`, `user2`) VALUES
-(1, '3', 'hello', '8'),
-(2, '3', 'hi', '8'),
-(23, '3', 'asddd', '3');
+INSERT INTO `messages` (`id`, `user1`, `message`, `user2`, `date`, `time`) VALUES
+(24, '10', 'asd', '3', '2023-10-07', '03:46:53 AM'),
+(25, '3', 'asdaads', '8', '2023-10-07', '03:57:50 AM');
 
 -- --------------------------------------------------------
 
@@ -149,24 +150,43 @@ CREATE TABLE `patients` (
   `fname` varchar(255) NOT NULL,
   `mname` varchar(255) NOT NULL,
   `lname` varchar(255) NOT NULL,
-  `age` varchar(255) NOT NULL,
-  `sex` varchar(255) NOT NULL
+  `contact` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `fclt_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `patients`
 --
 
-INSERT INTO `patients` (`id`, `fname`, `mname`, `lname`, `age`, `sex`) VALUES
-(19, 'aw', 'aw', 'aw', '11', 'Female'),
-(20, 'asd', 'asdad', 'asd', 'asd', 'Male'),
-(21, 'aw', 'awaw', 'aw', 'aww', 'Female'),
-(22, 'asd', 'asda', 'asdaad', '12', 'Male'),
-(23, 'asd', 'asd', 'asd', 'asd', 'Female'),
-(24, 'asd', 'asd', 'asd', 'asd', 'Female'),
-(25, 'adsas', 'dadasd', 'asd', 'asda', 'Female'),
-(26, 'asd', 'asd', 'asd', 'asd', 'Male'),
-(27, 'asd', '', 'asd', 'asd', 'Female');
+INSERT INTO `patients` (`id`, `fname`, `mname`, `lname`, `contact`, `address`, `fclt_id`) VALUES
+(28, 'asd', 'asdad', 'asd', 'asda', 'asd', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patients_details`
+--
+
+CREATE TABLE `patients_details` (
+  `patients_details_id` int(11) NOT NULL,
+  `petsa_unang_checkup` varchar(255) NOT NULL,
+  `edad` varchar(255) NOT NULL,
+  `timbang` varchar(255) NOT NULL,
+  `taas` varchar(255) NOT NULL,
+  `kalagayan_kalusugan` varchar(255) NOT NULL,
+  `petsa_huling_regla` varchar(255) NOT NULL,
+  `kailan_manganganak` varchar(255) NOT NULL,
+  `ilang_pagbubuntis` varchar(255) NOT NULL,
+  `patients_id` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `patients_details`
+--
+
+INSERT INTO `patients_details` (`patients_details_id`, `petsa_unang_checkup`, `edad`, `timbang`, `taas`, `kalagayan_kalusugan`, `petsa_huling_regla`, `kailan_manganganak`, `ilang_pagbubuntis`, `patients_id`) VALUES
+(1, 'asadd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', '28');
 
 -- --------------------------------------------------------
 
@@ -528,6 +548,12 @@ ALTER TABLE `patients`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `patients_details`
+--
+ALTER TABLE `patients_details`
+  ADD PRIMARY KEY (`patients_details_id`);
+
+--
 -- Indexes for table `prenatal`
 --
 ALTER TABLE `prenatal`
@@ -607,13 +633,19 @@ ALTER TABLE `first_trimester`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `patients_details`
+--
+ALTER TABLE `patients_details`
+  MODIFY `patients_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `prenatal`
