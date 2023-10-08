@@ -109,10 +109,16 @@ $(document).on("click", "#decline_button", function () {
             if (res.status == 200) {
                 $("#referralModal").modal("hide");
                 $("#yourDivId").load(location.href + " #yourDivId");
+                restoreButtons();
+                $('#reason').val('');
+            }else if(res.status == 422){
+              $("#errorMessage").removeClass("d-none");
+              $("#errorMessage").text(res.message);
             }
         },
     });
 });
+
 
 $(document).on("click", "#accept_button", function () {
     var formData = new FormData($("#referral_form")[0]);
@@ -129,10 +135,83 @@ $(document).on("click", "#accept_button", function () {
             if (res.status == 200) {
                 $("#referralModal").modal("hide");
                 $("#yourDivId").load(location.href + " #yourDivId");
+                hideReasonAndButtons();
+                $('#reason').val('');
             }
         },
     });
 });
+
+$(document).on("click", "#restore_button", function () {
+    var formData = new FormData($("#referral_form")[0]);
+    formData.append("restore_referral", true);
+
+    $.ajax({
+        type: "POST",
+        url: "new_function.php",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 200) {
+                $("#referralModal").modal("hide");
+                $("#yourDivId").load(location.href + " #yourDivId");
+            }
+        },
+    });
+});
+
+function restoreButtons(){
+  const declineReferral = document.getElementById("decline_referral");
+  const cancelButton = document.getElementById("cancel_button");
+  const declineButton = document.getElementById("decline_button");
+  const acceptButton = document.getElementById("accept_button");
+  const referralReason = document.querySelector(".referral-reason");
+
+    referralReason.style.display = "none";
+    declineButton.style.display = "none";
+    cancelButton.style.display = "none";
+    declineReferral.style.display = "block";
+    acceptButton.style.display = "block";
+
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const declineReferral = document.getElementById("decline_referral");
+  const cancelButton = document.getElementById("cancel_button");
+  const declineButton = document.getElementById("decline_button");
+  const acceptButton = document.getElementById("accept_button");
+  const referralReason = document.querySelector(".referral-reason");
+
+  firstFunction();
+
+  function firstFunction() {
+    referralReason.style.display = "none";
+    declineButton.style.display = "none";
+    cancelButton.style.display = "none";
+  }
+
+  function SecondFunction() {
+    referralReason.style.display = "block";
+    declineButton.style.display = "block";
+    cancelButton.style.display = "block";
+  }
+
+  declineReferral.addEventListener("click", function() {
+    SecondFunction();
+    declineReferral.style.display = "none";
+    acceptButton.style.display = "none";
+
+  });
+
+  cancelButton.addEventListener("click", function() {
+    firstFunction();
+    declineReferral.style.display = "block";
+    acceptButton.style.display = "block";
+  });
+});
+
 
 
 $(document).on("click", ".deleteReferral", function (e) {

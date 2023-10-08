@@ -114,6 +114,7 @@ $getreferral = getAllReferrals();
             </div>
               <div class="modal-footer">
               <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn1" id="restore_button">Restore Referral</button>
               </div>
     </form>
         </div>

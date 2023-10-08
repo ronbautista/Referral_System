@@ -400,7 +400,7 @@ if (isset($_POST['accept_referral'])) {
     $query_run = mysqli_query($conn, $query);
 
     // Execute the second query
-    $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time')";
+    $second_query = "INSERT INTO accepted_referrals (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time')";
     $second_query_run = mysqli_query($conn, $second_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Accepted', '$rfrrl_id', '$fclt_id', '$date', '$time')";
@@ -430,8 +430,9 @@ if (isset($_POST['accept_referral'])) {
 
 if (isset($_POST['decline_referral'])) {
     $rfrrl_id = mysqli_real_escape_string($conn, $_POST['rffrl_id']);
+    $reason = mysqli_real_escape_string($conn, $_POST['reason']); // Access the 'reason' field using $_POST
 
-    if ($rfrrl_id == NULL) {
+    if ($rfrrl_id == NULL || $reason == NULL) {
         $res = [
             'status' => 422,
             'message' => 'Field is mandatory'
@@ -448,13 +449,63 @@ if (isset($_POST['decline_referral'])) {
     $query_run = mysqli_query($conn, $query);
 
     // Execute the second query
-    $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Declined', '$date', '$time')";
+    $second_query = "INSERT INTO declined_referrals (fclt_id, rfrrl_id, status, date, time, reason) VALUES ('$fclt_id', '$rfrrl_id', 'Declined', '$date', '$time', '$reason')"; // Use $reason here
     $second_query_run = mysqli_query($conn, $second_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Declined', '$rfrrl_id', '$fclt_id', '$date', '$time')";
     $third_query_run = mysqli_query($conn, $third_query);
 
     if ($query_run && $second_query_run && $third_query_run) {
+        // Both queries executed successfully
+        $res = [
+            'status' => 200,
+            'message' => 'Both queries executed successfully'
+        ];
+        echo json_encode($res);
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'Referral declined by: ' . $fclt_name));
+        return false;
+    } else {
+        // At least one query failed
+        $res = [
+            'status' => 500,
+            'message' => 'One or both queries failed'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+}
+
+
+if (isset($_POST['restore_referral'])) {
+    $rfrrl_id = mysqli_real_escape_string($conn, $_POST['rffrl_id']);
+
+    if ($rfrrl_id == NULL) {
+        $res = [
+            'status' => 422,
+            'message' => 'Field is mandatory'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+
+    date_default_timezone_set('Asia/Manila');
+    $date = date("Y-m-d");
+    $time = date("h:i A");
+
+    $query = "UPDATE referral_records SET status ='Pending' WHERE rfrrl_id='$rfrrl_id'";
+    $query_run = mysqli_query($conn, $query);
+
+    // Execute the second query
+    $second_query = "DELETE FROM accepted_referrals WHERE rfrrl_id = $rfrrl_id";
+    $second_query_run = mysqli_query($conn, $second_query);
+
+    $fourth_query = "DELETE FROM declined_referrals WHERE rfrrl_id = $rfrrl_id";
+    $fourth_query_run = mysqli_query($conn, $fourth_query);
+
+    $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Declined', '$rfrrl_id', '$fclt_id', '$date', '$time')";
+    $third_query_run = mysqli_query($conn, $third_query);
+
+    if ($query_run && $second_query_run && $third_query_run && $fourth_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,

@@ -76,7 +76,8 @@ function HospitalPendingReferrals() {
     INNER JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id 
     INNER JOIN facilities AS f1 ON f1.fclt_id = referral_records.referred_hospital 
     INNER JOIN facilities AS f2 ON f2.fclt_id = referral_records.fclt_id 
-    WHERE f1.fclt_type = 'Provincial Hospital' AND referral_records.status = 'Declined'";
+    WHERE f1.fclt_type = 'Provincial Hospital' AND referral_records.status = 'Declined'
+    OR referral_records.referred_hospital = $fclt_id";
     
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_execute($stmt);
@@ -106,11 +107,21 @@ function displayAllReferralTransaction() {
     global $conn, $fclt_id; // Access the existing database connection
 
     // Perform the query to fetch all rows from the "referrals" table
-    $sql = "SELECT * FROM referral_forms
-    RIGHT JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
-    RIGHT JOIN referral_transaction ON referral_forms.id = referral_transaction.rfrrl_id
-    RIGHT JOIN facilities ON referral_records.fclt_id = facilities.fclt_id WHERE referral_transaction.fclt_id = $fclt_id
-    ORDER BY referral_transaction.date DESC, referral_transaction.time ASC";
+    $sql = "SELECT a.*, NULL AS reason, f.fclt_name, rf.*
+    FROM accepted_referrals AS a
+    INNER JOIN referral_forms AS rf ON a.rfrrl_id = rf.id
+    INNER JOIN facilities AS f ON a.fclt_id = f.fclt_id
+    WHERE a.fclt_id = '$fclt_id'
+    
+    UNION ALL
+    
+    SELECT d.*, f.fclt_name, rf.*
+    FROM declined_referrals AS d
+    INNER JOIN referral_forms AS rf ON d.rfrrl_id = rf.id
+    INNER JOIN facilities AS f ON d.fclt_id = f.fclt_id
+    WHERE d.fclt_id = '$fclt_id'
+    
+    ORDER BY date, time";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful

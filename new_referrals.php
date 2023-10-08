@@ -91,9 +91,20 @@ if ($count == 0) {
         ?>
         </div>
             </div>
-            <div class="modal-footer">
-        <button type="button" class="btn btn1" id="decline_button">Decline Referral</button>
+        <div class="modal-footer">
+          <div class="referral-reason">
+            <div class="mb-3">
+            <h5>Decline Reason</h5>
+            <div class="alert alert-warning d-none" id="errorMessage"></div>
+            <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
+          </div>
+          </div>
+          <div class="referral-buttons">
+        <button type="button" class="btn btn1" id="decline_referral">Decline Referral</button>
+        <button type="button" class="btn btn1" id="cancel_button">Cancel</button>
+        <button type="button" class="btn btn2" id="decline_button">Submit Decline</button>
         <button type="button" class="btn btn2" id="accept_button">Accept Referral</button>
+        </div>
     </div>
     </form>
         </div>
@@ -141,33 +152,6 @@ if ($count == 0) {
     </form>
     </div>
     </div>
-
-    <!-- Modal -->
-<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-      <h3>STAFF LOGIN</h3>
-      </div>
-      <div class="modal-body" id="modalContent">
-      <div class="alert alert-warning d-none" id="errorMessage"></div>
-      <form id="loginStaff">
-    <div class="mb-3">
-        <input type="text" class="form-control" name="uid" placeholder="Facility Name/ID">
-    </div>
-    <div class="mb-3">
-        <input type="password" class="form-control" name="pwd" placeholder="Password">
-    </div>
-    <div class="modal-footer">
-        <a class="btn btn1" href="signup.php" role="button">Sign Up</a>
-        <button type="submit" class="btn btn2">Login</button>
-    </div>
-</form>
-
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
