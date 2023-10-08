@@ -54,18 +54,17 @@ $referrals = referrals();
   </thead>
   <tbody>
     <?php
-    // Loop through the referrals and display each patient in a table row
     foreach ($referral_format as $referral) {
-      if ($referral['Field'] !== 'id') {
-        $fieldName = str_replace('_', ' ', $referral['Field']); // Replace underscores with spaces
-        ?>
-        <tr>
-          <td><?= $fieldName ?></td>
-          <td>
-            <button type="button" value="<?= $referral['Field']; ?>" class="deleteField btn btn-outline-danger">Delete</button>
-          </td>
-        </tr>
-        <?php
+      if ($referral['field_name'] !== 'id') {
+          $fieldName = str_replace('_', ' ', $referral['field_name']); // Replace underscores with spaces
+          ?>
+          <tr>
+              <td><?= $fieldName ?></td>
+              <td>
+                  <button type="button" value="<?= $referral['field_name']; ?>" class="deleteField btn btn-outline-danger">Delete</button>
+              </td>
+          </tr>
+          <?php
       }
     }
     ?>

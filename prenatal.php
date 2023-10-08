@@ -53,12 +53,12 @@ $patients = getAllPatients();
 </div>
          <!-- Card Content  -->
 
-  <table class="table table-success table-striped" id="table">
+  <table class="table table-success table-striped" id="table" style="text-align: center">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Full Name</th>
-      <th scope="col">Age</th>
+      <th scope="col">Adress</th>
       <th scope="col">Action</th>
     </tr>
   </thead>

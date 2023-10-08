@@ -16,8 +16,8 @@ if(isset($_POST['delete_field'])){
     $query = "DELETE FROM referral_format WHERE field_name='$field_name'";
     $query_run = mysqli_query($conn, $query);
 
-    $query = "ALTER TABLE referral_forms DROP COLUMN $field_name";
-    $second_query_run = mysqli_query($conn, $query);
+    $second_query = "ALTER TABLE referral_forms DROP COLUMN $field_name";
+    $second_query_run = mysqli_query($conn, $second_query);
 
     if($query_run && $second_query_run){
         
@@ -350,6 +350,11 @@ if (isset($_POST['save_field'])) {
         // Execute the second query
         $query = "ALTER TABLE referral_forms ADD $field varchar(255)";
         $query_run = mysqli_query($conn, $query);
+
+        $second_query = "INSERT INTO referral_format (field_name) values('$field')";
+        $second_query_run = mysqli_query($conn, $second_query);
+
+        
     } else {
         $res = [
             'status' => 300,
@@ -359,7 +364,7 @@ if (isset($_POST['save_field'])) {
         return false;
     }
 
-    if ($query_run) {
+    if ($query_run && $second_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -384,6 +389,7 @@ if (isset($_POST['save_field'])) {
 if (isset($_POST['accept_referral'])) {
     $rfrrl_id = mysqli_real_escape_string($conn, $_POST['rffrl_id']);
 
+
     if ($rfrrl_id == NULL) {
         $res = [
             'status' => 422,
@@ -400,7 +406,7 @@ if (isset($_POST['accept_referral'])) {
     $query_run = mysqli_query($conn, $query);
 
     // Execute the second query
-    $second_query = "INSERT INTO accepted_referrals (fclt_id, rfrrl_id, status, date, time) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time')";
+    $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time, reason) VALUES ('$fclt_id', '$rfrrl_id', 'Accepted', '$date', '$time', 'NULL')";
     $second_query_run = mysqli_query($conn, $second_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Accepted', '$rfrrl_id', '$fclt_id', '$date', '$time')";
@@ -449,7 +455,7 @@ if (isset($_POST['decline_referral'])) {
     $query_run = mysqli_query($conn, $query);
 
     // Execute the second query
-    $second_query = "INSERT INTO declined_referrals (fclt_id, rfrrl_id, status, date, time, reason) VALUES ('$fclt_id', '$rfrrl_id', 'Declined', '$date', '$time', '$reason')"; // Use $reason here
+    $second_query = "INSERT INTO referral_transaction (fclt_id, rfrrl_id, status, date, time, reason) VALUES ('$fclt_id', '$rfrrl_id', 'Declined', '$date', '$time', '$reason')"; // Use $reason here
     $second_query_run = mysqli_query($conn, $second_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Declined', '$rfrrl_id', '$fclt_id', '$date', '$time')";
@@ -492,20 +498,17 @@ if (isset($_POST['restore_referral'])) {
     $date = date("Y-m-d");
     $time = date("h:i A");
 
-    $query = "UPDATE referral_records SET status ='Pending' WHERE rfrrl_id='$rfrrl_id'";
+    $query = "UPDATE referral_records SET status = 'Pending' WHERE rfrrl_id='$rfrrl_id'";
     $query_run = mysqli_query($conn, $query);
 
     // Execute the second query
-    $second_query = "DELETE FROM accepted_referrals WHERE rfrrl_id = $rfrrl_id";
+    $second_query = "DELETE FROM referral_transaction WHERE rfrrl_id = $rfrrl_id";
     $second_query_run = mysqli_query($conn, $second_query);
-
-    $fourth_query = "DELETE FROM declined_referrals WHERE rfrrl_id = $rfrrl_id";
-    $fourth_query_run = mysqli_query($conn, $fourth_query);
 
     $third_query = "INSERT INTO referral_notification (message, rfrrl_id, fclt_id, date, time) VALUES ('Referral Declined', '$rfrrl_id', '$fclt_id', '$date', '$time')";
     $third_query_run = mysqli_query($conn, $third_query);
 
-    if ($query_run && $second_query_run && $third_query_run && $fourth_query_run) {
+    if ($query_run && $second_query_run && $third_query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,

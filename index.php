@@ -73,8 +73,6 @@ if ($result1 && $result2) {
               foreach ($getminireferral as  $referrals) {
                   $fclt_name = $referrals['fclt_name'];
                   $time = $referrals['time'];
-                  $referral_records_time = $referrals['referral_records_time'];
-                  $referral_transaction_time = $referrals['referral_transaction_time'];
                   $name = $referrals['Name'];
                   $status = $referrals['status'];
                   ?>
@@ -85,13 +83,13 @@ if ($result1 && $result2) {
                 <div class="info">
                     <div class="name"><?= $fclt_name ?></div>
                   <?php
-                    if($referral_transaction_time == NULL){
+                    if($time == NULL){
                       ?>
-                      <div class="description"><?= $name ?> • <?= $referral_records_time?></div>
+                      <div class="description"><?= $name ?> • <?= $time?></div>
                       <?php
                     }else{
                       ?>
-                  <div class="description"><?= $name ?> • <?= $referral_transaction_time?></div>
+                  <div class="description"><?= $name ?> • <?= $time?></div>
                       <?php
                     }
                   ?>

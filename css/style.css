@@ -639,6 +639,16 @@ h1 h2 h3 h4 h5 h6 {
   margin: 0 auto;
   border-radius: 100px;
 }
+#Pending-column p{
+  background-color: rgba(35, 169, 249, 0.2);
+  color: #1ba5f5;
+  width: 90px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 5px 1px;
+  margin: 0 auto;
+  border-radius: 100px;
+}
 label{
   margin-bottom: 10px;
 }

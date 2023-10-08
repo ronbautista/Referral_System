@@ -27,6 +27,7 @@ if (isset($_SESSION["first_account"])) {
           <th scope="col">Count</th>
           <th scope="col">Referred Hospital</th>
           <th scope="col">Name</th>
+          <th scope="col" class="action-column">Status</th>
           <th scope="col">Date • Time</th>
           <th scope="col" class="action-column">Action</th>
         </tr>
@@ -40,18 +41,20 @@ if (isset($_SESSION["first_account"])) {
           $rffrl_id = $displayreferrals['rfrrl_id'];
           $rfrrd_hospital = $displayreferrals['fclt_name'];
           $Name = $displayreferrals['Name'];
+          $status = $displayreferrals['status'];
           $date = $displayreferrals['date'];
           $time = $displayreferrals['time'];
 
           echo '<tr>
-            <th scope="row">' . $count . '</th>
-            <td>' . $rfrrd_hospital . '</td>
-            <td>' . $Name . '</td>
-            <td>' . $date . ' • ' . $time . '</td>
-            <td class="action-column">
-            <button id="icon-btn" type="button" value="'.$rffrl_id.'" class="viewMyRecord"><i class="fi fi-rr-eye"></i></button>
-            </td>
-          </tr>';
+          <th scope="row">' . $count . '</th>
+          <td>' . $rfrrd_hospital . '</td>
+          <td>' . $Name . '</td>
+          <td class="action-column" id="'.$status.'-column"><p>' . $status . '</p></td>
+          <td>' . $date . ' • ' . $time . '</td>
+          <td class="action-column">
+          <button id="icon-btn" type="button" value="'.$rffrl_id.'" class="viewRecord"><i class="fi fi-rr-eye"></i></button>
+          </td>
+        </tr>';
 
         }
         if ($count == 0) {
@@ -64,26 +67,6 @@ if (isset($_SESSION["first_account"])) {
 
   </div>
   </div>
-
-
-      
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-    <div class="toast-header">
-      <strong class="me-auto">Notification</strong>
-      <small>Just Now</small>
-      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-    <p class="toast-message">Hello, world! This is a toast message.</p> 
-    <div class="mt-2 pt-2 border-top">
-    <a class="btn btn-primary btn-sm" href="accepted_referrals.php" role="button">View</a>
-    </div>
-  </div>
-  </div>
-</div>
-    </div>
-
 
     
     <!-- Form Content  -->
@@ -99,24 +82,25 @@ if (isset($_SESSION["first_account"])) {
     <div class="row">
         <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
         <?php 
-          $query = "SHOW COLUMNS FROM referral_forms";
-          $query_run = mysqli_query($conn, $query);
+        $query = "SELECT * FROM referral_forms";
+        $query_run = mysqli_query($conn, $query);
 
-          if (mysqli_num_rows($query_run) > 0) {
-              foreach ($query_run as $field) {
-                if ($field['Field'] !== 'id') {
-                  $fieldNameLabel = str_replace('_', ' ', $field['Field']);
-          ?>
-                  <div class="col-sm-12 col-md-6 col-lg-3">
-                      <label for="<?= $field['Field'] ?>"><?= $fieldNameLabel ?></label>
-                      <input type="text" disabled readonly name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
-                  </div>
-          <?php
-              }
+        if (mysqli_num_rows($query_run) > 0) {
+            $row = mysqli_fetch_assoc($query_run);
+
+            foreach ($row as $field => $value) {
+                if ($field !== 'id') {
+                    $fieldNameLabel = str_replace('_', ' ', $field);
+            ?>
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                        <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
+                        <input type="text" disabled readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
+                    </div>
+            <?php
+                }
             }
-          }
-
-        ?>
+        }
+      ?>
         </div>
             </div>
             <div class="modal-footer">
