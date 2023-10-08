@@ -936,7 +936,6 @@ function scrollMessageContainerToBottom() {
         }
     });
 
-
 </script>
 
 </body>
