@@ -1,14 +1,15 @@
 <?php
 include_once 'header.php';
 include_once 'includes/referral_functions.inc.php';
+$fclt_id = $_SESSION['id'];
 
 // Call the function and fetch all the referrals
 $displayreferrals = displayAllReferralsPending();
 $getreferral = getAllReferrals();
 $getminireferral = minireferrals();
 
-$sql1 = "SELECT COUNT(*) as row_count FROM patients"; // Replace with your first table name
-$sql2 = "SELECT COUNT(*) as row_count FROM referral_forms"; // Replace with your second table name
+$sql1 = "SELECT COUNT(*) as row_count FROM patients WHERE fclt_id = '$fclt_id'"; // Replace with your first table name
+$sql2 = "SELECT COUNT(*) as row_count FROM referral_records WHERE fclt_id = '$fclt_id'"; // Replace with your second table name
 
 $result1 = mysqli_query($conn, $sql1);
 $result2 = mysqli_query($conn, $sql2);
