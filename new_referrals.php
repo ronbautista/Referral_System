@@ -71,24 +71,25 @@ if ($count == 0) {
     <div class="row">
         <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
         <?php 
-          $query = "SHOW COLUMNS FROM referral_forms";
-          $query_run = mysqli_query($conn, $query);
+        $query = "SELECT * FROM referral_forms";
+        $query_run = mysqli_query($conn, $query);
 
-          if (mysqli_num_rows($query_run) > 0) {
-              foreach ($query_run as $field) {
-                if ($field['Field'] !== 'id') {
-                  $fieldNameLabel = str_replace('_', ' ', $field['Field']);
-          ?>
-                  <div class="col-sm-12 col-md-6 col-lg-3">
-                      <label for="<?= $field['Field'] ?>"><?= $fieldNameLabel ?></label>
-                      <input type="text" disabled readonly name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
-                  </div>
-          <?php
-              }
-          }
+        if (mysqli_num_rows($query_run) > 0) {
+            $row = mysqli_fetch_assoc($query_run);
+
+            foreach ($row as $field => $value) {
+                if ($field !== 'id') {
+                    $fieldNameLabel = str_replace('_', ' ', $field);
+            ?>
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                        <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
+                        <input type="text" disabled readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
+                    </div>
+            <?php
+                }
+            }
         }
-
-        ?>
+      ?>
         </div>
             </div>
         <div class="modal-footer">

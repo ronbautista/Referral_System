@@ -349,7 +349,7 @@ if (isset($_POST['save_field'])) {
 
         // Execute the second query
         $query = "ALTER TABLE referral_forms ADD $field varchar(255)";
-        $query_run = mysqli_query($conn, $second_query);
+        $query_run = mysqli_query($conn, $query);
     } else {
         $res = [
             'status' => 300,
