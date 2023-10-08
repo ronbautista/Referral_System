@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2023 at 10:12 PM
+-- Generation Time: Oct 08, 2023 at 11:01 AM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,16 +36,28 @@ CREATE TABLE `accepted_referrals` (
   `time` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `accepted_referrals`
+-- Table structure for table `declined_referrals`
 --
 
-INSERT INTO `accepted_referrals` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`) VALUES
-(300, 3, 147, 'accepted', '2023-09-12', '05:49 PM'),
-(301, 8, 142, 'accepted', '2023-09-12', '06:29 PM'),
-(316, 3, 148, 'accepted', '2023-09-21', '02:02 PM'),
-(322, 3, 160, 'Accepted', '2023-09-22', '01:21 PM'),
-(323, 3, 161, 'Accepted', '2023-09-22', '04:56 PM');
+CREATE TABLE `declined_referrals` (
+  `id` int(11) NOT NULL,
+  `fclt_id` int(11) NOT NULL,
+  `rfrrl_id` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `date` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL,
+  `reason` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `declined_referrals`
+--
+
+INSERT INTO `declined_referrals` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`, `reason`) VALUES
+(25, 3, 167, 'Declined', '2023-10-08', '04:29 PM', 'asdadad');
 
 -- --------------------------------------------------------
 
@@ -68,10 +80,10 @@ CREATE TABLE `facilities` (
 --
 
 INSERT INTO `facilities` (`fclt_id`, `fclt_name`, `fclt_password`, `fclt_ref_id`, `fclt_type`, `fclt_address`, `img_url`) VALUES
-(3, 'Caraga Hospital', '$2y$10$e9OJl./loMHTgS5BJu5grOhWgjGak81GUi1LpK6W0q2.DK5usT6we', '003', 'Hospital', 'Surigao City', ''),
-(8, 'Gigaquit RHU', '$2y$10$1NzWlXD0t/r7ya4u1MDrOOH3sbO/ZmUz9990FwRozoX.1fpdscklO', '008', 'Birthing Home', 'Gigaquit', ''),
-(10, 'Surigao Del Norte Provincial Hospital', '$2y$10$YWFHX4SDkT3Bp803vcm1XO.RdvBsr8sgaRRiDPjLcfVU/l5WAZtM6', '009', 'Provincial Hospital', 'Surigao del Norte', ''),
-(12, 'Miranda', '$2y$10$298VYvJ767szo0IanMnkCOc42ubpxLXcOvOpGDWduA/nrSaRifOHq', '005', 'Birthing Home', 'Surigao City', '');
+(1, 'Caraga Hospital', '$2y$10$e9OJl./loMHTgS5BJu5grOhWgjGak81GUi1LpK6W0q2.DK5usT6we', '003', 'Hospital', 'Surigao City', ''),
+(2, 'Gigaquit RHU', '$2y$10$1NzWlXD0t/r7ya4u1MDrOOH3sbO/ZmUz9990FwRozoX.1fpdscklO', '008', 'Birthing Home', 'Gigaquit', ''),
+(3, 'Surigao Del Norte Provincial Hospital', '$2y$10$YWFHX4SDkT3Bp803vcm1XO.RdvBsr8sgaRRiDPjLcfVU/l5WAZtM6', '009', 'Provincial Hospital', 'Surigao del Norte', ''),
+(4, 'Miranda', '$2y$10$298VYvJ767szo0IanMnkCOc42ubpxLXcOvOpGDWduA/nrSaRifOHq', '005', 'Birthing Home', 'Surigao City', '');
 
 -- --------------------------------------------------------
 
@@ -136,8 +148,35 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`id`, `user1`, `message`, `user2`, `date`, `time`) VALUES
-(24, '10', 'asd', '3', '2023-10-07', '03:46:53 AM'),
-(25, '3', 'asdaads', '8', '2023-10-07', '03:57:50 AM');
+(35, '3', 'hi', '8', '2023-10-01', '02:06:15 PM'),
+(36, '8', 'hello', '3', '2023-10-01', '02:06:19 PM'),
+(37, '3', 'hi', '8', '2023-10-01', '02:06:22 PM'),
+(38, '8', 'hello', '3', '2023-10-01', '02:06:25 PM'),
+(39, '8', 'sanaol', '3', '2023-10-01', '02:06:32 PM'),
+(40, '3', 'sheesh', '10', '2023-10-01', '02:08:33 PM'),
+(41, '3', 'waw', '12', '2023-10-01', '02:08:41 PM'),
+(42, '3', 'Gigaquit RHU', '8', '2023-10-01', '02:09:01 PM'),
+(43, '3', 'RHU', '8', '2023-10-01', '02:09:33 PM'),
+(44, '3', 'hi', '12', '2023-10-02', '05:58:25 PM'),
+(45, '3', 'hello', '12', '2023-10-02', '06:08:19 PM'),
+(46, '3', 'hi', '12', '2023-10-02', '06:10:53 PM'),
+(47, '3', 'wew', '8', '2023-10-02', '06:17:54 PM'),
+(48, '3', 'gg', '8', '2023-10-02', '06:18:38 PM'),
+(49, '3', 'lol', '8', '2023-10-02', '06:18:48 PM'),
+(50, '3', 'aws', '8', '2023-10-02', '06:21:01 PM'),
+(51, '3', 'rara', '8', '2023-10-02', '06:21:31 PM'),
+(52, '3', 'aws', '12', '2023-10-02', '06:21:37 PM'),
+(53, '8', 'hey', '10', '2023-10-02', '06:22:50 PM'),
+(54, '8', 'tanga', '3', '2023-10-02', '06:23:01 PM'),
+(55, '3', 'aw', '12', '2023-10-02', '06:40:21 PM'),
+(56, '3', 'maam jaun pay lain ini ija recods?', '8', '2023-10-02', '06:41:51 PM'),
+(57, '8', 'wala raba maam mao rana', '3', '2023-10-02', '06:41:59 PM'),
+(58, '8', 'mag pasa rakan ko maam', '3', '2023-10-02', '06:42:05 PM'),
+(59, '3', 'sigi maam ty', '8', '2023-10-02', '06:42:18 PM'),
+(60, '3', 'awsd', '8', '2023-10-02', '07:00:16 PM'),
+(61, '3', 'oioi', '12', '2023-10-02', '07:37:33 PM'),
+(62, '3', 'hey', '8', '2023-10-02', '08:09:25 PM'),
+(63, '3', 'wew', '8', '2023-10-06', '10:13:55 AM');
 
 -- --------------------------------------------------------
 
@@ -151,7 +190,7 @@ CREATE TABLE `patients` (
   `mname` varchar(255) NOT NULL,
   `lname` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL,
+  `address` text NOT NULL,
   `fclt_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -160,7 +199,7 @@ CREATE TABLE `patients` (
 --
 
 INSERT INTO `patients` (`id`, `fname`, `mname`, `lname`, `contact`, `address`, `fclt_id`) VALUES
-(28, 'asd', 'asdad', 'asd', 'asda', 'asd', 3);
+(28, 'asd', 'asdad', 'asd', 'asdad', 'asd', 3);
 
 -- --------------------------------------------------------
 
@@ -178,7 +217,7 @@ CREATE TABLE `patients_details` (
   `petsa_huling_regla` varchar(255) NOT NULL,
   `kailan_manganganak` varchar(255) NOT NULL,
   `ilang_pagbubuntis` varchar(255) NOT NULL,
-  `patients_id` varchar(255) NOT NULL
+  `patients_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -186,24 +225,7 @@ CREATE TABLE `patients_details` (
 --
 
 INSERT INTO `patients_details` (`patients_details_id`, `petsa_unang_checkup`, `edad`, `timbang`, `taas`, `kalagayan_kalusugan`, `petsa_huling_regla`, `kailan_manganganak`, `ilang_pagbubuntis`, `patients_id`) VALUES
-(1, 'asadd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', '28');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `prenatal`
---
-
-CREATE TABLE `prenatal` (
-  `id` int(11) NOT NULL,
-  `first_checkup` varchar(255) NOT NULL,
-  `weight` varchar(255) NOT NULL,
-  `height` varchar(255) NOT NULL,
-  `health_status` varchar(255) NOT NULL,
-  `last_period` varchar(255) NOT NULL,
-  `date_of_birth` varchar(255) NOT NULL,
-  `pregnancies_count` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(1, 'asda', 'adsada', 'asdd', 'asdad', 'adas', 'asdad', 'asd', 'ads', 28);
 
 -- --------------------------------------------------------
 
@@ -242,12 +264,8 @@ CREATE TABLE `referral_forms` (
 --
 
 INSERT INTO `referral_forms` (`id`, `Name`, `Age`) VALUES
-(158, 'vvv', 'vv'),
-(159, 'Ronald', 'ads'),
-(160, 'asda', 'asda'),
-(161, 'qweqeq', 'qweq'),
-(162, 'asd', 'asda'),
-(163, 'asadw', 'asdawd');
+(166, 'First', '123'),
+(167, 'Second', '123');
 
 -- --------------------------------------------------------
 
@@ -352,13 +370,102 @@ INSERT INTO `referral_notification` (`id`, `message`, `rfrrl_id`, `fclt_id`, `da
 (490, 'Referral Accepted', 160, 3, '2023-09-22', '01:21 PM', 0),
 (491, 'New referral', 161, 8, '2023-09-22', '01:42 PM', 0),
 (492, 'Referral Accepted', 161, 3, '2023-09-22', '04:56 PM', 0),
-(493, 'New referral', 162, 8, '2023-10-07', '03:33 AM', 0),
-(494, 'Referral Accepted', 162, 10, '2023-10-07', '03:34 AM', 0),
-(495, 'Referral Accepted', 162, 3, '2023-10-07', '03:36 AM', 0),
-(496, 'New referral', 163, 8, '2023-10-07', '03:38 AM', 0),
-(497, 'Referral Accepted', 163, 10, '2023-10-07', '03:38 AM', 0),
-(498, 'Referral Declined', 162, 10, '2023-10-07', '03:38 AM', 0),
-(499, 'Referral Accepted', 162, 3, '2023-10-07', '03:39 AM', 0);
+(493, 'Referral Accepted', 158, 3, '2023-10-01', '11:30 AM', 0),
+(494, 'Referral Accepted', 161, 3, '2023-10-01', '11:35 AM', 0),
+(495, 'Referral Accepted', 161, 3, '2023-10-01', '11:36 AM', 0),
+(496, 'Referral Declined', 159, 3, '2023-10-01', '11:38 AM', 0),
+(497, 'New referral', 162, 8, '2023-10-01', '11:41 AM', 0),
+(498, 'New referral', 163, 8, '2023-10-01', '11:41 AM', 0),
+(499, 'New referral', 164, 8, '2023-10-01', '12:12 PM', 0),
+(500, 'Referral Accepted', 164, 3, '2023-10-01', '12:12 PM', 0),
+(501, 'New referral', 165, 8, '2023-10-02', '09:16 PM', 0),
+(502, 'Referral Accepted', 162, 10, '2023-10-02', '09:21 PM', 0),
+(503, 'Referral Accepted', 165, 10, '2023-10-02', '09:32 PM', 0),
+(504, 'Referral Declined', 163, 10, '2023-10-02', '09:33 PM', 0),
+(505, 'Referral Declined', 163, 10, '2023-10-02', '09:34 PM', 0),
+(506, 'Referral Declined', 162, 10, '2023-10-02', '09:37 PM', 0),
+(507, 'Referral Accepted', 162, 3, '2023-10-06', '10:12 AM', 0),
+(508, 'Referral Accepted', 162, 3, '2023-10-06', '10:12 AM', 0),
+(509, 'Referral Accepted', 162, 3, '2023-10-06', '10:13 AM', 0),
+(510, 'Referral Accepted', 165, 10, '2023-10-08', '11:33 AM', 0),
+(511, 'Referral Declined', 163, 10, '2023-10-08', '11:33 AM', 0),
+(512, 'Referral Declined', 163, 10, '2023-10-08', '12:04 PM', 0),
+(513, 'Referral Declined', 163, 10, '2023-10-08', '12:05 PM', 0),
+(514, 'Referral Declined', 163, 10, '2023-10-08', '12:05 PM', 0),
+(515, 'Referral Declined', 163, 10, '2023-10-08', '12:06 PM', 0),
+(516, 'Referral Accepted', 163, 3, '2023-10-08', '12:06 PM', 0),
+(517, 'Referral Declined', 163, 10, '2023-10-08', '12:06 PM', 0),
+(518, 'Referral Declined', 163, 10, '2023-10-08', '12:07 PM', 0),
+(519, 'Referral Declined', 163, 10, '2023-10-08', '12:07 PM', 0),
+(520, 'Referral Declined', 165, 10, '2023-10-08', '12:07 PM', 0),
+(521, 'Referral Declined', 162, 3, '2023-10-08', '12:08 PM', 0),
+(522, 'Referral Accepted', 162, 10, '2023-10-08', '12:37 PM', 0),
+(523, 'Referral Declined', 162, 10, '2023-10-08', '12:37 PM', 0),
+(524, 'Referral Declined', 162, 10, '2023-10-08', '12:45 PM', 0),
+(525, 'Referral Declined', 165, 10, '2023-10-08', '01:02 PM', 0),
+(526, 'Referral Accepted', 162, 10, '2023-10-08', '01:07 PM', 0),
+(527, 'New referral', 166, 2, '2023-10-08', '02:20 PM', 0),
+(528, 'New referral', 167, 2, '2023-10-08', '02:21 PM', 0),
+(529, 'Referral Declined', 166, 3, '2023-10-08', '02:21 PM', 0),
+(530, 'Referral Accepted', 167, 3, '2023-10-08', '02:30 PM', 0),
+(531, 'Referral Accepted', 166, 1, '2023-10-08', '02:38 PM', 0),
+(532, 'Referral Declined', 166, 3, '2023-10-08', '02:44 PM', 0),
+(533, 'Referral Declined', 166, 3, '2023-10-08', '02:44 PM', 0),
+(534, 'Referral Declined', 166, 3, '2023-10-08', '02:48 PM', 0),
+(535, 'Referral Accepted', 166, 3, '2023-10-08', '02:49 PM', 0),
+(536, 'Referral Declined', 166, 3, '2023-10-08', '02:49 PM', 0),
+(537, 'Referral Accepted', 166, 3, '2023-10-08', '02:57 PM', 0),
+(538, 'Referral Declined', 167, 3, '2023-10-08', '02:57 PM', 0),
+(539, 'Referral Declined', 166, 3, '2023-10-08', '02:57 PM', 0),
+(540, 'Referral Declined', 166, 3, '2023-10-08', '02:57 PM', 0),
+(541, 'Referral Declined', 166, 3, '2023-10-08', '03:04 PM', 0),
+(542, 'Referral Declined', 166, 3, '2023-10-08', '03:04 PM', 0),
+(543, 'Referral Declined', 166, 3, '2023-10-08', '03:04 PM', 0),
+(544, 'Referral Declined', 166, 3, '2023-10-08', '03:05 PM', 0),
+(545, 'Referral Declined', 166, 3, '2023-10-08', '03:06 PM', 0),
+(546, 'Referral Declined', 166, 3, '2023-10-08', '03:06 PM', 0),
+(547, 'Referral Declined', 166, 3, '2023-10-08', '03:24 PM', 0),
+(548, 'Referral Declined', 166, 3, '2023-10-08', '03:25 PM', 0),
+(549, 'Referral Declined', 166, 3, '2023-10-08', '03:37 PM', 0),
+(550, 'Referral Declined', 166, 3, '2023-10-08', '03:44 PM', 0),
+(551, 'Referral Declined', 166, 3, '2023-10-08', '03:45 PM', 0),
+(552, 'Referral Declined', 166, 3, '2023-10-08', '03:45 PM', 0),
+(553, 'Referral Declined', 166, 3, '2023-10-08', '03:48 PM', 0),
+(554, 'Referral Declined', 166, 3, '2023-10-08', '03:48 PM', 0),
+(555, 'Referral Declined', 167, 3, '2023-10-08', '04:01 PM', 0),
+(556, 'Referral Declined', 167, 3, '2023-10-08', '04:01 PM', 0),
+(557, 'Referral Declined', 167, 3, '2023-10-08', '04:01 PM', 0),
+(558, 'Referral Declined', 167, 3, '2023-10-08', '04:02 PM', 0),
+(559, 'Referral Declined', 166, 3, '2023-10-08', '04:02 PM', 0),
+(560, 'Referral Declined', 166, 3, '2023-10-08', '04:02 PM', 0),
+(561, 'Referral Declined', 166, 3, '2023-10-08', '04:03 PM', 0),
+(562, 'Referral Declined', 166, 3, '2023-10-08', '04:03 PM', 0),
+(563, 'Referral Declined', 167, 3, '2023-10-08', '04:05 PM', 0),
+(564, 'Referral Declined', 167, 3, '2023-10-08', '04:05 PM', 0),
+(565, 'Referral Declined', 166, 3, '2023-10-08', '04:06 PM', 0),
+(566, 'Referral Declined', 166, 3, '2023-10-08', '04:06 PM', 0),
+(567, 'Referral Declined', 167, 3, '2023-10-08', '04:07 PM', 0),
+(568, 'Referral Declined', 167, 3, '2023-10-08', '04:09 PM', 0),
+(569, 'Referral Declined', 166, 3, '2023-10-08', '04:10 PM', 0),
+(570, 'Referral Declined', 167, 3, '2023-10-08', '04:10 PM', 0),
+(571, 'Referral Declined', 167, 3, '2023-10-08', '04:11 PM', 0),
+(572, 'Referral Declined', 166, 3, '2023-10-08', '04:11 PM', 0),
+(573, 'Referral Declined', 167, 3, '2023-10-08', '04:11 PM', 0),
+(574, 'Referral Declined', 167, 3, '2023-10-08', '04:13 PM', 0),
+(575, 'Referral Declined', 166, 3, '2023-10-08', '04:13 PM', 0),
+(576, 'Referral Declined', 166, 3, '2023-10-08', '04:13 PM', 0),
+(577, 'Referral Declined', 166, 3, '2023-10-08', '04:14 PM', 0),
+(578, 'Referral Declined', 167, 3, '2023-10-08', '04:17 PM', 0),
+(579, 'Referral Declined', 167, 3, '2023-10-08', '04:20 PM', 0),
+(580, 'Referral Declined', 166, 3, '2023-10-08', '04:20 PM', 0),
+(581, 'Referral Declined', 166, 3, '2023-10-08', '04:20 PM', 0),
+(582, 'Referral Accepted', 167, 3, '2023-10-08', '04:20 PM', 0),
+(583, 'Referral Declined', 167, 3, '2023-10-08', '04:20 PM', 0),
+(584, 'Referral Declined', 166, 3, '2023-10-08', '04:21 PM', 0),
+(585, 'Referral Accepted', 167, 3, '2023-10-08', '04:29 PM', 0),
+(586, 'Referral Declined', 167, 3, '2023-10-08', '04:29 PM', 0),
+(587, 'Referral Declined', 166, 3, '2023-10-08', '04:29 PM', 0),
+(588, 'Referral Declined', 167, 3, '2023-10-08', '04:29 PM', 0);
 
 -- --------------------------------------------------------
 
@@ -372,7 +479,7 @@ CREATE TABLE `referral_records` (
   `rfrrl_id` int(11) NOT NULL,
   `date` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL,
-  `referred_hospital` int(11) NOT NULL,
+  `referred_hospital` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -381,8 +488,8 @@ CREATE TABLE `referral_records` (
 --
 
 INSERT INTO `referral_records` (`id`, `fclt_id`, `rfrrl_id`, `date`, `time`, `referred_hospital`, `status`) VALUES
-(156, 8, 162, '2023-10-07', '03:33 AM', 10, 'Accepted'),
-(157, 8, 163, '2023-10-07', '03:38 AM', 10, 'Accepted');
+(160, 2, 166, '2023-10-08', '02:20 PM', '3', 'Pending'),
+(161, 2, 167, '2023-10-08', '02:21 PM', '3', 'Declined');
 
 -- --------------------------------------------------------
 
@@ -404,9 +511,7 @@ CREATE TABLE `referral_transaction` (
 --
 
 INSERT INTO `referral_transaction` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`) VALUES
-(3, 10, 163, 'Accepted', '2023-10-07', '03:38 AM'),
-(4, 10, 162, 'Declined', '2023-10-07', '03:38 AM'),
-(5, 3, 162, 'Accepted', '2023-10-07', '03:39 AM');
+(21, 10, 162, 'Declined', '2023-10-08', '12:45 PM');
 
 -- --------------------------------------------------------
 
@@ -448,7 +553,9 @@ INSERT INTO `second_trimester` (`id`, `check-up`, `patients_id`, `asdada`, `asda
 (28, 'second_checkup', 8, 'wew', 'wew', 'wew'),
 (29, 'first_checkup', 23, 'aw', 'aw', 'aw'),
 (30, 'first_checkup', 19, 'aw', 'aw', 'aw'),
-(31, 'first_checkup', 26, 'asd', 'asd', 'asd');
+(31, 'first_checkup', 26, 'asd', 'asd', 'asd'),
+(32, 'second_checkup', 27, '', '', ''),
+(33, 'first_checkup', 28, 'asd', 'asd', 'asd');
 
 -- --------------------------------------------------------
 
@@ -524,6 +631,12 @@ ALTER TABLE `accepted_referrals`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `declined_referrals`
+--
+ALTER TABLE `declined_referrals`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `facilities`
 --
 ALTER TABLE `facilities`
@@ -552,12 +665,6 @@ ALTER TABLE `patients`
 --
 ALTER TABLE `patients_details`
   ADD PRIMARY KEY (`patients_details_id`);
-
---
--- Indexes for table `prenatal`
---
-ALTER TABLE `prenatal`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `referral_format`
@@ -615,7 +722,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `accepted_referrals`
 --
 ALTER TABLE `accepted_referrals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=324;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=331;
+
+--
+-- AUTO_INCREMENT for table `declined_referrals`
+--
+ALTER TABLE `declined_referrals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `facilities`
@@ -633,7 +746,7 @@ ALTER TABLE `first_trimester`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `patients`
@@ -648,46 +761,40 @@ ALTER TABLE `patients_details`
   MODIFY `patients_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `prenatal`
---
-ALTER TABLE `prenatal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `referral_format`
 --
 ALTER TABLE `referral_format`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- AUTO_INCREMENT for table `referral_forms`
 --
 ALTER TABLE `referral_forms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
 
 --
 -- AUTO_INCREMENT for table `referral_notification`
 --
 ALTER TABLE `referral_notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=500;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=589;
 
 --
 -- AUTO_INCREMENT for table `referral_records`
 --
 ALTER TABLE `referral_records`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT for table `referral_transaction`
 --
 ALTER TABLE `referral_transaction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `second_trimester`
 --
 ALTER TABLE `second_trimester`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `third_trimester`
