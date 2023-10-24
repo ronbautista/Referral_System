@@ -72,34 +72,40 @@ function HospitalPendingReferrals() {
     global $conn, $fclt_id; // Access the existing database connection
 
     // Perform the query to fetch all rows from the "referrals" table
-    $sql = "SELECT referral_forms.*, referral_records.*, f1.*, f2.* FROM referral_forms 
-    INNER JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id 
-    INNER JOIN facilities AS f1 ON f1.fclt_id = referral_records.referred_hospital 
-    INNER JOIN facilities AS f2 ON f2.fclt_id = referral_records.fclt_id 
-    WHERE f1.fclt_type = 'Provincial Hospital' AND referral_records.status = 'Declined'
-    AND referral_records.referred_hospital = $fclt_id";
+    $sql = "SELECT referral_forms.*, referral_records.*, f1.*, f2.*
+    FROM referral_forms
+    INNER JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
+    INNER JOIN facilities AS f1 ON f1.fclt_id = referral_records.referred_hospital
+    INNER JOIN facilities AS f2 ON f2.fclt_id = referral_records.fclt_id
+    WHERE (referral_records.referred_hospital = $fclt_id AND referral_records.status = 'Pending')
+      OR referral_records.status = 'Declined'";
     
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
 
-    // Check if the query was successful
-    if ($result) {
-        // Fetch all rows into an associative array
-        $referrals = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        // Free the result set
-        mysqli_free_result($result);
-
-        // Return the array of referrals
-        return $referrals;
+    if ($stmt === false) {
+        echo "Error preparing the statement: " . mysqli_error($conn);
     } else {
-        // Handle query error (you may choose to log or display an error message)
-        echo "Error executing query: " . mysqli_error($conn);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    
+        // Check if the query was successful
+        if ($result) {
+            // Fetch all rows into an associative array
+            $referrals = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    
+            // Free the result set
+            mysqli_free_result($result);
+    
+            // Return the array of referrals
+            return $referrals;
+        } else {
+            // Handle query error (you may choose to log or display an error message)
+            echo "Error executing query: " . mysqli_error($conn);
+        }
     }
-
+    
     // Return an empty array in case of an error
-    return array();
+    return array();    
 }
 
 
