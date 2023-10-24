@@ -62,3 +62,18 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_PO
     }
 }
 
+function getPatientDetails($conn, $patientID) {
+    $query = "SELECT patients.id, patients_details.* FROM patients LEFT JOIN patients_details ON patients.id = patients_details.patients_id WHERE id = $patientID";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        die('Query failed: ' . mysqli_error($conn));
+    }
+
+    $row = mysqli_fetch_assoc($result);
+
+    // Close the result and return the row
+    mysqli_free_result($result);
+
+    return $row;
+}

@@ -125,7 +125,8 @@ if(isset($_GET['myrecord_rffrl_id'])){
 }
 
 if (isset($_POST['create_referral'])) {
-    // Sanitize and retrieve data from the form fields
+    // Retrieve and sanitize data from the form fields
+    $data = [];
     $data = [];
     foreach ($_POST as $field => $value) {
         if ($field !== 'create_referral' && $field !== 'referred_hospital') {
@@ -135,12 +136,23 @@ if (isset($_POST['create_referral'])) {
 
     $referred_hospital = mysqli_real_escape_string($conn, $_POST['referred_hospital']);
 
+    // Check if the "Name" and "referred_hospital" fields are empty
+    if (empty($data['Name']) && (empty($referred_hospital) || $referred_hospital === '' || $referred_hospital == 'NULL')) {
+        $response = [
+            'status' => 400,
+            'message' => 'The Name and referred hospital fields are required.',
+        ];
+        echo json_encode($response);
+        exit; // Stop further processing
+    }
+
     $columns = implode(', ', array_keys($data));
     $values = "'" . implode("', '", $data) . "'";
-    $sql = "INSERT INTO referral_forms ($columns) VALUES ($values)";
+    $query = "INSERT INTO referral_forms ($columns) VALUES ($values)";
+    $query_run = mysqli_query($conn, $query);
 
     // Execute the query
-    if (mysqli_query($conn, $sql)) {
+    if ($query_run) {
         // Additional actions after successful insertion
         $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral from ' . $fclt_name));
         $new_inserted_id = mysqli_insert_id($conn);
@@ -158,7 +170,7 @@ if (isset($_POST['create_referral'])) {
                           '$fclt_id', '$date', '$time', '0')";
         $notify_query_run = mysqli_query($conn, $notify_query);
 
-        if ($query_another_table_run && $notify_query_run) {
+        if ($query_run && $query_another_table_run && $notify_query_run) {
             // Success message
             $response = [
                 'status' => 200,
@@ -182,6 +194,7 @@ if (isset($_POST['create_referral'])) {
     // Return JSON response to your AJAX request
     echo json_encode($response);
 }
+
 
 
 if (isset($_POST['add_patient'])) {

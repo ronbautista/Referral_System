@@ -77,7 +77,7 @@ function HospitalPendingReferrals() {
     INNER JOIN facilities AS f1 ON f1.fclt_id = referral_records.referred_hospital 
     INNER JOIN facilities AS f2 ON f2.fclt_id = referral_records.fclt_id 
     WHERE f1.fclt_type = 'Provincial Hospital' AND referral_records.status = 'Declined'
-    OR referral_records.referred_hospital = $fclt_id";
+    AND referral_records.referred_hospital = $fclt_id";
     
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_execute($stmt);
@@ -255,7 +255,7 @@ function minireferrals() {
     INNER JOIN referral_forms ON referral_forms.id = referral_transaction.rfrrl_id
     INNER JOIN facilities ON facilities.fclt_id = referral_records.fclt_id
     WHERE referral_transaction.fclt_id = '$fclt_id' OR referral_records.fclt_id = '$fclt_id'
-    LIMIT 5";
+    LIMIT 4";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful

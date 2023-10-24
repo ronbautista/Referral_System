@@ -5,9 +5,15 @@
 include_once 'header.php';
 
 include 'db_conn.php';
+include_once 'includes/prenatal_functions.inc.php';
+
+
 
 if (isset($_GET['id'])) {
   $patientID = $_GET['id'];
+
+$row = getPatientDetails($conn, $patientID);
+$columnNames = ($row) ? array_keys($row) : [];
 
   // Retrieve patient information from the database using the provided ID
   $sql = "SELECT * FROM patients LEFT JOIN patients_details ON patients.id = patients_details.patients_id WHERE patients.id = ?";
@@ -55,64 +61,43 @@ if (isset($_GET['id'])) {
         <div class="card-header">
             Fill the Fields
         </div>
-        <div class="card-body">
+        <div class="card-body" id= "firstSecCard">
             <h5 class="card-title">Special title treatment</h5>
+            <div class="alert alert-warning d-none" id="errorMessage"></div>
+            <div class="alert alert-success d-none" id="successMessage"></div>
             <form id="patients_details">
                 <input type="hidden" name="patient_id" value="<?php echo $patientID; ?>">
                 <div class="row">
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['petsa_unang_checkup'] : ''; ?>"
-                            name="petsa_unang_checkup">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['edad'] : ''; ?>"
-                            name="edad">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['timbang'] : ''; ?>"
-                            name="timbang">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['taas'] : ''; ?>"
-                            name="taas">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['kalagayan_kalusugan'] : ''; ?>"
-                            name="kalagayan_kalusugan">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['petsa_huling_regla'] : ''; ?>"
-                            name="petsa_huling_regla">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['kailan_manganganak'] : ''; ?>"
-                            name="kailan_manganganak">
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="inputEmail4">Petsa ng unang check-up</label>
-                        <input type="text" class="form-control" id="inputEmail4"
-                            value="<?php echo ($row) ? $row['ilang_pagbubuntis'] : ''; ?>"
-                            name="ilang_pagbubuntis">
-                    </div>
+                    <?php
+                    $hasData = false; // Initialize a variable to track if any input field has data
+                    foreach ($columnNames as $columnName) {
+                        if ($columnName != 'patients_id' && $columnName != 'patients_details_id' && $columnName != 'id') {
+                          $label = ucwords(str_replace('_', ' ', $columnName));
+                            $value = ($row ? $row[$columnName] : ''); // Get the input value
+
+                            if (!empty($value)) {
+                                $hasData = true; // Set the flag to true if the input has data
+                            }
+
+                            echo '<div class="col-sm-12 col-md-6 col-lg-4">
+                                <label for="' . $columnName . '">' . $label . '</label>
+                                <input type="text" class="form-control" id="' . $columnName . '"
+                                value ="' . $value . '" name="' . $columnName . '">
+                            </div>';
+                        }
+                    }
+                    ?>
+                </div>
+                <?php
+                if (!$hasData) {
+                    // Only display the submit button if there is no data in the input fields
+                    echo '<button type="submit" class="btn btn-primary" id="submitBtn" name="submit" style="margin-top:20px">Submit</button>';
+                }
+                ?>
+            </form>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary" name="submit" style="margin-top:20px">Submit</button>
-    </form>
-  </div>
-</div>
+
 
 
 <div class="secodSec">

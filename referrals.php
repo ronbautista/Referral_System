@@ -119,6 +119,7 @@ if (isset($_SESSION["first_account"])) {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
     <div class="modal-body">
+    <div class="alert alert-warning d-none" id="errorMessage"></div>
     <form id="createReferral">
     <div class="row">
       <?php 
@@ -142,6 +143,7 @@ if (isset($_SESSION["first_account"])) {
       <div class="col-sm-12 col-md-6 col-lg-3">
       <label>Select Refer Hospital</label>
       <select class="form-select" name="referred_hospital">
+      <option value="NULL"></option>
       <?php 
         $query = "SELECT * FROM facilities";
         $query_run = mysqli_query($conn, $query);

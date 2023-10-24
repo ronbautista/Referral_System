@@ -259,7 +259,10 @@ $(document).on("submit", "#createReferral", function (e) {
       if (res.status == 422) {
         $("#errorMessage").removeClass("d-none");
         $("#errorMessage").text(res.message);
-      } else if (res.status == 200) {
+      } else if (res.status == 400) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }else if (res.status == 200) {
         $("#errorMessage").addClass("d-none");
         $("#staticBackdrop").modal("hide");
         $("#createReferral")[0].reset();
@@ -355,9 +358,10 @@ $(document).on("submit", "#patients_details", function (e) {
         $("#errorMessage").text(res.message);
       } else if (res.status == 200) {
         $("#errorMessage").addClass("d-none");
-        $("#staticBackdrop").modal("hide");
-        console.log(response);
-        $("#addPatient")[0].reset();
+        $("#successMessage").removeClass("d-none");
+        $("#successMessage").text(res.message);
+        console.log("Hiding the submit button");
+        $('#submitBtn').hide();
 
         $("#table").load(location.href + " #table");
       }
@@ -873,12 +877,14 @@ function loadLatestMessage(contactID) {
     xhr.send();
 }
 
+// Update your JavaScript to set the contact name and latest message
 function setLatestMessage(contactID, latestMessage, time) {
     // Find the contact card with the matching contact ID
     var contactCard = document.querySelector(`[data-contact-id="${contactID}"]`);
 
-    // Find the latest message element within the contact card
-    var latestMessageElement = contactCard.querySelector('.description');
+    // Find the "description" and "wews" elements within the contact card
+    var descriptionElement = contactCard.querySelector('.description');
+    var wewsElement = contactCard.querySelector('.wews'); // Change this line to select the "wews" element in the same contact card
 
     // Split the time string to keep only hours, minutes, and AM/PM
     var timeParts = time.split(' '); // Split by space to separate time and AM/PM
@@ -890,9 +896,16 @@ function setLatestMessage(contactID, latestMessage, time) {
     // Create the modified time string with AM/PM
     var modifiedTime = hours + ':' + minutes + ' ' + amPm;
 
-    // Set the latest message text with the modified time
-    latestMessageElement.textContent = latestMessage + ' • ' + modifiedTime;
+    // Set the "description" text with the latest message and modified time
+    descriptionElement.textContent = latestMessage + ' • ' + modifiedTime;
+
+    // Set the "wews" text with the same content as the "description" element
+    wewsElement.textContent = descriptionElement.textContent;
 }
+
+
+
+
 
 function displayFirstContactName() {
     var firstContactName = referralCards[0].getAttribute('data-contact-name');

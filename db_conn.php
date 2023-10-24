@@ -1,13 +1,12 @@
 <?php
 
-$sname ="localhost";
-$unmae="root";
-$password="";
+$servername = "localhost";
+$dBUsername = "root";
+$dBPassword = "";
+$dBName = "referraldb";
 
-$db_name = "referraldb";
-
-$conn = mysqli_connect($sname, $unmae, $password, $db_name);
+$conn = mysqli_connect($servername, $dBUsername, $dBPassword, $dBName);
 
 if(!$conn){
-    echo "Connection failed";
+    die("Connection failed: " . mysqli_connect_error());
 }

@@ -1,7 +1,10 @@
 <?php
 include_once 'header.php';
 include_once 'includes/referral_functions.inc.php';
+include_once 'includes/messages_functions.inc.php';
 $fclt_id = $_SESSION['id'];
+$contacts = contacts();
+$messages = messages();
 
 // Call the function and fetch all the referrals
 $displayreferrals = displayAllReferralsPending();
@@ -167,36 +170,30 @@ if ($result1 && $result2) {
         </div>
       <div class="home-feed">
         <div class="yourDivClass">
-        <div class="referral-card">
-          <div class="mini-referral-logo" id="message-logo">
-            <img src="images/person.png" alt="Logo" class="logo">
-          </div>
+        <div class="contacts">
+            <?php
+            foreach ($contacts as $contact) {
+                $contact_name = $contact['fclt_name'];
+                $contact_id = $contact['fclt_id'];
+
+                // Add your condition here, for example, to skip a specific row:
+                if ($contact_id != $fclt_id) {
+            ?>
+                <div class="referral-card" id="message-contact" data-contact-name="<?php echo $contact_name; ?>" data-contact-id="<?php echo $contact_id; ?>">
+            <div class="mini-referral-logo" id="message-logo">
+                <img src="images/person.png" alt="Logo" class="logo">
+            </div>
             <div class="info">
-                <div class="name">Jezmahboi</div>
-                <div class="description">Ambobo mo tanga • 2:35 PM</div>
+                <div class="name"><?php echo $contact_name; ?></div>
+                <div class="wews" id="wews-<?php echo $contact_id; ?>"></div>
             </div>
             <button class="confirm-button" id="viewbtn">View</button>
         </div>
-        <div class="referral-card">
-          <div class="mini-referral-logo" id="message-logo">
-          <img src="images/person.png" alt="Logo" class="logo">
-          </div>
-            <div class="info">
-                <div class="name">Ronald Bautista</div>
-                <div class="description">I am gay huhu • 5:15 AM</div>
-            </div>
-            <button class="confirm-button" id="viewbtn">View</button>
-        </div>
-        <div class="referral-card">
-          <div class="mini-referral-logo" id="message-logo">
-          <img src="images/person.png" alt="Logo" class="logo">
-          </div>
-            <div class="info">
-                <div class="name">SJ</div>
-                <div class="description">nah ambot • 3:40 AM</div>
-            </div>
-            <button class="confirm-button" id="viewbtn">View</button>
-        </div>
+            <?php
+                }
+            }
+            ?>
+</div>
         </div>
       </div>
     </div>
