@@ -127,7 +127,6 @@ if(isset($_GET['myrecord_rffrl_id'])){
 if (isset($_POST['create_referral'])) {
     // Retrieve and sanitize data from the form fields
     $data = [];
-    $data = [];
     foreach ($_POST as $field => $value) {
         if ($field !== 'create_referral' && $field !== 'referred_hospital') {
             $data[$field] = mysqli_real_escape_string($conn, $value);
@@ -280,6 +279,50 @@ if (isset($_POST['patients_details'])) {
     echo json_encode($responseArray);
 }
 
+if (isset($_POST['edited_patients_details'])) {
+    $patientID = mysqli_real_escape_string($conn, $_POST['patient_id']);
+    $petsa_unang_checkup = mysqli_real_escape_string($conn, $_POST['petsa_unang_checkup']);
+    $edad = mysqli_real_escape_string($conn, $_POST['edad']);
+    $timbang = mysqli_real_escape_string($conn, $_POST['timbang']);
+    $taas = mysqli_real_escape_string($conn, $_POST['taas']);
+    $kalagayan_kalusugan = mysqli_real_escape_string($conn, $_POST['kalagayan_kalusugan']);
+    $petsa_huling_regla = mysqli_real_escape_string($conn, $_POST['petsa_huling_regla']);
+    $kailan_manganganak = mysqli_real_escape_string($conn, $_POST['kailan_manganganak']);
+    $ilang_pagbubuntis = mysqli_real_escape_string($conn, $_POST['ilang_pagbubuntis']);
+
+    $query = "UPDATE patients_details 
+          SET 
+            petsa_unang_checkup = '$petsa_unang_checkup', 
+            edad = '$edad', 
+            timbang = '$timbang', 
+            taas = '$taas', 
+            kalagayan_kalusugan = '$kalagayan_kalusugan', 
+            petsa_huling_regla = '$petsa_huling_regla', 
+            kailan_manganganak = '$kailan_manganganak', 
+            ilang_pagbubuntis = '$ilang_pagbubuntis'
+          WHERE patients_id = '$patientID'";
+
+    $query_run = mysqli_query($conn, $query);
+
+    if ($query_run) {
+        $res = [
+            'status' => 200,
+            'message' => 'Patient edited successfully'
+        ];
+        echo json_encode($res);
+        return false;
+    } else {
+        // At least one query failed
+        $res = [
+            'status' => 500,
+            'message' => 'Patient not edited successfully'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+    header('Content-Type: application/json');
+    echo json_encode($responseArray);
+}
 
 if (isset($_POST['login'])) {
     $uid = mysqli_real_escape_string($conn, $_POST['uid']);
