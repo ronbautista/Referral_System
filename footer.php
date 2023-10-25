@@ -244,6 +244,33 @@ $(document).on("click", ".deleteReferral", function (e) {
   }
 });
 
+$(document).on("click", "#deletePatient", function (e) {
+  e.preventDefault();
+
+  if (confirm("Are you sure you want to delete this patient?")) {
+    var patientID = $(this).val();
+
+    $.ajax({
+      type: "POST",
+      url: "new_function.php",
+      data: {
+        delete_patient: true,
+        patient_id: patientID,
+      },
+      success: function (response) {
+        var res = jQuery.parseJSON(response);
+        if (res.status == 500) {
+          alert(res.message);
+        } else {
+          alert(res.message);
+          $("#table").load(location.href + " #table");
+          $("#fieldForm").load(location.href + " #fieldForm");
+        }
+      },
+    });
+  }
+});
+
 $(document).on("submit", "#createReferral", function (e) {
   e.preventDefault();
 
@@ -495,6 +522,33 @@ $(document).on("click", ".deleteField", function (e) {
   }
 });
 
+$(document).on("click", ".deletePrenatalField", function (e) {
+  e.preventDefault();
+
+  if (confirm("Are you sure you want to delete this field?")) {
+    var field_name = $(this).val();
+
+    $.ajax({
+      type: "POST",
+      url: "new_function.php",
+      data: {
+        delete_prenatal_field: true,
+        field_name: field_name,
+      },
+      success: function (response) {
+        var res = jQuery.parseJSON(response);
+        if (res.status == 500) {
+          alert(res.message);
+        } else {
+          alert(res.message);
+          $("#prenatalFieldTable").load(location.href + " #prenatalFieldTable");
+          $("#fieldForm").load(location.href + " #fieldForm");
+        }
+      },
+    });
+  }
+});
+
 $(document).on("submit", "#addField", function (e) {
   e.preventDefault();
 
@@ -527,6 +581,37 @@ $(document).on("submit", "#addField", function (e) {
   });
 });
 
+$(document).on("submit", "#addPrenatalField", function (e) {
+  e.preventDefault();
+
+  var formData = new FormData(this);
+  formData.append("save_prenatal_field", true);
+
+  $.ajax({
+    type: "POST",
+    url: "new_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if (res.status == 422) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      } else if (res.status == 200) {
+        $("#errorMessage").addClass("d-none");
+        $("#staticBackdrop").modal("hide");
+        $("#addField")[0].reset();
+
+        $("#fieldTable").load(location.href + " #fieldTable");
+        $("#fieldForm").load(location.href + " #fieldForm");
+      } else if (res.status == 300) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }
+    },
+  });
+});
 
 // Code to View Records to Modal
 $(document).on('click', '.viewRecord', function(){

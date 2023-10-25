@@ -38,6 +38,31 @@ if(isset($_POST['delete_field'])){
     }
 }
 
+if(isset($_POST['delete_prenatal_field'])){
+    $field_name = mysqli_real_escape_string($conn, $_POST['field_name']);
+
+    $query = "ALTER TABLE patients_details DROP COLUMN $field_name";
+    $query_run = mysqli_query($conn, $query);
+
+    if($query_run ){
+        
+        $res = [
+            'status' => 200,
+            'message' => 'Field deleted successfully'
+        ];
+        echo json_encode($res);
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'Field Deleted from ' . $field_name));
+        return false;
+    }else{
+        $res = [
+            'status' => 500,
+            'message' => 'Field not deleted'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+}
+
 if(isset($_POST['delete_referral'])){
     $referral_id = mysqli_real_escape_string($conn, $_POST['referral_id']);
 
@@ -48,6 +73,31 @@ if(isset($_POST['delete_referral'])){
     $second_query_run = mysqli_query($conn, $query);
 
     if($query_run && $second_query_run){
+        
+        $res = [
+            'status' => 200,
+            'message' => 'Field deleted successfully'
+        ];
+        echo json_encode($res);
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'Referral Deleted from ' . $fclt_name));
+        return false;
+    }else{
+        $res = [
+            'status' => 500,
+            'message' => 'Field not deleted'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+}
+
+if(isset($_POST['delete_patient'])){
+    $patient_id = mysqli_real_escape_string($conn, $_POST['patient_id']);
+
+    $query = "DELETE FROM patients WHERE id='$patient_id'";
+    $query_run = mysqli_query($conn, $query);
+
+    if($query_run){
         
         $res = [
             'status' => 200,
@@ -443,6 +493,56 @@ if (isset($_POST['save_field'])) {
     }
 }
 
+if (isset($_POST['save_prenatal_field'])) {
+    $field = mysqli_real_escape_string($conn, $_POST['field_name']);
+
+    $field = str_replace(' ', '_', $field);
+
+    if ($field == NULL) {
+        $res = [
+            'status' => 422,
+            'message' => 'Field is mandatory'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+
+    if (!preg_match('/^\d+$/', $field)) {
+
+        // Execute the second query
+        $query = "ALTER TABLE patients_details ADD $field varchar(255)";
+        $query_run = mysqli_query($conn, $query);
+
+        
+    } else {
+        $res = [
+            'status' => 300,
+            'message' => 'Invalid Field Name'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+
+    if ($query_run) {
+        // Both queries executed successfully
+        $res = [
+            'status' => 200,
+            'message' => 'Both queries executed successfully',
+            'field_name' => $field
+        ];
+        echo json_encode($res);
+        return false;
+    } else {
+        // At least one query failed
+        $res = [
+            'status' => 500,
+            'message' => 'One or both queries failed'
+        ];
+        echo json_encode($res);
+
+        return false;
+    }
+}
 
 if (isset($_POST['accept_referral'])) {
     $rfrrl_id = mysqli_real_escape_string($conn, $_POST['rffrl_id']);

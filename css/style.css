@@ -660,3 +660,8 @@ label{
 .datepicker .datepicker-days{
   padding: 10px;
 }
+.table-condensed{
+  font-size: 0.8rem;
+  height: 200px;
+  width: 340px;
+}

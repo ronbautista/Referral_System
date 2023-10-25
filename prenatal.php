@@ -76,7 +76,10 @@ $patients = getAllPatients();
             echo "<th scope='row'>" . ($key + 1) . "</th>";
             echo "<td>$lname, $fname $mname</td>";
             echo "<td>$address</td>";
-            echo '<td><a class="btn btn-primary" href="add_prenatal.php?id='.$id.'" role="button">View</a></td>';
+            echo '<td>
+            <a class="btn btn-primary" href="add_prenatal.php?id='.$id.'" role="button">View</a>
+            <button type="button" class="btn btn-primary" value="'.$id.'" id= "deletePatient">Delete</button>
+            </td>';
             // Add more table cells for other patient details if needed
             echo "</tr>";
         }

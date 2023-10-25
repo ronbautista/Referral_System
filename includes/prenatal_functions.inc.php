@@ -77,3 +77,29 @@ function getPatientDetails($conn, $patientID) {
 
     return $row;
 }
+
+function prenatal_format() {
+    global $conn; // Access the existing database connection
+
+    // Perform the query to fetch the column information from the "patients_details" table
+    $sql = "SHOW COLUMNS FROM patients_details";
+    $result = mysqli_query($conn, $sql);
+
+    // Check if the query was successful
+    if ($result) {
+        // Fetch all rows into an associative array
+        $referrals = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        // Free the result set
+        mysqli_free_result($result);
+
+        // Return the array of column information
+        return $referrals;
+    } else {
+        // Handle query error (you may choose to log or display an error message)
+        echo "Error executing query: " . mysqli_error($conn);
+    }
+
+    // Return an empty array in case of an error
+    return array();
+}
