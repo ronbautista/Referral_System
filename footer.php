@@ -455,6 +455,17 @@ $(document).ready(function () {
         datepickerInput.datepicker('remove');
         initializeDatePicker();
     });
+    
+    $(document).on("click", "#editBtnSave", function (e) {
+    e.preventDefault();
+
+    // Add the 'readonly' attribute to the datepicker input field
+    datepickerInput.attr('readonly', 'readonly');
+    
+    // Destroy the date picker
+    datepickerInput.datepicker('destroy');
+});
+
 });
 
 $(document).on("click", ".deleteField", function (e) {

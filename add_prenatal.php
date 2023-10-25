@@ -121,12 +121,6 @@ $columnNames = ($row) ? array_keys($row) : [];
         </div>
     </div>
 
-    <script>
-
-
-</script>
-
-
 <div class="secodSec">
 <h3>Karanasan sa mga Naunang Pagbubuntis at Panganganak</h3>
 <div class="card">
