@@ -332,44 +332,51 @@ $(document).on("submit", "#addPatient", function (e) {
   });
 });
 
-$(document).on("submit", "#patients_details", function (e) {
-  e.preventDefault();
+$(document).on("click", "#submitBtn", function (e) {
+    e.preventDefault();
 
-  // Get the patient ID from the hidden input field
-  var patientID = $("input[name='patient_id']").val();
+    // Get the patient ID from the hidden input field
+    var patientID = $("input[name='patient_id']").val();
 
-  var formData = new FormData(this);
-  formData.append("patients_details", true);
+    var formData = new FormData($("#patients_details")[0]); // Use the form's ID to get the form data
 
-  // Add the patient ID to the formData
-  formData.append("patient_id", patientID);
+    formData.append("patients_details", true);
 
-  $.ajax({
-    type: "POST",
-    url: "new_function.php",
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      var res = jQuery.parseJSON(response);
-      if (res.status == 422) {
-        console.log(res); // Log the response for debugging
-        $("#errorMessage").removeClass("d-none");
-        $("#errorMessage").text(res.message);
-      } else if (res.status == 200) {
-        $("#errorMessage").addClass("d-none");
-        $("#successMessage").removeClass("d-none");
-        $("#successMessage").text(res.message);
-        console.log("Hiding the submit button");
-        $('#submitBtn').hide();
+    // Add the patient ID to the formData
+    formData.append("patient_id", patientID);
 
-        $("#table").load(location.href + " #table");
-      }
-    },
-  });
+    $.ajax({
+        type: "POST",
+        url: "new_function.php",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 422) {
+                console.log(res); // Log the response for debugging
+                $("#errorMessage").removeClass("d-none");
+                $("#errorMessage").text(res.message);
+            } else if (res.status == 200) {
+                $("#errorMessage").addClass("d-none");
+                $("#successMessage").removeClass("d-none");
+                $("#successMessage").text(res.message);
+                $('#submitBtn').hide(); // Hide the "Submit" button
+                $('#editBtn').show();
+
+                // Set readonly attribute for all input fields
+                $('input.form-control').attr('readonly', true);
+            }
+        },
+    });
 });
 
+$(document).on("click", "#editBtn", function (e) {
+    e.preventDefault();
 
+    // Remove readonly attribute from all input fields
+    $('input.form-control').removeAttr('readonly');
+});
 
 $(document).on("click", ".deleteField", function (e) {
   e.preventDefault();

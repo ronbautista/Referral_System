@@ -68,30 +68,36 @@ $columnNames = ($row) ? array_keys($row) : [];
             <form id="patients_details">
                 <input type="hidden" name="patient_id" value="<?php echo $patientID; ?>">
                 <div class="row">
-                    <?php
-                    $hasData = false; // Initialize a variable to track if any input field has data
-                    foreach ($columnNames as $columnName) {
-                        if ($columnName != 'patients_id' && $columnName != 'patients_details_id' && $columnName != 'id') {
-                          $label = ucwords(str_replace('_', ' ', $columnName));
-                            $value = ($row ? $row[$columnName] : ''); // Get the input value
+                <?php
+                $hasData = false; // Initialize a variable to track if any input field has data
 
-                            if (!empty($value)) {
-                                $hasData = true; // Set the flag to true if the input has data
-                            }
+                foreach ($columnNames as $columnName) {
+                    if ($columnName != 'patients_id' && $columnName != 'patients_details_id' && $columnName != 'id') {
+                        $label = ucwords(str_replace('_', ' ', $columnName));
+                        $value = ($row ? $row[$columnName] : ''); // Get the input value
 
-                            echo '<div class="col-sm-12 col-md-6 col-lg-4">
-                                <label for="' . $columnName . '">' . $label . '</label>
-                                <input type="text" class="form-control" id="' . $columnName . '"
-                                value ="' . $value . '" name="' . $columnName . '">
-                            </div>';
+                        if (!empty($value)) {
+                            $hasData = true; // Set the flag to true if the input has data
                         }
+
+                        $readonly = $hasData ? 'readonly' : ''; // Determine whether to add the "readonly" attribute
+
+                        echo '<div class="col-sm-12 col-md-6 col-lg-4">
+                            <label for="' . $columnName . '">' . $label . '</label>
+                            <input type="text" class="form-control" id="' . $columnName . '"
+                            value="' . $value . '" name="' . $columnName . '" ' . $readonly . '>
+                        </div>';
                     }
-                    ?>
+                }
+                ?>
                 </div>
                 <?php
                 if (!$hasData) {
                     // Only display the submit button if there is no data in the input fields
                     echo '<button type="submit" class="btn btn-primary" id="submitBtn" name="submit" style="margin-top:20px">Submit</button>';
+                    echo '<button class="btn btn-primary" id="editBtn" style="margin-top:20px; display:none">Edit</button>';
+                }else{
+                  echo '<button class="btn btn-primary" id="editBtn" style="margin-top:20px">Edit</button>';
                 }
                 ?>
             </form>
