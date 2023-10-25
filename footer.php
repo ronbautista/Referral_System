@@ -20,6 +20,9 @@
 <!-- Include Pusher JavaScript -->
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
+<!-- Include Bootstrap-datepicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
 
 
 <script>
@@ -366,6 +369,8 @@ $(document).on("click", "#submitBtn", function (e) {
 
                 // Set readonly attribute for all input fields
                 $('input.form-control').attr('readonly', true);
+
+                $('#datepicker').attr('readonly', true);
             }
         },
     });
@@ -378,6 +383,9 @@ $(document).on("click", "#editBtn", function (e) {
     $('input.form-control').removeAttr('readonly');
     $('#editBtnSave').show(); // Hide the "Submit" button
     $('#editBtn').hide();
+
+    // Remove readonly attribute specifically from the datepicker input field
+    $('#datepicker').removeAttr('readonly');
 });
 
 $(document).on("click", "#editBtnSave", function (e) {
@@ -414,9 +422,38 @@ $(document).on("click", "#editBtnSave", function (e) {
                 $('#editBtn').show();
 
                 // Set readonly attribute for all input fields
-                $('input.form-control').attr('readonly', true);
+               $('input.form-control').prop('readonly', true);
+               $('#datepicker').prop('readonly', true);
             }
         },
+    });
+});
+
+$(document).ready(function () {
+    var datepickerInput = $('#datepicker');
+    
+    // Function to initialize the date picker
+    function initializeDatePicker() {
+        datepickerInput.datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+    }
+
+    if (!datepickerInput.prop('readonly')) {
+        initializeDatePicker();
+    }
+
+    // Add a click event to the "editBtn" to reinitialize the date picker
+    $(document).on("click", "#editBtn", function (e) {
+        e.preventDefault();
+
+        // Remove readonly attribute specifically from the datepicker input field
+        datepickerInput.removeAttr('readonly');
+        
+        // Destroy and reinitialize the date picker
+        datepickerInput.datepicker('remove');
+        initializeDatePicker();
     });
 });
 

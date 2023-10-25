@@ -1,5 +1,7 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Bootstrap-datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 </head>
 <?php
 include_once 'header.php';
@@ -68,28 +70,41 @@ $columnNames = ($row) ? array_keys($row) : [];
             <form id="patients_details">
                 <input type="hidden" name="patient_id" value="<?php echo $patientID; ?>">
                 <div class="row">
-            <?php
-            $hasData = false;
+                <?php
+                $hasData = false;
 
-            foreach ($columnNames as $columnName) {
-                if ($columnName != 'patients_id' && $columnName != 'patients_details_id' && $columnName != 'id') {
-                    $label = ucwords(str_replace('_', ' ', $columnName));
-                    $value = ($row ? $row[$columnName] : '');
+                foreach ($columnNames as $columnName) {
+                    if ($columnName != 'patients_id' && $columnName != 'patients_details_id' && $columnName != 'id') {
+                        $label = ucwords(str_replace('_', ' ', $columnName));
+                        $value = ($row ? $row[$columnName] : '');
 
-                    if (!empty($value)) {
-                        $hasData = true;
-                    }
+                        if (!empty($value)) {
+                            $hasData = true;
+                        }
 
-                    $readonly = $hasData ? 'readonly' : '';
+                        $readonly = $hasData ? 'readonly' : '';
 
-                    echo '<div class="col-sm-12 col-md-6 col-lg-4">
-                        <label for="' . $columnName . '">' . $label . '</label>
-                        <input type="text" class="form-control" id="' . $columnName . '"
-                        value="' . $value . '" name="' . $columnName . '" ' . $readonly . '>
-                    </div>';
-                }
-            }
-            ?>
+                        // Check if $columnName is 'petsa'
+                        if ($columnName == 'petsa_unang_checkup') {
+                            echo '<div class="form-group col-sm-12 col-md-6 col-lg-4">
+                            <label for="datepicker">' . $label . '</label>
+                                <div class="input-group">
+                                    <input type="text" id="datepicker" class="form-control" 
+                                    value="' . $value . '" name="' . $columnName . '" ' . $readonly . '>
+                                </div>
+                            </div>';
+                            continue; // Skip the rest of the loop for this column
+                        }
+
+                        echo '<div class="col-sm-12 col-md-6 col-lg-4">
+                            <label for="' . $columnName . '">' . $label . '</label>
+                            <input type="text" class="form-control" id="' . $columnName . '"
+                            value="' . $value . '" name="' . $columnName . '" ' . $readonly . '>
+                        </div>';
+                          }
+                      }
+                      ?>
+
                 </div>
                 <?php
                 if (!$hasData) {
@@ -106,6 +121,10 @@ $columnNames = ($row) ? array_keys($row) : [];
         </div>
     </div>
 
+    <script>
+
+
+</script>
 
 
 <div class="secodSec">

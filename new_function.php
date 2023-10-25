@@ -281,26 +281,28 @@ if (isset($_POST['patients_details'])) {
 
 if (isset($_POST['edited_patients_details'])) {
     $patientID = mysqli_real_escape_string($conn, $_POST['patient_id']);
-    $petsa_unang_checkup = mysqli_real_escape_string($conn, $_POST['petsa_unang_checkup']);
-    $edad = mysqli_real_escape_string($conn, $_POST['edad']);
-    $timbang = mysqli_real_escape_string($conn, $_POST['timbang']);
-    $taas = mysqli_real_escape_string($conn, $_POST['taas']);
-    $kalagayan_kalusugan = mysqli_real_escape_string($conn, $_POST['kalagayan_kalusugan']);
-    $petsa_huling_regla = mysqli_real_escape_string($conn, $_POST['petsa_huling_regla']);
-    $kailan_manganganak = mysqli_real_escape_string($conn, $_POST['kailan_manganganak']);
-    $ilang_pagbubuntis = mysqli_real_escape_string($conn, $_POST['ilang_pagbubuntis']);
+    $data = [];
 
+    // Loop through the posted data and sanitize it
+    foreach ($_POST as $columnName => $value) {
+        if ($columnName !== 'edited_patients_details' && $columnName !== 'patient_id') {
+            $data[$columnName] = mysqli_real_escape_string($conn, $value);
+        }
+    }
+
+    $setClauses = [];
+
+    // Construct the SET clause for the SQL query
+    foreach ($data as $columnName => $value) {
+        $setClauses[] = "$columnName = '$value'";
+    }
+
+    $setClause = implode(', ', $setClauses);
+
+    // Construct the SQL query for the UPDATE statement
     $query = "UPDATE patients_details 
-          SET 
-            petsa_unang_checkup = '$petsa_unang_checkup', 
-            edad = '$edad', 
-            timbang = '$timbang', 
-            taas = '$taas', 
-            kalagayan_kalusugan = '$kalagayan_kalusugan', 
-            petsa_huling_regla = '$petsa_huling_regla', 
-            kailan_manganganak = '$kailan_manganganak', 
-            ilang_pagbubuntis = '$ilang_pagbubuntis'
-          WHERE patients_id = '$patientID'";
+              SET $setClause
+              WHERE patients_id = '$patientID'";
 
     $query_run = mysqli_query($conn, $query);
 
