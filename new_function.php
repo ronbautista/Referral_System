@@ -285,28 +285,19 @@ if (isset($_POST['add_patient'])) {
 }
 
 if (isset($_POST['patients_details'])) {
-    $patientID = mysqli_real_escape_string($conn, $_POST['patient_id']);
-    $petsa_unang_checkup = mysqli_real_escape_string($conn, $_POST['petsa_unang_checkup']);
-    $edad = mysqli_real_escape_string($conn, $_POST['edad']);
-    $timbang = mysqli_real_escape_string($conn, $_POST['timbang']);
-    $taas = mysqli_real_escape_string($conn, $_POST['taas']);
-    $kalagayan_kalusugan = mysqli_real_escape_string($conn, $_POST['kalagayan_kalusugan']);
-    $petsa_huling_regla = mysqli_real_escape_string($conn, $_POST['petsa_huling_regla']);
-    $kailan_manganganak = mysqli_real_escape_string($conn, $_POST['kailan_manganganak']);
-    $ilang_pagbubuntis = mysqli_real_escape_string($conn, $_POST['ilang_pagbubuntis']);
+    $data = [];
 
-    if ($patientID == NULL || $petsa_unang_checkup == NULL || $edad == NULL) {
-        $res = [
-            'status' => 422,
-            'message' => 'Fields are mandatory'
-        ];
-        echo json_encode($res);
-        return false;
+    foreach ($_POST as $field => $value) {
+        if ($field !== 'patients_details') { // Exclude the patient_id field
+            $data[$field] = mysqli_real_escape_string($conn, $value);
+        }
     }
 
-    $query = "INSERT INTO patients_details (patients_id, petsa_unang_checkup, edad, timbang, taas, kalagayan_kalusugan, petsa_huling_regla, kailan_manganganak, ilang_pagbubuntis)
-                VALUES ('$patientID', '$petsa_unang_checkup', '$edad', '$timbang', '$taas', '$kalagayan_kalusugan', '$petsa_huling_regla', '$kailan_manganganak', '$ilang_pagbubuntis')";
-
+    // Build the SQL query dynamically
+    $columns = implode(', ', array_keys($data));
+    $values = "'" . implode("', '", $data) . "'";
+    $query = "INSERT INTO patients_details ($columns) VALUES ($values)";
+    
     $query_run = mysqli_query($conn, $query);
 
     if ($query_run) {
@@ -315,27 +306,26 @@ if (isset($_POST['patients_details'])) {
             'message' => 'Patient added successfully'
         ];
         echo json_encode($res);
-        return false;
+        return;
     } else {
-        // At least one query failed
+        // Query execution failed
         $res = [
             'status' => 500,
             'message' => 'Patient not created successfully'
         ];
         echo json_encode($res);
-        return false;
+        return;
     }
-    header('Content-Type: application/json');
-    echo json_encode($responseArray);
 }
 
+
 if (isset($_POST['edited_patients_details'])) {
-    $patientID = mysqli_real_escape_string($conn, $_POST['patient_id']);
+    $patientID = mysqli_real_escape_string($conn, $_POST['patients_id']);
     $data = [];
 
     // Loop through the posted data and sanitize it
     foreach ($_POST as $columnName => $value) {
-        if ($columnName !== 'edited_patients_details' && $columnName !== 'patient_id') {
+        if ($columnName !== 'edited_patients_details' && $columnName !== 'patients_id') {
             $data[$columnName] = mysqli_real_escape_string($conn, $value);
         }
     }
@@ -495,52 +485,53 @@ if (isset($_POST['save_field'])) {
 
 if (isset($_POST['save_prenatal_field'])) {
     $field = mysqli_real_escape_string($conn, $_POST['field_name']);
-
+    $field = preg_replace('/\s+/', ' ', $field); // Replace multiple spaces with one space
     $field = str_replace(' ', '_', $field);
+    $field = strtolower($field); // Convert the field name to lowercase
 
-    if ($field == NULL) {
+    if (empty($field)) {
         $res = [
             'status' => 422,
             'message' => 'Field is mandatory'
         ];
         echo json_encode($res);
-        return false;
-    }
-
-    if (!preg_match('/^\d+$/', $field)) {
-
-        // Execute the second query
-        $query = "ALTER TABLE patients_details ADD $field varchar(255)";
-        $query_run = mysqli_query($conn, $query);
-
-        
-    } else {
+    } elseif (!preg_match('/^\w+$/', $field)) { // Use \w+ to allow letters, numbers, and underscores
         $res = [
             'status' => 300,
             'message' => 'Invalid Field Name'
         ];
         echo json_encode($res);
-        return false;
-    }
-
-    if ($query_run) {
-        // Both queries executed successfully
-        $res = [
-            'status' => 200,
-            'message' => 'Both queries executed successfully',
-            'field_name' => $field
-        ];
-        echo json_encode($res);
-        return false;
     } else {
-        // At least one query failed
-        $res = [
-            'status' => 500,
-            'message' => 'One or both queries failed'
-        ];
-        echo json_encode($res);
+        // Check if the field already exists in the table
+        $checkQuery = "SHOW COLUMNS FROM patients_details LIKE '$field'";
+        $checkResult = mysqli_query($conn, $checkQuery);
 
-        return false;
+        if (mysqli_num_rows($checkResult) == 0) {
+            // Field doesn't exist, so add it
+            $query = "ALTER TABLE patients_details ADD $field varchar(255)";
+            $query_run = mysqli_query($conn, $query);
+
+            if ($query_run) {
+                $res = [
+                    'status' => 200,
+                    'message' => 'Field added successfully',
+                    'field_name' => $field
+                ];
+                echo json_encode($res);
+            } else {
+                $res = [
+                    'status' => 500,
+                    'message' => 'Failed to add the field'
+                ];
+                echo json_encode($res);
+            }
+        } else {
+            $res = [
+                'status' => 300,
+                'message' => 'Field already exists'
+            ];
+            echo json_encode($res);
+        }
     }
 }
 
@@ -594,7 +585,7 @@ if (isset($_POST['accept_referral'])) {
 
 if (isset($_POST['decline_referral'])) {
     $rfrrl_id = mysqli_real_escape_string($conn, $_POST['rffrl_id']);
-    $reason = mysqli_real_escape_string($conn, $_POST['reason']); // Access the 'reason' field using $_POST
+    $reason = mysqli_real_escape_string($conn, $_POST['reason']);
 
     if ($rfrrl_id == NULL || $reason == NULL) {
         $res = [

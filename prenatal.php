@@ -9,35 +9,41 @@ $patients = getAllPatients();
 
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="staticBackdropLabel">Patient's Information</h2>
+        <h3 class="modal-title" id="staticBackdropLabel">Patient's Information</h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
       <div class="modal-body">
 <form id="addPatient">
-<div class="alert alert-warning d-none" id="errorMessage"></div>
+
   <div class="mb-3">
-    <input class="form-control" type="text" name="fname" placeholder="First Name">
+    <label for="fname">First Name</label>
+    <input class="form-control" type="text" name="fname" id="fname" placeholder="First Name">
   </div>
   <div class="mb-3">
-    <input class="form-control" type="text" name="mname" placeholder="Middle Name">
+  <label for="mname">Middle Name</label>
+    <input class="form-control" type="text" name="mname" id="mname" placeholder="Middle Name">
   </div>
   <div class="mb-3">
-    <input class="form-control" type="text" name="lname" placeholder="last Name">
+  <label for="lname">Last Name</label>
+    <input class="form-control" type="text" name="lname"  id="lname" placeholder="last Name">
   </div>
   <div class="mb-3">
-    <input class="form-control" type="tex" name="contactNum" placeholder="Contact Number">
+  <label for="contactNum">Contact Number</label>
+    <input class="form-control" type="tex" name="contactNum" id="contactNum" placeholder="Contact Number">
   </div>
   <div class="mb-3">
-    <input class="form-control" type="tex" name="address" placeholder="Address">
+  <label for="address">Address</label>
+    <input class="form-control" type="tex" name="address" id="address" placeholder="Address">
   </div>
+  <div class="alert alert-danger d-none" id="errorMessage"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn2" name="submit">Add Prenatal</button>
+        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name="submit">Add Prenatal</button>
       </div>
 </form>
     </div>
@@ -48,7 +54,7 @@ $patients = getAllPatients();
 <div class="feed">
 <div class="head">
 <h2 class="left-heading mb-4">Prenatal List</h2>
-<button type="button" class="right-button btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Prenatal</button>
+<button type="button" class="right-button btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Prenatal</button>
 
 </div>
          <!-- Card Content  -->

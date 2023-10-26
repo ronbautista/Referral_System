@@ -12,7 +12,7 @@ $getreferral = getAllReferrals();
 <?php 
 if (isset($_SESSION["first_account"])) {
     if ($_SESSION["facility"] == 'Birthing Home' || $_SESSION["facility"] == 'Provincial Hospital') {
-        echo '<button type="button" class="right-button btn " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Create Referral</button>';
+        echo '<button type="button" class="right-button btn btn-primary " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Create Referral</button>';
     }
 }
 ?>
@@ -70,7 +70,7 @@ if (isset($_SESSION["first_account"])) {
 
     
     <!-- Form Content  -->
-    <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -94,7 +94,7 @@ if (isset($_SESSION["first_account"])) {
             ?>
                     <div class="col-sm-12 col-md-6 col-lg-3">
                         <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
-                        <input type="text" disabled readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
+                        <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
                     </div>
             <?php
                 }
@@ -104,14 +104,14 @@ if (isset($_SESSION["first_account"])) {
         </div>
             </div>
             <div class="modal-footer">
-        <button type="button" data-bs-dismiss="modal" class="btn btn2">Close</button>
+        <button type="button" data-bs-dismiss="modal" class="btn close">Close</button>
     </div>
     </form>
         </div>
         </div>
         </div>
 
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -119,7 +119,7 @@ if (isset($_SESSION["first_account"])) {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
     <div class="modal-body">
-    <div class="alert alert-warning d-none" id="errorMessage"></div>
+    <div class="alert alert-danger d-none" id="errorMessage"></div>
     <form id="createReferral">
     <div class="row">
       <?php 
@@ -161,8 +161,8 @@ if (isset($_SESSION["first_account"])) {
         </div>
     </div>
     <div class="modal-footer">
-    <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-      <button type="submit" class="btn btn2">Create</button>
+    <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary">Create</button>
     </div>
     </div>
     </form>

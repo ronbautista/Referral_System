@@ -41,28 +41,28 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
               ?>
 	        <ul class="list-unstyled components mb-5">
           <li>
-              <a href="index.php" class="sidebarbtn" id="home-link">
-              <i class="fi fi-ss-home"></i><span class="sidebar-label">Home</span>
-              </a>
-            </li>
+            <a href="index.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : ''; ?>" id="home-link">
+                <i class="fi fi-ss-home"></i><span class="sidebar-label">Home</span>
+            </a>
+        </li>
+
             <?php 
             if (isset($_SESSION["first_account"])) {
-                if ($_SESSION["facility"] == 'Birthing Home' ) {
-                    echo '<li>
-                    <a href="referrals.php"class="sidebarbtn" id="referrals-link">
+              if ($_SESSION["facility"] == 'Birthing Home') {
+                echo '<li>
+                <a href="referrals.php" class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'referrals.php' ? 'active' : '') . '" id="referrals-link">
                     <i class="fi fi-sr-document"></i><span class="sidebar-label">Referrals</span>
-                    </a
-                    >
-                  </li>';
-                }else if ($_SESSION["facility"] == 'Hospital' || $_SESSION["facility"] == 'Provincial Hospital') {
-                  echo '<li>
-                  <a href="new_referrals.php"class="sidebarbtn" id="new-referrals-link">
-                  <i class="fi fi-sr-document"></i><span class="sidebar-label">New Referrals</span>
-                  </a
-                  >
-                </li>
+                </a>
+                </li>';
+            }else if ($_SESSION["facility"] == 'Hospital' || $_SESSION["facility"] == 'Provincial Hospital') {
+                  echo '
+                  <li>
+                  <a href="new_referrals.php" class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'new_referrals.php' ? 'active' : '') . '" id="new-referrals-link">
+                      <i class="fi fi-sr-document"></i><span class="sidebar-label">New Referrals</span>
+                  </a>
+                    </li>
                 <li>
-                  <a href="accepted_referrals.php"class="sidebarbtn"id="accepted-referrals-link">
+                  <a href="accepted_referrals.php"class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'accepted_referrals.php' ? 'active' : '') . '" id="accepted-referrals-link">
                   <i class="fi fi-sr-vote-yea"></i><span class="sidebar-label">Referral Transactions</span>
                   </a
                   >
@@ -74,13 +74,13 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
             }
             ?>
             <li>
-              <a href="messages.php" class="sidebarbtn" id="messages-link">
+              <a href="messages.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'messages.php' ? 'active' : ''; ?>" id="messages-link">
               <i class="fi fi-sr-envelope"></i><span class="sidebar-label">Messages</span>
               </a
               >
             </li>
               <li>
-                <a href="prenatal.php" class="sidebarbtn" id="prenatal-link">
+                <a href="prenatal.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'prenatal.php' ? 'active' : ''; ?>" id="prenatal-link">
                 <i class="fi fi-ss-users"></i><span class="sidebar-label">Prenatal</span></a
                 >
               </li>
@@ -88,7 +88,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
               if (isset($_SESSION["second_account"])) {
                   if ($_SESSION["usersrole"] == 'Admin') {
                       echo '<li>
-                      <a href="settings.php" class="sidebarbtn" id="settings-link"
+                      <a href="settings.php" class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'settings.php' ? 'active' : '') . '" id="settings-link"
                         ><i class="fi fi-sr-settings"></i>Settings</a
                       >
                     </li>';
@@ -103,9 +103,6 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
               </li>
               </div>
             </ul>
-
-
-
           </div>
         </nav>
 
@@ -193,7 +190,3 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
     </div>
   </div>
 </div>
-
-
-
-

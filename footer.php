@@ -52,29 +52,6 @@
     window.addEventListener('load', checkScreenWidth);
     window.addEventListener('resize', checkScreenWidth);
 
-$(document).ready(function () {
-    // Check if a stored active link exists in local storage
-    var activeLink = localStorage.getItem('activeLink');
-
-    // Set the "active" class on the stored active link
-    if (activeLink) {
-        $(".sidebarbtn[href='" + activeLink + "']").addClass("active");
-    }
-
-    // Add click event listeners to your sidebar links
-    $(".sidebarbtn").click(function () {
-        // Remove the "active" class from all list items
-        $(".sidebarbtn").removeClass("active");
-
-        // Add the "active" class to the clicked button
-        $(this).addClass("active");
-
-        // Store the clicked link in local storage
-        localStorage.setItem('activeLink', $(this).attr('href'));
-    });
-});
-
-
 
 var secondAccountEmpty = <?php echo $secondAccountEmpty ? 'true' : 'false'; ?>;
 
@@ -366,14 +343,14 @@ $(document).on("click", "#submitBtn", function (e) {
     e.preventDefault();
 
     // Get the patient ID from the hidden input field
-    var patientID = $("input[name='patient_id']").val();
+    var patientID = $("input[name='patients_id']").val();
 
     var formData = new FormData($("#patients_details")[0]); // Use the form's ID to get the form data
 
     formData.append("patients_details", true);
 
     // Add the patient ID to the formData
-    formData.append("patient_id", patientID);
+    formData.append("patients_id", patientID);
 
     $.ajax({
         type: "POST",
@@ -410,6 +387,8 @@ $(document).on("click", "#editBtn", function (e) {
     $('input.form-control').removeAttr('readonly');
     $('#editBtnSave').show(); // Hide the "Submit" button
     $('#editBtn').hide();
+    $("#errorMessage").addClass("d-none");
+    $("#successMessage").addClass("d-none");
 
     // Remove readonly attribute specifically from the datepicker input field
     $('#datepicker').removeAttr('readonly');
@@ -419,14 +398,14 @@ $(document).on("click", "#editBtnSave", function (e) {
     e.preventDefault();
 
     // Get the patient ID from the hidden input field
-    var patientID = $("input[name='patient_id']").val();
+    var patientID = $("input[name='patients_id']").val();
 
     var formData = new FormData($("#patients_details")[0]); // Use the form's ID to get the form data
 
     formData.append("edited_patients_details", true);
 
     // Add the patient ID to the formData
-    formData.append("patient_id", patientID);
+    formData.append("patients_id", patientID);
 
     $.ajax({
         type: "POST",
@@ -600,11 +579,11 @@ $(document).on("submit", "#addPrenatalField", function (e) {
         $("#errorMessage").text(res.message);
       } else if (res.status == 200) {
         $("#errorMessage").addClass("d-none");
-        $("#staticBackdrop").modal("hide");
+        $("#prenatalModalAdd").modal("hide");
         $("#addField")[0].reset();
 
-        $("#fieldTable").load(location.href + " #fieldTable");
-        $("#fieldForm").load(location.href + " #fieldForm");
+        $("#prenatalFieldTable").load(location.href + " #prenatalFieldTable");
+        $("#addPrenatalField").load(location.href + " #addPrenatalField");
       } else if (res.status == 300) {
         $("#errorMessage").removeClass("d-none");
         $("#errorMessage").text(res.message);

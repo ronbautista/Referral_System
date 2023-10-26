@@ -12,24 +12,25 @@ $prenatal_format = prenatal_format();
 
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="staticBackdropLabel">Add field</h2>
+        <h1 class="modal-title" id="staticBackdropLabel">Add referral fields</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
 <form id="addField">
       <div class="modal-body">
         <div class="alert alert-warning d-none" id="errorMessage"></div>
     <div class="mb-3">
-        <input class="form-control" type="text" name="field_name" placeholder="Field Name">
+      <label for="field_name">Field Name</label>
+        <input class="form-control" type="text" name="field_name" id="field_name" placeholder="Enter name">
     </div>
  
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn2">Add</button>
+        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </div>
     </form>
@@ -37,24 +38,25 @@ $prenatal_format = prenatal_format();
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="prenatalModalAdd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="prenatalModalAdd" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="staticBackdropLabel">Add prenatal field</h2>
+        <h1 class="modal-title" id="staticBackdropLabel">Add prenatal field</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
 <form id="addPrenatalField">
       <div class="modal-body">
         <div class="alert alert-warning d-none" id="errorMessage"></div>
     <div class="mb-3">
-        <input class="form-control" type="text" name="field_name" placeholder="Field Name">
+        <label for="field_name">Field Name</label>
+        <input class="form-control" type="text" name="field_name" id="field_name" placeholder="Enter name">
     </div>
  
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn2">Add</button>
+        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </div>
     </form>
@@ -65,7 +67,7 @@ $prenatal_format = prenatal_format();
 <div class="feed">
 <div class="head">
 <h4 class="left-heading mb-4">Referral input fields</h4>
-<button type="button" class="right-button btn " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add</button>
+<button type="button" class="right-button btn btn-primary " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add</button>
 
 </div>
          <!-- Card Content  -->
@@ -143,8 +145,7 @@ $prenatal_format = prenatal_format();
 <div class="feed">
 <div class="head">
 <h4 class="left-heading mb-4">Prenatal input fields</h4>
-<button type="button" class="right-button btn " data-bs-toggle="modal" data-bs-target="#prenatalModalAdd"><i class="fi fi-br-plus"></i> Add</button>
-
+<button type="button" class="right-button btn btn-primary" data-bs-toggle="modal" data-bs-target="#prenatalModalAdd"><i class="fi fi-br-plus"></i> Add</button>
 </div>
          <!-- Card Content  -->
   <div class="card">

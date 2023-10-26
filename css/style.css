@@ -7,11 +7,17 @@
 @import url('https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css');
 @import url('https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css');
 @import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('path/to/plus-jakarta-sans.woff2') format('woff2'), /* modern browsers */
+       url('path/to/plus-jakarta-sans.woff') format('woff'); /* older browsers */
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -242,25 +248,6 @@ body {
   margin-right: 6px;
   margin-top: -3px; /
 }
-.head .btn {
-  margin-top: -30px;
-  background-color: #209f85;
-  color: #fff;
-  text-decoration: none;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px, rgba(0, 0, 0, 0.14) 0 2px 2px 0,
-    rgba(0, 0, 0, 0.12) 0 1px 5px 0;
-}
-.modal .btn {
-  background-color: #209f85;
-  color: #fff;
-  text-decoration: none;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px, rgba(0, 0, 0, 0.14) 0 2px 2px 0,
-    rgba(0, 0, 0, 0.12) 0 1px 5px 0;
-}
-.head .btn:hover {
-  box-shadow: rgba(0, 0, 0, 0.2) 0 2px 4px -1px, rgba(0, 0, 0, 0.14) 0 4px 5px 0,
-    rgba(0, 0, 0, 0.12) 0 1px 10px 0;
-}
 
 .navbar ul {
   list-style: none;
@@ -324,66 +311,77 @@ a.btn.btn-primary {
   color: #209f85; /* Change link color on hover */
 }
 
-
 .input-group-append {
   cursor: pointer;
 }
 .card {
   margin-bottom: 20px; /* Adjust the value to increase or decrease the gap between cards */
 }
-.modal {
-  background-color: none;
+
+.modal .modal-content{
+  padding: 8px;
+  border-radius: 16px;
+  border: none;
 }
 
-.modal .modal-content {
-  border: 2px solid #209f85;
+.modal .button-container {
+  text-align: center; /* Center the text horizontally */
 }
-.modal .modal-content {
-  border-radius: 20px; /* Remove the border-radius */
+
+.modal .button-text {
+  margin-top: 20px;
 }
-.modal .modal-header {
-  background-color: #209f85;
-  border-top-right-radius: 15px;
-  border-top-left-radius: 15px;
-  color: #f2f2f2;
-  height: 50px;
+.button-text a{
+  text-decoration: none;
+  color: #212529;
+  font-weight: 500;
 }
-.modal .btn {
-  background-color: #f2f2f2;
-  border: 2px solid #209f85;
-  border-radius: 0;
-  color: #209f85;
-  opacity: 1;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px,
-    rgba(0, 0, 0, 0.14) 0 2px 2px 0, rgba(0, 0, 0, 0.12) 0 1px 5px 0;
+.modal .modal-body{
+  margin: 0px;
 }
-.modal .btn2 {
-  background-color: #209f85;
-  border: 2px solid #209f85;
-  border-radius: 0;
-  color: #f2f2f2;
-  opacity: 1;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px,
-    rgba(0, 0, 0, 0.14) 0 2px 2px 0, rgba(0, 0, 0, 0.12) 0 1px 5px 0;
+.modal .body-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.modal .btn2:hover {
-  background-color: #f2f2f2;
-  border: 2px solid #209f85;
-  border-radius: 0;
-  opacity: 1;
-  color: #209f85;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px,
-    rgba(0, 0, 0, 0.14) 0 2px 2px 0, rgba(0, 0, 0, 0.12) 0 1px 5px 0;
+
+.modal h1 {
+  font-size: 32px;
+  font-weight: 600;
 }
-.modal .btn1:hover {
-  background-color: #209f85;
-  border: 2px solid #209f85;
-  border-radius: 0;
-  color: #f2f2f2;
-  opacity: 1;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px,
-    rgba(0, 0, 0, 0.14) 0 2px 2px 0, rgba(0, 0, 0, 0.12) 0 1px 5px 0;
+
+.modal .body-title h5 {
+  font-size: 20px;
+  font-weight: 500;
 }
+
+#loginStaff label {
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-bottom: 2px;
+}
+.modal #loginStaff input {
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+#loginStaff .btn {
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#staffModalLogin{
+  max-width: 400px;
+}
+
 
 .modal-footer {
   display: flex;
@@ -402,15 +400,6 @@ a.btn.btn-primary {
   transition: all 0.3s;
 }
 
-.modal [data-bs-theme="custom"] {
-  filter: invert(1) !important;
-  opacity: 1 !important;
-}
-.modal .btn-close:focus {
-  outline: none;
-  border: none;
-  box-shadow: none;
-}
 .fclt-signup{
   background-color: blue;
 }
@@ -664,4 +653,97 @@ label{
   font-size: 0.8rem;
   height: 200px;
   width: 340px;
+}
+.new_modal .nav-tabs .nav-link {
+  border: none;
+  margin-bottom: 1px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 10px 0px 10px 0px;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.new_modal .nav-tabs .nav-link.active {
+  border-bottom: solid 4px #0d6efd;
+  margin-bottom: -2.5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.new_modal .nav-tabs {
+  border-bottom: none;
+}
+
+.new_modal .modal-header {
+  border-bottom: none;
+}
+
+.upperBtn {
+  padding: 0px 15px;
+  border: 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.new_modal .nav-item {
+  margin-right: 20px;
+}
+
+.modal .btn{
+  font-size: 16px;
+  font-weight: 500;
+  padding: 6px 15px;
+  border-radius: 4px;
+}
+
+.head .btn{
+  font-size: 16px;
+  font-weight: 500;
+  padding: 6px 15px;
+  border-radius: 4px;
+  margin-top: -30px;
+}
+
+.modal .close{
+  background-color: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 6px 15px;
+  border-radius: 4px;
+}
+
+.modal label{
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+}
+.modal-content input{
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 8px 15px;
+  border-radius: 4px;
+}
+.modal-content select{
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 8px 15px;
+  border-radius: 4px;
+}
+.modal-content select option{
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+}
+.modal .modal-header{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 10px 20px;
+}
+.firstSec .card-header{
+  background-color: transparent;
 }

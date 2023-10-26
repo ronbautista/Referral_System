@@ -82,7 +82,7 @@ $getreferral = getAllReferrals();
 
 
         <!-- Form Content  -->
-        <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
       <div class="modal-header">
@@ -106,7 +106,7 @@ $getreferral = getAllReferrals();
             ?>
                     <div class="col-sm-12 col-md-6 col-lg-3">
                         <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
-                        <input type="text" disabled readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
+                        <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
                     </div>
             <?php
                 }
@@ -116,8 +116,8 @@ $getreferral = getAllReferrals();
         </div>
             </div>
               <div class="modal-footer">
-              <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn1" id="restore_button">Restore Referral</button>
+              <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="restore_button">Restore Referral</button>
               </div>
     </form>
         </div>

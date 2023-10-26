@@ -300,26 +300,31 @@ if ($result1 && $result2) {
     </div>
     </div>
 
-    <!-- Modal -->
-<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+
+
+    <!-- STAFF LOGIN FORM -->
+    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" id="staffModalLogin">
     <div class="modal-content">
-      <div class="modal-header">
-      <h3>STAFF LOGIN</h3>
+      <div class="modal-body">
+      <div class="body-title">
+      <h1>Log in</h1>
+      <h5>staff log in</h5>
       </div>
-      <div class="modal-body" id="modalContent">
-      <div class="alert alert-warning d-none" id="errorMessage"></div>
-      <form id="loginStaff">
+    <form id="loginStaff">
     <div class="mb-3">
-        <input type="text" class="form-control" name="uid" placeholder="Facility Name/ID">
+        <label for="uid" id = "asd">Username</label>
+        <input type="text" class="form-control" name="uid" id="uid" placeholder="Enter username">
     </div>
     <div class="mb-3">
-        <input type="password" class="form-control" name="pwd" placeholder="Password">
+        <label for="uid">Password</label>
+        <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Enter password">
     </div>
-    <div class="modal-footer">
-        <a class="btn btn2" href="includes/fclt_logout.inc.php" role="button" style="margin-right:auto">Logout Facility</a>
-        <a class="btn btn1" href="signup.php" role="button">Sign Up</a>
-        <button type="submit" class="btn btn2">Login</button>
+    <div class="mb-3 button-container">
+    <div class="alert alert-danger d-none" id="errorMessage"></div>
+    <button type="submit" class="btn btn-primary">Log in</button>
+    <a class="btn btn-primary" href="includes/fclt_logout.inc.php" role="button" style="margin-right:auto">Logout Facility</a>
+    <p class="button-text">Dont have an account? <a href="signup.php">Sign up now!</a></p>
     </div>
 </form>
 
@@ -327,6 +332,7 @@ if ($result1 && $result2) {
     </div>
   </div>
 </div>
+
 
 
 
