@@ -177,15 +177,15 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <?php echo '<h5 class="modal-title" id="exampleModalLabel">' . $_SESSION["names"] . '</h5>';?>
+        <?php echo '<h1 class="modal-title" id="exampleModalLabel">' . $_SESSION["names"] . '</h1>';?>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
       <div class="modal-body">
         <h5>Are you sure you want to logout?</h5>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn1" data-bs-dismiss="modal">Cancel</button>
-        <a class="btn btn2" href="includes/fclt_logout.inc.php" role="button">Logout</a>
+        <button type="button" class="btn close" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" href="includes/fclt_logout.inc.php" role="button">Logout</a>
       </div>
     </div>
   </div>

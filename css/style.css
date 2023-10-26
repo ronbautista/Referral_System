@@ -343,9 +343,19 @@ a.btn.btn-primary {
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.modal h1 {
+#staffModalLogin .modal h1 {
   font-size: 32px;
   font-weight: 600;
+}
+
+.modal h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.modal .modal-body h5 {
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .modal .body-title h5 {
@@ -742,7 +752,6 @@ label{
 }
 .modal .modal-header{
   font-family: 'Plus Jakarta Sans', sans-serif;
-  padding: 10px 20px;
 }
 .firstSec .card-header{
   background-color: transparent;

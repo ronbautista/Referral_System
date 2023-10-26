@@ -303,7 +303,7 @@ if ($result1 && $result2) {
 
 
     <!-- STAFF LOGIN FORM -->
-    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog" id="staffModalLogin">
     <div class="modal-content">
       <div class="modal-body">
