@@ -80,49 +80,69 @@ $getreferral = getAllReferrals();
 </div>
     </div>
 
-
-        <!-- Form Content  -->
-    <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
+  
+<!-- Form Content -->
+<div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content new_modal">
       <div class="modal-header">
-          <h5 class="modal-title">From: <span id="fclt_name"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-    <form id="referral_form">
-    <div class="row">
-        <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
-        <?php 
-        $query = "SELECT * FROM referral_forms";
-        $query_run = mysqli_query($conn, $query);
+        <h5 class="modal-title">From: <span id="fclt_name"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="upperBtn">
+        <ul class="nav nav-tabs" id="myTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Referral Record</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Other Records</a>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-body">
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <form id="referral_form">
+              <div class="row">
+                <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
+                <?php 
+                  $query = "SELECT * FROM referral_forms";
+                  $query_run = mysqli_query($conn, $query);
 
-        if (mysqli_num_rows($query_run) > 0) {
-            $row = mysqli_fetch_assoc($query_run);
+                  if (mysqli_num_rows($query_run) > 0) {
+                      $row = mysqli_fetch_assoc($query_run);
 
-            foreach ($row as $field => $value) {
-                if ($field !== 'id') {
-                    $fieldNameLabel = str_replace('_', ' ', $field);
-            ?>
-                    <div class="col-sm-12 col-md-6 col-lg-3">
-                        <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
-                        <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
-                    </div>
-            <?php
-                }
-            }
-        }
-      ?>
-        </div>
-            </div>
-              <div class="modal-footer">
-              <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="restore_button">Restore Referral</button>
+                      foreach ($row as $field => $value) {
+                          if ($field !== 'id') {
+                              $fieldNameLabel = str_replace('_', ' ', $field);
+                      ?>
+                              <div class="col-sm-12 col-md-6 col-lg-3">
+                                  <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
+                                  <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
+                              </div>
+                      <?php
+                          }
+                      }
+                  }
+                ?>
               </div>
-    </form>
+      
+          </div>
+          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            Profile content
+          </div>
         </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" id="restore_button">Restore Referral</button>
         </div>
-        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <?php
 include_once 'footer.php'

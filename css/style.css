@@ -753,6 +753,10 @@ label{
 .modal .modal-header{
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.firstSec .card-header{
+#hahaha{
+  background-color: transparent;
+  padding: 10px 10px 0 20px;
+}
+#hehehe{
   background-color: transparent;
 }

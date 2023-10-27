@@ -54,7 +54,7 @@ $patients = getAllPatients();
 <div class="feed">
 <div class="head">
 <h2 class="left-heading mb-4">Prenatal List</h2>
-<button type="button" class="right-button btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Prenatal</button>
+<button type="button" class="right-button btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add Prenatal</button>
 
 </div>
          <!-- Card Content  -->
