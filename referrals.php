@@ -111,63 +111,83 @@ if (isset($_SESSION["first_account"])) {
         </div>
         </div>
 
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+   
+<!-- Form Content -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
-    <div class="modal-content">
+    <div class="modal-content new_modal">
       <div class="modal-header">
-        <h2 class="modal-title" id="staticBackdropLabel">Create Referral</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
+      <h2 class="modal-title" id="staticBackdropLabel">Create Referral</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    <div class="modal-body">
-    <div class="alert alert-danger d-none" id="errorMessage"></div>
-    <form id="createReferral">
-    <div class="row">
-      <?php 
-      $query = "SHOW COLUMNS FROM referral_forms";
-      $query_run = mysqli_query($conn, $query);
+      <div class="upperBtn">
+        <ul class="nav nav-tabs" id="myTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Referral Record</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Other Records</a>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-body">
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <form id="createReferral">
+            <div class="row">
+              <?php 
+              $query = "SHOW COLUMNS FROM referral_forms";
+              $query_run = mysqli_query($conn, $query);
 
-      if (mysqli_num_rows($query_run) > 0) {
-        foreach ($query_run as $field) {
-            if ($field['Field'] !== 'id') {
-                $fieldLabel = str_replace('_', ' ', $field['Field']);
-    ?>
-        <div class="col-sm-12 col-md-6 col-lg-3">
-        <label for="<?= $field['Field'] ?>"><?= $fieldLabel ?></label>
-        <input type="text" name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
-        </div>
-    <?php
+              if (mysqli_num_rows($query_run) > 0) {
+                foreach ($query_run as $field) {
+                    if ($field['Field'] !== 'id') {
+                        $fieldLabel = str_replace('_', ' ', $field['Field']);
+            ?>
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                <label for="<?= $field['Field'] ?>"><?= $fieldLabel ?></label>
+                <input type="text" name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
+                </div>
+            <?php
+                    }
+                }
             }
-        }
-    }
-      ?>
-      <div class="col-sm-12 col-md-6 col-lg-3">
-      <label>Select Refer Hospital</label>
-      <select class="form-select" name="referred_hospital">
-      <option value="NULL"></option>
-      <?php 
-        $query = "SELECT * FROM facilities";
-        $query_run = mysqli_query($conn, $query);
+              ?>
 
-        if (mysqli_num_rows($query_run) > 0) {
-          while ($row = mysqli_fetch_assoc($query_run)) {
-      ?>
-          <option value="<?= $row['fclt_id'] ?>"><?= $row['fclt_name'] ?></option>
-      <?php
+      <div class="col-sm-12 col-md-6 col-lg-3">
+        <label>Select Refer Hospital</label>
+        <select class="form-select" name="referred_hospital">
+        <option value="NULL"></option>
+        <?php 
+          $query = "SELECT * FROM facilities";
+          $query_run = mysqli_query($conn, $query);
+
+          if (mysqli_num_rows($query_run) > 0) {
+            while ($row = mysqli_fetch_assoc($query_run)) {
+        ?>
+            <option value="<?= $row['fclt_id'] ?>"><?= $row['fclt_name'] ?></option>
+        <?php
+            }
           }
-        }
-      ?>
-    </select>
+        ?>
+      </select>
       </div>
+      </div>
+          </div>
+          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div id="draggableDiv" class="draggable" draggable="true">Drag records here!</div>
+          </div>
         </div>
-    </div>
-    <div class="modal-footer">
-    <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
     <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+      </div>
     </div>
-    </div>
-    </form>
-    </div>
-    </div>
+  </div>
+</div>
+
 
 <?php
 include_once 'footer.php'
