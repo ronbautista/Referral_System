@@ -139,7 +139,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                   
                     <div class="dropdown-content">
                         <a href="#">Profile</a>
-                        <a href="#">Settings</a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#staffEditModal">Settings</a>
                         <a href="includes/logout.inc.php">Logout</a>
                     </div>
                 </div>
@@ -190,3 +190,54 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
     </div>
   </div>
 </div>
+
+
+<!-- EDIT STAFF PROFILE -->
+<div class="modal fade" id="staffEditModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" id="staffEdit">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1>Staff Profile</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="image-profile">
+          <div class="image-content">
+            <img src="images/boy.png" alt="Logo" class="profile-icon">
+          </div>
+          <div class="edit-button">
+            <button class="btn btn-primary">Edit Image</button>
+          </div>
+        </div>
+        <div class="profile-details">
+        <form>
+        <?php
+                    if (isset($_SESSION["second_account"])) {
+                      // Second account is logged in
+                      echo '<div class="mb-3">
+                      <label for="username" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="username" aria-describedby="emailHelp" value="' . $_SESSION["usersname"] . '">
+                    </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="email" value="' . $_SESSION["email"] . '">
+                    </div>
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="passsword" class="form-control" id="password" placeholder="*****">
+                    </div>';
+                  } else {
+                      // No account is logged in, display login links
+                      echo '<li class="nav-item">
+                      <a href="#" data-bs-toggle="modal" class="user-login" data-bs-target="#loginModal">Login</a>
+                        </li>';
+                  }
+                  ?>
+          <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

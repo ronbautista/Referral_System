@@ -5,6 +5,7 @@ include_once 'includes/referral_functions.inc.php';
 // Call the function and fetch all the referrals
 $displayreferrals = myReferrals() ;
 $getreferral = getAllReferrals();
+$referrals_audit = referrals_audit();
 ?>
 <div class="feed">
 <div class="head" id="reload">
@@ -74,7 +75,7 @@ if (isset($_SESSION["first_account"])) {
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Referred Hospital: <span id="fclt_name"></span></h5>
+          <h1 class="modal-title">Referred Hospital: <span id="fclt_name"></span></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
         </div>
     <div class="modal-body">
@@ -104,6 +105,15 @@ if (isset($_SESSION["first_account"])) {
         </div>
             </div>
             <div class="modal-footer">
+
+            <div class="referral-audit">
+          <div class="mb-3">
+            <h5>Referral Audit</h5>
+            <div class="alert alert-danger d-none" id="errorMessage"></div>
+            <p>asdadsda</p>
+          </div>
+        </div>
+
         <button type="button" data-bs-dismiss="modal" class="btn close">Close</button>
     </div>
     </form>

@@ -348,6 +348,7 @@ a.btn.btn-primary {
   font-weight: 600;
 }
 
+
 .modal h1 {
   font-size: 24px;
   font-weight: 600;
@@ -393,6 +394,7 @@ a.btn.btn-primary {
 }
 
 
+
 .modal-footer {
   display: flex;
   justify-content: space-between; /* Distribute space between the children */
@@ -407,6 +409,10 @@ a.btn.btn-primary {
 .referral-reason {
   width: 100%; /* Make it take the full width of the parent container */
   display: none;
+  transition: all 0.3s;
+}
+.referral-audit {
+  width: 100%; /* Make it take the full width of the parent container */
   transition: all 0.3s;
 }
 
@@ -772,4 +778,60 @@ label{
   font-size: 34px;
   font-weight: 500;
   color: #0d6efd;
+}
+
+#staffEdit .profile-icon {
+  width: 100px; /* Adjust the width to your desired size */
+  height: auto; /* To maintain the aspect ratio */
+}
+
+#staffEdit{
+  max-width: 500px;
+}
+
+#staffEdit .modal-header{
+  display: flex;
+  align-items: center;
+  border-bottom: none;
+  margin-bottom: -10px;
+}
+
+#staffEdit .modal-header h1{
+ margin: 0;
+}
+
+#staffEdit .modal-body{
+  display: flex;
+  flex-direction: column;
+}
+#staffEdit .edit-button{
+  margin-top: 20px;
+}
+
+#staffEdit .image-profile {
+  flex: 1; /* Make the image-profile div expand to fill the modal body */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#staffEdit .image-content {
+  flex: 1; /* Make the image content expand to fill the image-profile div */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#staffEdit .profile-icon {
+  max-width: 100%; /* Ensure the image fits within its container */
+  height: auto;
+}
+
+#staffEdit .profile-details{
+  padding: 10px;
+}
+
+#staffEdit .btn-primary {
+  width: 100%; /* Make the submit button fill the width of the form */
 }

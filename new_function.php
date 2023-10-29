@@ -395,6 +395,7 @@ if (isset($_POST['login'])) {
                 $_SESSION["usersname"] = $user["usersName"];
                 $_SESSION["usersuid"] = $user["usersUid"];
                 $_SESSION["usersrole"] = $user["usersrole"];
+                $_SESSION["email"] = $user["usersEmail"];
 
                 // Return a JSON response for a successful login
                 $res = [
