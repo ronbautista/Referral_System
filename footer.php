@@ -1110,6 +1110,25 @@ function scrollMessageContainerToBottom() {
         }
     });
 
+    function openFileInput() {
+    // Trigger the file input dialog when the button is clicked
+    document.getElementById('fileInput').click();
+  }
+
+  function handleFileSelect(input) {
+    const imagePreview = document.getElementById('imagePreview');
+    const file = input.files[0];
+
+    if (file) {
+      // Display the selected image in the image preview div
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
 </script>
 
 </body>

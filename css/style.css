@@ -817,10 +817,21 @@ label{
 }
 
 #staffEdit .image-content {
-  flex: 1; /* Make the image content expand to fill the image-profile div */
+  width: 120px; /* Set a specific width for the circular container */
+  height: 120px; /* Set a specific height for the circular container */
+  border-radius: 50%; /* Create a circular shape */
+  overflow: hidden; /* Hide any content outside the circle */
+  margin: 0 auto; /* Center the circle horizontally (optional) */
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#staffEdit .image-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image fills the circular container */
+  object-position: center center; /* Center the image within the circle */
 }
 
 #staffEdit .profile-icon {
@@ -834,4 +845,12 @@ label{
 
 #staffEdit .btn-primary {
   width: 100%; /* Make the submit button fill the width of the form */
+}
+#trimester{
+  border: none;
+  padding: 0;
+  margin: -15px;
+}
+#trimester-header{
+  border-bottom: none;
 }

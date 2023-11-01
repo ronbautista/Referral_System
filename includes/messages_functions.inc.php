@@ -10,13 +10,13 @@ function contacts() {
     // Check if the query was successful
     if ($result) {
         // Fetch all rows into an associative array
-        $referrals = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $contacts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         // Free the result set
         mysqli_free_result($result);
 
         // Return the array of referrals
-        return $referrals;
+        return $contacts;
     } else {
         // Handle query error (you may choose to log or display an error message)
         echo "Error executing query: " . mysqli_error($conn);
@@ -36,13 +36,13 @@ function messages() {
     // Check if the query was successful
     if ($result) {
         // Fetch all rows into an associative array
-        $referrals = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $messages = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         // Free the result set
         mysqli_free_result($result);
 
         // Return the array of referrals
-        return $referrals;
+        return $messages;
     } else {
         // Handle query error (you may choose to log or display an error message)
         echo "Error executing query: " . mysqli_error($conn);

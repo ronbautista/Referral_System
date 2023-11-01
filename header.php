@@ -138,8 +138,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                     </div>
                   
                     <div class="dropdown-content">
-                        <a href="#">Profile</a>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#staffEditModal">Settings</a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#staffEditModal">Profile</a>
                         <a href="includes/logout.inc.php">Logout</a>
                     </div>
                 </div>
@@ -202,12 +201,13 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
       </div>
       <div class="modal-body">
         <div class="image-profile">
-          <div class="image-content">
-            <img src="images/boy.png" alt="Logo" class="profile-icon">
-          </div>
+        <div class="image-content">
+        <img src="images/boy.png" alt="Logo" class="profile-icon" id="imagePreview">
+      </div>
           <div class="edit-button">
-            <button class="btn btn-primary">Edit Image</button>
-          </div>
+          <button class="btn btn-primary" onclick="openFileInput()">Edit Image</button>
+          <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="handleFileSelect(this)">
+        </div>
         </div>
         <div class="profile-details">
         <form>

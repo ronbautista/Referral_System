@@ -5,6 +5,7 @@ include_once 'includes/messages_functions.inc.php';
 $fclt_id = $_SESSION['id'];
 $contacts = contacts();
 $messages = messages();
+$prenatals = prenatals();
 
 // Call the function and fetch all the referrals
 $displayreferrals = displayAllReferralsPending();
@@ -129,36 +130,28 @@ if ($result1 && $result2) {
         </div>
       <div class="home-feed">
         <div class="yourDivClass">
+
+        <?php
+            foreach ($prenatals as $prenatals) {
+                $total = $prenatals['row_count'];
+                $fclt_name = $prenatals['fclt_name'];
+
+            ?>
         <div class="referral-card">
           <div class="mini-referral-logo" id="prenatal-logo">
             <img src="images/person.png" alt="Logo" class="logo">
           </div>
             <div class="info">
-                <div class="name">Gigaquit RHU</div>
-                <div class="description">700 Total Prenatal</div>
+                <div class="name"><?= $fclt_name ?></div>
+                <div class="description"><?= $total ?> Total Prenatal</div>
             </div>
             <button class="confirm-button" id="viewbtn">View</button>
         </div>
-        <div class="referral-card">
-          <div class="mini-referral-logo" id="prenatal-logo">
-          <img src="images/person.png" alt="Logo" class="logo">
-          </div>
-            <div class="info">
-                <div class="name">Claver RHU</div>
-                <div class="description">700 Total Prenatal</div>
-            </div>
-            <button class="confirm-button" id="viewbtn">View</button>
-        </div>
-        <div class="referral-card">
-          <div class="mini-referral-logo" id="prenatal-logo">
-          <img src="images/person.png" alt="Logo" class="logo">
-          </div>
-            <div class="info">
-                <div class="name">Miranda</div>
-                <div class="description">700 Total Prenatal</div>
-            </div>
-            <button class="confirm-button" id="viewbtn">View</button>
-        </div>
+            <?php
+            }
+            ?>
+            
+
         </div>
       </div>
     </div>

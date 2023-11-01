@@ -308,3 +308,29 @@ function minireferrals() {
     // Return an empty array in case of an error
     return array();
 }
+
+function prenatals() {
+    global $conn, $fclt_id;
+
+    // Perform the query to fetch all rows from the "referrals" table
+    $sql = "SELECT p.fclt_id, COUNT(*) AS row_count, fclt_name FROM patients AS p INNER JOIN facilities AS f ON p.fclt_id = f.fclt_id GROUP BY p.fclt_id ORDER BY p.fclt_id";
+    $result = mysqli_query($conn, $sql);
+
+    // Check if the query was successful
+    if ($result) {
+        // Fetch all rows into an associative array
+        $prenatals = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        // Free the result set
+        mysqli_free_result($result);
+
+        // Return the array of referrals
+        return $prenatals;
+    } else {
+        // Handle query error (you may choose to log or display an error message)
+        echo "Error executing query: " . mysqli_error($conn);
+    }
+
+    // Return an empty array in case of an error
+    return array();
+}

@@ -274,10 +274,9 @@ $columnNames = ($row) ? array_keys($row) : [];
 
   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
         
-        <div class="thirdSec" id="thirdSec">
-    <div class="card new_modal">
-        <div class="card-header upperBtn" id="hehehe">
-            <div class="d-flex justify-content-between">
+    <div class="card new_modal" id="trimester">
+        <div class="card-header" id="hehehe">
+            <div class="d-flex justify-content-between" id="trimester-header">
                 <ul class="nav nav-tabs card-header-tabs button-container-left" style="margin-left:1px;">
                     <li class="nav-item">
                         <a class="nav-link active button" aria-current="true" role="button" data-tab="first_trimester">First Trimester</a>
@@ -315,7 +314,6 @@ $columnNames = ($row) ? array_keys($row) : [];
     </div>
 </div>  
 </div>
-      </div>
       </div>
 
 
