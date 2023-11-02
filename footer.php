@@ -26,6 +26,48 @@
 
 
 <script>
+          function displaySelectedImage() {
+            const input = document.getElementById('formFile');
+            const imagePreview = document.getElementById('imagePreview');
+            const imageName = document.getElementById('image_name');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imageName.textContent = input.files[0].name;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Add an event listener to the button to trigger the file input
+        document.getElementById('uploadButton').addEventListener('click', function () {
+            document.getElementById('formFile').click(); // Trigger the file input
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function () {
+            const formData = new FormData(document.getElementById('user_profile'));
+
+            fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').textContent = data.message;
+                if (data.message === 'File uploaded successfully') {
+                    // Close the modal if the upload is successful
+                    const staffEditModal = new bootstrap.Modal(document.getElementById('staffEditModal'));
+                    staffEditModal.hide();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
 
 // JavaScript to toggle the sidebar
     const sidebar = document.getElementById('sidebar');
@@ -682,8 +724,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set the active left button based on the 'leftTab' value
   buttonsLeft.forEach((button) => {
     const dataTab = button.getAttribute("data-tab");
-    console.log("Button data-tab:", dataTab);
-    console.log("leftTab value:", leftTab);
+   // console.log("Button data-tab:", dataTab);
+    //console.log("leftTab value:", leftTab);
 
     if (dataTab === leftTab) {
       setActiveButton(buttonsLeft, button);
@@ -694,8 +736,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set the active right button based on the 'rightTab' value
   buttonsRight.forEach((button) => {
     const dataTab = button.getAttribute("data-tab");
-    console.log("Button data-tab:", dataTab);
-    console.log("rightTab value:", rightTab);
+    //console.log("Button data-tab:", dataTab);
+   // console.log("rightTab value:", rightTab);
 
     if (dataTab === rightTab) {
       setActiveButton(buttonsRight, button);
@@ -770,7 +812,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       dataType: "json",
       success: function (response) {
-        console.log("Fetch data success:", response);
+        //console.log("Fetch data success:", response);
 
         if (response.success) {
           // Log the data received
@@ -809,7 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       dataType: "json",
       success: function (response) {
-        console.log("AJAX success:", response);
+        //console.log("AJAX success:", response);
         if (response.success) {
           displayForm(response.columns);
         } else {
@@ -994,7 +1036,7 @@ function loadLatestMessageForContact(contactIDValue) {
 if (referralCards.length > 0) {
     var firstCard = referralCards[0];
     contactIDValue = firstCard.getAttribute('data-contact-id');
-    console.log("Contact ID: " + contactIDValue);
+    //console.log("Contact ID: " + contactIDValue);
     firstCard.click();
     loadMessages(contactIDValue);
     displayFirstContactName();
@@ -1025,8 +1067,8 @@ function loadLatestMessage(contactID) {
             var time = response.time; // Get the time from the response
 
             // Log the latest message and time to the console
-            console.log("Latest Message: " + latestMessage);
-            console.log("Time: " + time);
+            //console.log("Latest Message: " + latestMessage);
+            //console.log("Time: " + time);
 
             // Update the latest message for the specific contact card
             setLatestMessage(contactID, latestMessage, time);
@@ -1109,26 +1151,6 @@ function scrollMessageContainerToBottom() {
             });
         }
     });
-
-    function openFileInput() {
-    // Trigger the file input dialog when the button is clicked
-    document.getElementById('fileInput').click();
-  }
-
-  function handleFileSelect(input) {
-    const imagePreview = document.getElementById('imagePreview');
-    const file = input.files[0];
-
-    if (file) {
-      // Display the selected image in the image preview div
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        imagePreview.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
 </script>
 
 </body>

@@ -155,7 +155,7 @@ if ($result1 && $result2) {
         </div>
       </div>
     </div>
-
+ <!-- Additional form fields for name and description -->
     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
     <div class="head">
           <h3 class="left-heading mb-4">Messages</h3>
@@ -186,7 +186,7 @@ if ($result1 && $result2) {
                 }
             }
             ?>
-</div>
+      </div>
         </div>
       </div>
     </div>
@@ -304,23 +304,22 @@ if ($result1 && $result2) {
       <h1>Log in</h1>
       <h5>staff log in</h5>
       </div>
-    <form id="loginStaff">
-    <div class="mb-3">
-        <label for="uid" id = "asd">Username</label>
-        <input type="text" class="form-control" name="uid" id="uid" placeholder="Enter username">
-    </div>
-    <div class="mb-3">
-        <label for="uid">Password</label>
-        <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Enter password">
-    </div>
-    <div class="mb-3 button-container">
-    <div class="alert alert-danger d-none" id="errorMessage"></div>
-    <button type="submit" class="btn btn-primary">Log in</button>
-    <a class="btn btn-primary" href="includes/fclt_logout.inc.php" role="button" style="margin-right:auto">Logout Facility</a>
-    <p class="button-text">Dont have an account? <a href="signup.php">Sign up now!</a></p>
-    </div>
-</form>
-
+        <form id="loginStaff">
+        <div class="mb-3">
+            <label for="uid" id = "asd">Username</label>
+            <input type="text" class="form-control" name="uid" id="uid" placeholder="Enter username">
+        </div>
+        <div class="mb-3">
+            <label for="uid">Password</label>
+            <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Enter password">
+        </div>
+        <div class="mb-3 button-container">
+        <div class="alert alert-danger d-none" id="errorMessage"></div>
+        <button type="submit" class="btn btn-primary">Log in</button>
+        <a class="btn btn-primary" href="includes/fclt_logout.inc.php" role="button" style="margin-right:auto">Logout Facility</a>
+        <p class="button-text">Dont have an account? <a href="signup.php">Sign up now!</a></p>
+        </div>
+        </form>
       </div>
     </div>
   </div>

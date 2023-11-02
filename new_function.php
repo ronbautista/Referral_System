@@ -780,13 +780,56 @@ if (isset($_GET['message_contact_id'])) {
     $conn->close();
 }
 
+if (isset($_FILES['profile_image'])) {
+    $max_file_size = 2097152;
 
+    // Check if file is not too large
+    if ($_FILES['profile_image']['size'] > $max_file_size) {
+        echo "File is too large. Maximum file size is 2MB.";
+        exit;
+    }
 
+    // Check file type and extension
+    $allowed_types = array('jpg', 'jpeg', 'png', 'gif');
+    $extension = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
+    if (!in_array(strtolower($extension), $allowed_types)) {
+        echo "Only JPG, JPEG, PNG, and GIF files are allowed.";
+        exit;
+    }
 
+    $upload_directory = __DIR__ . '/images/';
 
+    if (!file_exists($upload_directory)) {
+        // Create the directory if it doesn't exist
+        mkdir($upload_directory, 0755, true);
+    }
 
+    $file_name = $_FILES['profile_image']['name'];
+    $file_path = $upload_directory . $file_name;
 
+    if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $file_path)) {
+        echo "Failed to upload file.";
+        exit;
+    }
 
+    // Insert file information into the database, including the file path
+    // Ensure you have a valid database connection stored in $conn
+    $query = "INSERT INTO profile_image (img_path) VALUES (?)";
 
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("s", $file_path);
+        if ($stmt->execute()) {
+            // File uploaded and information saved successfully, perform the redirect
+            header("Location: index.php"); // Replace 'success.php' with the actual success page URL
+            exit; // Make sure to exit after performing the redirect
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Error: " . $conn->error;
+    }
 
-
+    // Close the database connection
+    $conn->close();
+}

@@ -9,10 +9,7 @@
 @import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: url('path/to/plus-jakarta-sans.woff2') format('woff2'), /* modern browsers */
-       url('path/to/plus-jakarta-sans.woff') format('woff'); /* older browsers */
-  font-weight: normal;
-  font-style: normal;
+  src: url('/Referral_System/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf');
 }
 
 body {
