@@ -640,20 +640,16 @@ if(res.status == 422){
 }else if(res.status == 200){
 $('#fclt_name').text(res.data.fclt_name);
 $('#rffrl_id').val(res.data.id);
-<?php 
-$query = "SHOW COLUMNS FROM referral_forms";
-$query_run = mysqli_query($conn, $query);
-
-if(mysqli_num_rows($query_run) > 0){
-foreach($query_run as $field){
-?>
-$('#<?=  $field['Field'] ?>').val(res.data.<?=  $field['Field'] ?>);
-<?php 
-}
-}
-?>
 $('#referralModal').modal('show');
-        }
+
+var columnNames = res.column_data;
+
+for (var i = 0; i < columnNames.length; i++) {
+    var columnName = columnNames[i];
+    var columnData = res.data[columnName];
+    $('#' + columnName).val(columnData);
+}
+      }
     }
 });
 });

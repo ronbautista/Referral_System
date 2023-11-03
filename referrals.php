@@ -94,7 +94,7 @@ if (isset($_SESSION["first_account"])) {
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <form id="referral_form">
               <div class="row">
-                <input type="text" name="rffrl_id" id="rffrl_id" class="form-control">
+                <input type="hidden" name="rffrl_id" id="rffrl_id" class="form-control">
                 <?php 
                   $query = "SELECT * FROM referral_forms";
                   $query_run = mysqli_query($conn, $query);
@@ -139,7 +139,6 @@ if (isset($_SESSION["first_account"])) {
             <?php
             }
             ?>
-            <input type="text" id="rffrl_ids">
           </div>
         </div>
         <button type="button" data-bs-dismiss="modal" class="btn close">Close</button>
