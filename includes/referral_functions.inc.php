@@ -196,7 +196,7 @@ function referral_format() {
     global $conn; // Access the existing database connection
 
     // Perform the query to fetch all rows from the "referral_format" table
-    $sql = "SELECT * FROM referral_format";
+    $sql = "SHOW COLUMNs FROM referral_forms";
     $result = mysqli_query($conn, $sql);
 
     // Check if the query was successful

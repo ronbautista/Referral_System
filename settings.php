@@ -82,13 +82,13 @@ $prenatal_format = prenatal_format();
         <tbody>
           <?php
           foreach ($referral_format as $referral) {
-            if ($referral['field_name'] !== 'id') {
-              $fieldName = str_replace('_', ' ', $referral['field_name']); // Replace underscores with spaces
+            if ($referral['Field'] !== 'id') {
+              $fieldName = str_replace('_', ' ', $referral['Field']); // Replace underscores with spaces
               ?>
               <tr>
                 <td><?= $fieldName ?></td>
                 <td>
-                  <button type="button" value="<?= $referral['field_name']; ?>" class="deleteField btn btn-outline-danger">Delete</button>
+                  <button type="button" value="<?= $referral['Field']; ?>" class="deleteField btn btn-outline-danger">Delete</button>
                 </td>
               </tr>
               <?php

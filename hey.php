@@ -15,9 +15,16 @@
   </head>
   <body>
     <div class="form-group col-sm-12 col-md-6 col-lg-4">
-        <label for="datepicker">asdd</label>
+        <label for="datepicker1">asdd</label>
         <div class="input-group">
-            <input type="text" id="datepicker" class="form-control">
+            <input type="text" id="" class="form-control datepicker">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-6 col-lg-4">
+        <label for="datepicker2">asdd</label>
+        <div class="input-group">
+            <input type="text" id="" class="form-control datepicker">
         </div>
     </div>
 
@@ -32,16 +39,11 @@
 
     <script>
     $(document).ready(function () {
-        var datepickerInput = $('#datepicker');
-        
-        // Initialize the date picker
-        datepickerInput.datepicker({
+        // Initialize all datepicker inputs with the 'datepicker' class
+        $('.datepicker').datepicker({
             autoclose: true,
             todayHighlight: true
         });
-
-        // You can remove the 'readonly' attribute if you don't need it.
-        // datepickerInput.attr('readonly', 'readonly');
     });
     </script>
   </body>

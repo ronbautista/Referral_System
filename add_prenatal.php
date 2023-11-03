@@ -100,16 +100,16 @@ $columnNames = ($row) ? array_keys($row) : [];
                         $readonly = $hasData ? 'readonly' : '';
 
                         // Check if $columnName is 'petsa'
-                        if ($columnName == 'petsa_ng_unang_checkup') {
+                        if (strpos($columnName, 'petsa') !== false) {
                             echo '<div class="form-group col-sm-12 col-md-6 col-lg-4">
                                 <label for="datepicker">' . $label . '</label>
                                 <div class="input-group">
-                                    <input type="text" id="datepicker" class="form-control" 
+                                    <input type="text" id="datepicker" class="form-control datepicker" 
                                     value="' . $value . '" name="' . $columnName . '" ' . $readonly . '>
                                 </div>
                             </div>';
                             continue; // Skip the rest of the loop for this column
-                        }
+                        }                        
 
                         echo '<div class="col-sm-12 col-md-6 col-lg-4">
                             <label for="' . $columnName . '">' . $label . '</label>

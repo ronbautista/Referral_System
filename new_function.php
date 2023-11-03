@@ -116,36 +116,8 @@ if(isset($_POST['delete_patient'])){
     }
 }
 
-if(isset($_GET['rffrl_id'])){
+if (isset($_GET['rffrl_id'])) {
     $rffrl_id = mysqli_real_escape_string($conn, $_GET['rffrl_id']);
-
-    $query = "SELECT referral_forms.*, facilities.fclt_name FROM referral_records 
-    LEFT JOIN referral_forms on referral_records.rfrrl_id = referral_forms.id 
-    LEFT JOIN facilities ON referral_records.fclt_id = facilities.fclt_id where rfrrl_id = '$rffrl_id'";
-    $query_run = mysqli_query($conn, $query);
-
-    if(mysqli_num_rows($query_run) == 1){
-        $rffrl = mysqli_fetch_array($query_run);
-        
-        $res = [
-            'status' => 200,
-            'message' => 'Referral fetch successfully by id',
-            'data' => $rffrl
-        ];
-        echo json_encode($res);
-        return false;
-    }else{
-        $res = [
-            'status' => 404,
-            'message' => 'No id found'
-        ];
-        echo json_encode($res);
-        return false;
-    }
-}
-
-if (isset($_GET['myrecord_rffrl_id'])) {
-    $rffrl_id = mysqli_real_escape_string($conn, $_GET['myrecord_rffrl_id']);
 
     $query = "SELECT referral_forms.*, referral_records.*, facilities.*
     FROM referral_forms
@@ -169,6 +141,50 @@ if (isset($_GET['myrecord_rffrl_id'])) {
         'message' => 'Data fetched successfully',
         'data' => $queryData,
         'column_data' => $columnNames,
+    ];
+
+    echo json_encode($res);
+}
+
+if (isset($_GET['myrecord_rffrl_id'])) {
+    $rffrl_id = mysqli_real_escape_string($conn, $_GET['myrecord_rffrl_id']);
+
+    $query = "SELECT referral_forms.*, referral_records.*, facilities.*
+    FROM referral_forms
+    INNER JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
+    INNER JOIN facilities ON facilities.fclt_id = referral_records.referred_hospital
+    WHERE referral_forms.id = '$rffrl_id'";
+    $query_run = mysqli_query($conn, $query);
+
+    $queryclumn = "SHOW COLUMNS FROM referral_forms";
+    $querycolumn_run = mysqli_query($conn, $queryclumn);
+
+    $querytransactions = "SELECT *
+	FROM referral_transaction
+    INNER JOIN facilities ON referral_transaction.fclt_id = facilities.fclt_id
+    WHERE rfrrl_id = '$rffrl_id'";
+    $querytransactions_run = mysqli_query($conn, $querytransactions);
+
+    $queryData = mysqli_fetch_array($query_run);
+
+    $columnData = [];
+    while ($row = mysqli_fetch_assoc($querycolumn_run)) {
+        $columnNames[] = $row['Field'];
+    }
+
+    $querytransactions_run = mysqli_query($conn, $querytransactions);
+
+    $querytransactions_data = [];
+    while ($row = mysqli_fetch_array($querytransactions_run)) {
+        $querytransactions_data[] = $row;
+    }
+
+    $res = [
+        'status' => 200,
+        'message' => 'Data fetched successfully',
+        'data' => $queryData,
+        'column_data' => $columnNames,
+        'transactions' => $querytransactions_data,
     ];
 
     echo json_encode($res);

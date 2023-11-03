@@ -79,7 +79,7 @@ if ($count == 0) {
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <form id="referral_form">
               <div class="row">
-                <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
+                <input type="hidden" name="rffrl_id" id="rffrl_id" class="form-control">
                 <?php
                 $query = "SELECT * FROM referral_forms";
                 $query_run = mysqli_query($conn, $query);

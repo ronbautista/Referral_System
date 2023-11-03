@@ -126,19 +126,7 @@ if (isset($_SESSION["first_account"])) {
             <div class="referral-audit">
           <div class="mb-3">
             <h5>Referral Audit</h5>
-            <div class="alert alert-danger d-none" id="errorMessage"></div>
-            <?php
-            foreach ($referral_transactions as $data) {
-                $id = $data['fclt_id'];
-                $status = $data['status'];
-                $date = $data['date'];
-                $time = $data['time'];
-
-            ?>
-            <p><?= $id ?> <?= $status ?> <?= $date ?> <?= $time ?></p>
-            <?php
-            }
-            ?>
+            <div id="referral_transactions"></div>
           </div>
         </div>
         <button type="button" data-bs-dismiss="modal" class="btn close">Close</button>

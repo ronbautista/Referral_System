@@ -436,7 +436,7 @@ $(document).on("click", "#editBtnSave", function (e) {
 });
 
 $(document).ready(function () {
-    var datepickerInput = $('#datepicker');
+    var datepickerInput = $('.datepicker');
     
     // Function to initialize the date picker
     function initializeDatePicker() {
@@ -606,40 +606,7 @@ if(res.status == 422){
     alert(res.message);
 }else if(res.status == 200){
 $('#fclt_name').text(res.data.fclt_name);
-$('#rffrl_id').val(res.data.id);
-<?php 
-$query = "SHOW COLUMNS FROM referral_forms";
-$query_run = mysqli_query($conn, $query);
-
-if(mysqli_num_rows($query_run) > 0){
-foreach($query_run as $field){
-?>
-$('#<?=  $field['Field'] ?>').val(res.data.<?=  $field['Field'] ?>);
-<?php 
-}
-}
-?>
-$('#referralModal').modal('show');
-        }
-    }
-});
-});
-
-// Code to View Records to Modal
-$(document).on('click', '.viewMyRecord', function(){
-
-var rffrl_id = $(this).val();
-$.ajax({
-    type:"GET",
-    url:"new_function.php?myrecord_rffrl_id=" + rffrl_id,
-    success: function(response){
-
-var res = jQuery.parseJSON(response);
-if(res.status == 422){
-    alert(res.message);
-}else if(res.status == 200){
-$('#fclt_name').text(res.data.fclt_name);
-$('#rffrl_id').val(res.data.id);
+$('#rffrl_id').val(res.data.rfrrl_id);
 $('#referralModal').modal('show');
 
 var columnNames = res.column_data;
@@ -653,6 +620,52 @@ for (var i = 0; i < columnNames.length; i++) {
     }
 });
 });
+
+// Code to View Records to Modal
+$(document).on('click', '.viewMyRecord', function () {
+    var rffrl_id = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "new_function.php?myrecord_rffrl_id=" + rffrl_id,
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 422) {
+                alert(res.message);
+            } else if (res.status == 200) {
+                $('#fclt_name').text(res.data.fclt_name);
+                $('#rffrl_id').val(res.data.rfrrl_id);
+                $('#referralModal').modal('show');
+
+                var columnNames = res.column_data;
+
+                for (var i = 0; i < columnNames.length; i++) {
+                    var columnName = columnNames[i];
+                    var columnData = res.data[columnName];
+                    $('#' + columnName).val(columnData);
+                }
+
+                // Display referral transactions
+                var querytransactions_data = res.transactions;
+                var referralTransactionsDiv = $('#referral_transactions');
+                referralTransactionsDiv.empty(); // Clear any previous data
+
+                for (var i = 0; i < querytransactions_data.length; i++) {
+                    var transactionData = querytransactions_data[i];
+                    var status = transactionData.status;
+                    var time = transactionData.time;
+                    var fclt_name = transactionData.fclt_name;
+
+                    if (status) {
+                        var pElement = $('<p></p>'); // Create a new <p> element
+                        pElement.text(status +" by "+ fclt_name +" at "+ time); // Include the label
+                        referralTransactionsDiv.append(pElement); // Append the <p> element to the div
+                    }
+                }
+            }
+        }
+    });
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
   // Get the 'leftTab' and 'rightTab' values from URL parameters
