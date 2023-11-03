@@ -6,6 +6,7 @@ include_once 'includes/referral_functions.inc.php';
 $displayreferrals = myReferrals() ;
 $getreferral = getAllReferrals();
 $referrals_audit = referrals_audit();
+$referral_transactions = referral_transactions();
 ?>
 <div class="feed">
 <div class="head" id="reload">
@@ -53,7 +54,7 @@ if (isset($_SESSION["first_account"])) {
           <td class="action-column" id="'.$status.'-column"><p>' . $status . '</p></td>
           <td>' . $date . ' • ' . $time . '</td>
           <td class="action-column">
-          <button id="icon-btn" type="button" value="'.$rffrl_id.'" class="viewRecord"><i class="fi fi-rr-eye"></i></button>
+          <button id="icon-btn" type="button" value="'.$rffrl_id.'" class="viewMyRecord"><i class="fi fi-rr-eye"></i></button>
           </td>
         </tr>';
 
@@ -70,64 +71,12 @@ if (isset($_SESSION["first_account"])) {
   </div>
 
     
-    <!-- CREATE REFERRAL  -->
+    <!-- VIEW REFERRAL  -->
     <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title">Referred Hospital: <span id="fclt_name"></span></h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
-        </div>
-    <div class="modal-body">
-    <form id="referral_form">
-    <div class="row">
-        <input type="text" hidden name="rffrl_id" id="rffrl_id" class="form-control">
-        <?php 
-        $query = "SELECT * FROM referral_forms";
-        $query_run = mysqli_query($conn, $query);
-
-        if (mysqli_num_rows($query_run) > 0) {
-            $row = mysqli_fetch_assoc($query_run);
-
-            foreach ($row as $field => $value) {
-                if ($field !== 'id') {
-                    $fieldNameLabel = str_replace('_', ' ', $field);
-            ?>
-                    <div class="col-sm-12 col-md-6 col-lg-3">
-                        <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
-                        <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control" value="<?= $value ?>">
-                    </div>
-            <?php
-                }
-            }
-        }
-      ?>
-        </div>
-            </div>
-            <div class="modal-footer">
-
-            <div class="referral-audit">
-          <div class="mb-3">
-            <h5>Referral Audit</h5>
-            <div class="alert alert-danger d-none" id="errorMessage"></div>
-            <p>asdadsda</p>
-          </div>
-        </div>
-
-        <button type="button" data-bs-dismiss="modal" class="btn close">Close</button>
-    </div>
-    </form>
-        </div>
-        </div>
-        </div>
-
-   
-<!-- REFERRAL RECORDS -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content new_modal">
       <div class="modal-header">
-      <h2 class="modal-title" id="staticBackdropLabel">Create Referral</h2>
+        <h5 class="modal-title">To: <span id="fclt_name"></span></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="upperBtn">
@@ -143,6 +92,86 @@ if (isset($_SESSION["first_account"])) {
       <div class="modal-body">
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <form id="referral_form">
+              <div class="row">
+                <input type="text" name="rffrl_id" id="rffrl_id" class="form-control">
+                <?php 
+                  $query = "SELECT * FROM referral_forms";
+                  $query_run = mysqli_query($conn, $query);
+
+                  if (mysqli_num_rows($query_run) > 0) {
+                      $row = mysqli_fetch_assoc($query_run);
+
+                      foreach ($row as $field => $value) {
+                          if ($field !== 'id') {
+                              $fieldNameLabel = str_replace('_', ' ', $field);
+                      ?>
+                        <div class="col-sm-12 col-md-6 col-lg-3">
+                          <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
+                          <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control">
+                        </div>
+                      <?php
+                          }
+                      }
+                  }
+                ?>
+              </div>
+              </div>
+              <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                Profile content
+              </div>
+            </div>
+          </div>
+            <div class="modal-footer">
+            <div class="referral-audit">
+          <div class="mb-3">
+            <h5>Referral Audit</h5>
+            <div class="alert alert-danger d-none" id="errorMessage"></div>
+            <?php
+            foreach ($referral_transactions as $data) {
+                $id = $data['fclt_id'];
+                $status = $data['status'];
+                $date = $data['date'];
+                $time = $data['time'];
+
+            ?>
+            <p><?= $id ?> <?= $status ?> <?= $date ?> <?= $time ?></p>
+            <?php
+            }
+            ?>
+            <input type="text" id="rffrl_ids">
+          </div>
+        </div>
+        <button type="button" data-bs-dismiss="modal" class="btn close">Close</button>
+    </div>
+    </form>
+        </div>
+        </div>
+        </div>
+
+   
+<!-- CREATE REFERRAL -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content new_modal">
+      <div class="modal-header">
+      <h2 class="modal-title" id="staticBackdropLabel">Create Referral</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="upperBtn">
+        <ul class="nav nav-tabs" id="myTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="referral-tab" data-bs-toggle="tab" href="#referral" role="tab" aria-controls="referral" aria-selected="true">Referral Record</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="records-tab" data-bs-toggle="tab" href="#records" role="tab" aria-controls="records" aria-selected="false">Other Records</a>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-body">
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="referral" role="tabpanel" aria-labelledby="referral-tab">
+            <div class="alert alert-danger d-none" id="referralError"></div>
           <form id="createReferral">
             <div class="row">
               <?php 
@@ -163,13 +192,12 @@ if (isset($_SESSION["first_account"])) {
                 }
             }
               ?>
-
       <div class="col-sm-12 col-md-6 col-lg-3">
         <label>Select Refer Hospital</label>
         <select class="form-select" name="referred_hospital">
         <option value="NULL"></option>
         <?php 
-          $query = "SELECT * FROM facilities";
+         $query = "SELECT * FROM facilities WHERE fclt_id != '" . $_SESSION["id"] . "'";
           $query_run = mysqli_query($conn, $query);
 
           if (mysqli_num_rows($query_run) > 0) {
@@ -184,7 +212,7 @@ if (isset($_SESSION["first_account"])) {
       </div>
       </div>
           </div>
-          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="tab-pane fade" id="records" role="tabpanel" aria-labelledby="records-tab">
           <div id="draggableDiv" class="draggable" draggable="true">Drag records here!</div>
           </div>
         </div>

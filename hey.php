@@ -1,55 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger Interface</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <!-- Left Sidebar (Contacts) -->
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        Contacts
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">Contact 1</li>
-                            <li class="list-group-item">Contact 2</li>
-                            <li class="list-group-item">Contact 3</li>
-                            <!-- Add more contacts here -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            <!-- Right Sidebar (Message Box) -->
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-header">
-                        Chat with Contact
-                    </div>
-                    <div class="card-body">
-                        <div id="message-box">
-                            <!-- Messages will be displayed here -->
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Type your message...">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary">Send</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Add the Bootstrap-datepicker CSS (You can replace this with the actual CDN link) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" integrity="sha384-...">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="form-group col-sm-12 col-md-6 col-lg-4">
+        <label for="datepicker">asdd</label>
+        <div class="input-group">
+            <input type="text" id="datepicker" class="form-control">
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.3/dist/js/bootstrap.min.js"></script>
-</body>
+
+    <!-- Include jQuery (required for Bootstrap datepicker) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Bootstrap JS (required for Bootstrap datepicker) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Include Bootstrap-datepicker JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js" integrity="sha384-..."></script>
+
+    <script>
+    $(document).ready(function () {
+        var datepickerInput = $('#datepicker');
+        
+        // Initialize the date picker
+        datepickerInput.datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        // You can remove the 'readonly' attribute if you don't need it.
+        // datepickerInput.attr('readonly', 'readonly');
+    });
+    </script>
+  </body>
 </html>

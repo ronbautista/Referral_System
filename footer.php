@@ -267,8 +267,8 @@ $(document).on("submit", "#createReferral", function (e) {
         $("#errorMessage").removeClass("d-none");
         $("#errorMessage").text(res.message);
       } else if (res.status == 400) {
-        $("#errorMessage").removeClass("d-none");
-        $("#errorMessage").text(res.message);
+        $("#referralError").removeClass("d-none");
+        $("#referralError").text(res.message);
       }else if (res.status == 200) {
         $("#errorMessage").addClass("d-none");
         $("#staticBackdrop").modal("hide");
@@ -625,7 +625,38 @@ $('#referralModal').modal('show');
 });
 });
 
+// Code to View Records to Modal
+$(document).on('click', '.viewMyRecord', function(){
 
+var rffrl_id = $(this).val();
+$.ajax({
+    type:"GET",
+    url:"new_function.php?myrecord_rffrl_id=" + rffrl_id,
+    success: function(response){
+
+var res = jQuery.parseJSON(response);
+if(res.status == 422){
+    alert(res.message);
+}else if(res.status == 200){
+$('#fclt_name').text(res.data.fclt_name);
+$('#rffrl_id').val(res.data.id);
+<?php 
+$query = "SHOW COLUMNS FROM referral_forms";
+$query_run = mysqli_query($conn, $query);
+
+if(mysqli_num_rows($query_run) > 0){
+foreach($query_run as $field){
+?>
+$('#<?=  $field['Field'] ?>').val(res.data.<?=  $field['Field'] ?>);
+<?php 
+}
+}
+?>
+$('#referralModal').modal('show');
+        }
+    }
+});
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   // Get the 'leftTab' and 'rightTab' values from URL parameters
@@ -1033,10 +1064,6 @@ function setLatestMessage(contactID, latestMessage, time) {
     // Set the "wews" text with the same content as the "description" element
     wewsElement.textContent = descriptionElement.textContent;
 }
-
-
-
-
 
 function displayFirstContactName() {
     var firstContactName = referralCards[0].getAttribute('data-contact-name');

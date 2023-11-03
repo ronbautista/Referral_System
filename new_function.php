@@ -144,35 +144,36 @@ if(isset($_GET['rffrl_id'])){
     }
 }
 
-if(isset($_GET['myrecord_rffrl_id'])){
+if (isset($_GET['myrecord_rffrl_id'])) {
     $rffrl_id = mysqli_real_escape_string($conn, $_GET['myrecord_rffrl_id']);
 
     $query = "SELECT referral_forms.*, referral_records.*, facilities.*
     FROM referral_forms
     INNER JOIN referral_records ON referral_forms.id = referral_records.rfrrl_id
     INNER JOIN facilities ON facilities.fclt_id = referral_records.referred_hospital
-    WHERE rfrrl_id = '$rffrl_id'";
+    WHERE referral_forms.id = '$rffrl_id'";
     $query_run = mysqli_query($conn, $query);
 
-    if(mysqli_num_rows($query_run) == 1){
-        $rffrl = mysqli_fetch_array($query_run);
-        
-        $res = [
-            'status' => 200,
-            'message' => 'Referral fetch successfully by id',
-            'data' => $rffrl
-        ];
-        echo json_encode($res);
-        return false;
-    }else{
-        $res = [
-            'status' => 404,
-            'message' => 'No id found'
-        ];
-        echo json_encode($res);
-        return false;
+    $queryclumn = "SHOW COLUMNS FROM referral_forms";
+    $querycolumn_run = mysqli_query($conn, $queryclumn);
+
+    $queryData = mysqli_fetch_array($query_run);
+
+    $columnData = [];
+    while ($row = mysqli_fetch_assoc($querycolumn_run)) {
+        $columnNames[] = $row['Field'];
     }
+
+    $res = [
+        'status' => 200,
+        'message' => 'Data fetched successfully',
+        'data' => $queryData,
+        'column_data' => $columnNames,
+    ];
+
+    echo json_encode($res);
 }
+
 
 if (isset($_POST['create_referral'])) {
     // Retrieve and sanitize data from the form fields
