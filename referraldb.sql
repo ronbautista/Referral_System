@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 25, 2023 at 10:22 AM
+-- Generation Time: Nov 03, 2023 at 03:12 PM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -111,17 +111,8 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`id`, `user1`, `message`, `user2`, `date`, `time`) VALUES
-(84, '2', 'hey', '1', '2023-10-25', '02:20:10 PM'),
-(85, '2', 'asd', '3', '2023-10-25', '02:20:15 PM'),
-(86, '2', 'kok', '1', '2023-10-25', '02:20:19 PM'),
-(87, '2', 'asda', '1', '2023-10-25', '02:20:25 PM'),
-(88, '2', 'asda', '1', '2023-10-25', '02:20:26 PM'),
-(89, '2', 'koko', '1', '2023-10-25', '02:20:30 PM'),
-(90, '2', 'ji', '4', '2023-10-25', '02:22:34 PM'),
-(91, '2', 'sdgg', '4', '2023-10-25', '02:22:51 PM'),
-(92, '2', 'll', '4', '2023-10-25', '02:23:03 PM'),
-(93, '1', 'ko', '2', '2023-10-25', '02:23:45 PM'),
-(94, '2', 'jh', '1', '2023-10-25', '02:25:36 PM');
+(108, '1', 'hey', '2', '2023-11-02', '02:12:34 PM'),
+(109, '2', 'yow', '1', '2023-11-02', '02:12:41 PM');
 
 -- --------------------------------------------------------
 
@@ -148,7 +139,8 @@ INSERT INTO `patients` (`id`, `fname`, `mname`, `lname`, `contact`, `address`, `
 (30, 'Sarah', '', 'Jane', '009090', 'Airport', 2),
 (31, 'asda', 'asdad', 'asdasd', 'asdas', 'asdad', 3),
 (34, 'asd', 'asd', 'asd', 'asdasa', 'asd', 3),
-(35, 'uhuy', 'b', 'ubu', 'buyb', 'uyb', 2);
+(35, 'uhuy', 'b', 'ubu', 'buyb', 'uyb', 2),
+(36, 'asdad', 'asd', 'asdada', 'asd', '', 1);
 
 -- --------------------------------------------------------
 
@@ -158,21 +150,53 @@ INSERT INTO `patients` (`id`, `fname`, `mname`, `lname`, `contact`, `address`, `
 
 CREATE TABLE `patients_details` (
   `patients_details_id` int(11) NOT NULL,
-  `petsa_unang_checkup` varchar(255) NOT NULL,
+  `petsa_ng_unang_checkup` varchar(255) NOT NULL,
   `edad` varchar(255) NOT NULL,
   `timbang` varchar(255) NOT NULL,
   `taas` varchar(255) NOT NULL,
-  `kalagayan_kalusugan` varchar(255) NOT NULL,
-  `patients_id` int(11) NOT NULL
+  `patients_id` int(11) NOT NULL,
+  `kalagayan_ng_kalusugan` varchar(255) DEFAULT NULL,
+  `petsa_ng_huling_regla` varchar(255) DEFAULT NULL,
+  `kailan_ako_manganganak` varchar(255) DEFAULT NULL,
+  `pang_ilang_pagbubuntis` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `patients_details`
 --
 
-INSERT INTO `patients_details` (`patients_details_id`, `petsa_unang_checkup`, `edad`, `timbang`, `taas`, `kalagayan_kalusugan`, `patients_id`) VALUES
-(59, '', '', '', '', '', 29),
-(60, '10/25/2023', 'asda', 'asd', '', '', 30);
+INSERT INTO `patients_details` (`patients_details_id`, `petsa_ng_unang_checkup`, `edad`, `timbang`, `taas`, `patients_id`, `kalagayan_ng_kalusugan`, `petsa_ng_huling_regla`, `kailan_ako_manganganak`, `pang_ilang_pagbubuntis`) VALUES
+(65, '10/28/2023', 'adsada', 'asdd', 'asdad', 30, '', '', '', ''),
+(66, '10/27/2023', 'adsada', 'aasds', 'asdad', 35, 'asd', 'dasd', 'asda', 'dasdsa'),
+(67, '10/26/2023', '', '', '', 28, '', '', '', ''),
+(68, '10/26/2023', '', '', 'asd', 36, '', '', '', ''),
+(69, '', '', '', '', 0, NULL, NULL, NULL, NULL),
+(70, '', '', '', '', 0, NULL, NULL, NULL, NULL),
+(71, '', '', '', '', 0, NULL, NULL, NULL, NULL),
+(72, '', '', '', '', 0, NULL, NULL, NULL, NULL),
+(73, '', '', '', '', 0, NULL, NULL, NULL, NULL),
+(74, '', '', '', '', 0, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profile_image`
+--
+
+CREATE TABLE `profile_image` (
+  `id` int(11) NOT NULL,
+  `img_path` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `profile_image`
+--
+
+INSERT INTO `profile_image` (`id`, `img_path`) VALUES
+(31, 'C:\\xampp\\htdocs\\Referral_System/images/apple.jpg'),
+(32, 'C:\\xampp\\htdocs\\Referral_System/images/Apple-Logo-black.png'),
+(33, 'C:\\xampp\\htdocs\\Referral_System/images/Apple-Logo-black.png'),
+(34, 'C:\\xampp\\htdocs\\Referral_System/images/Apple-Logo-black.png');
 
 -- --------------------------------------------------------
 
@@ -200,20 +224,20 @@ INSERT INTO `referral_format` (`id`, `field_name`) VALUES
 
 CREATE TABLE `referral_forms` (
   `id` int(11) NOT NULL,
-  `Name` varchar(255) DEFAULT NULL
+  `Name` varchar(255) DEFAULT NULL,
+  `dadaad` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `referral_forms`
 --
 
-INSERT INTO `referral_forms` (`id`, `Name`) VALUES
-(233, 'asd'),
-(234, 'asd2'),
-(235, 'juj'),
-(236, 'new'),
-(237, 'new2'),
-(238, 'asd');
+INSERT INTO `referral_forms` (`id`, `Name`, `dadaad`) VALUES
+(239, 'asdadadasd', ''),
+(240, 'asdadad', ''),
+(241, 'asdada', ''),
+(248, 'First', ''),
+(249, 'Second', '');
 
 -- --------------------------------------------------------
 
@@ -430,7 +454,26 @@ INSERT INTO `referral_notification` (`id`, `message`, `rfrrl_id`, `fclt_id`, `da
 (702, 'Referral Accepted', 237, 3, '2023-10-25', '02:02 AM', 0),
 (703, 'Referral Declined', 237, 3, '2023-10-25', '02:02 AM', 0),
 (704, 'Referral Declined', 237, 3, '2023-10-25', '02:02 AM', 0),
-(705, 'New referral', 238, 2, '2023-10-25', '09:33 AM', 0);
+(705, 'New referral', 238, 2, '2023-10-25', '09:33 AM', 0),
+(706, 'Referral Declined', 236, 1, '2023-10-26', '01:54 PM', 0),
+(707, 'Referral Declined', 236, 1, '2023-10-26', '01:54 PM', 0),
+(708, 'Referral Accepted', 237, 1, '2023-10-26', '04:36 PM', 0),
+(709, 'Referral Declined', 236, 1, '2023-10-26', '04:37 PM', 0),
+(710, 'Referral Declined', 236, 1, '2023-10-26', '04:37 PM', 0),
+(711, 'Referral Declined', 237, 3, '2023-10-26', '04:46 PM', 0),
+(712, 'Referral Declined', 235, 3, '2023-10-26', '04:46 PM', 0),
+(713, 'New referral', 239, 2, '2023-10-26', '04:49 PM', 0),
+(714, 'New referral', 240, 2, '2023-10-26', '04:50 PM', 0),
+(715, 'New referral', 241, 2, '2023-10-26', '04:51 PM', 0),
+(716, 'New referral', 242, 2, '2023-10-26', '04:51 PM', 0),
+(717, 'New referral', 243, 2, '2023-10-26', '04:52 PM', 0),
+(718, 'New referral', 244, 2, '2023-10-26', '04:53 PM', 0),
+(719, 'New referral', 245, 2, '2023-10-26', '04:53 PM', 0),
+(720, 'New referral', 246, 2, '2023-10-26', '04:53 PM', 0),
+(721, 'New referral', 247, 2, '2023-10-26', '04:54 PM', 0),
+(722, 'New referral', 248, 2, '2023-10-26', '05:17 PM', 0),
+(723, 'Referral Accepted', 248, 1, '2023-10-26', '05:17 PM', 0),
+(724, 'New referral', 249, 2, '2023-10-26', '06:10 PM', 0);
 
 -- --------------------------------------------------------
 
@@ -453,12 +496,10 @@ CREATE TABLE `referral_records` (
 --
 
 INSERT INTO `referral_records` (`id`, `fclt_id`, `rfrrl_id`, `date`, `time`, `referred_hospital`, `status`) VALUES
-(209, 2, 233, '2023-10-25', '01:31 AM', '1', 'Accepted'),
-(210, 2, 234, '2023-10-25', '01:48 AM', '1', 'Accepted'),
-(211, 2, 235, '2023-10-25', '01:49 AM', '3', 'Accepted'),
-(212, 2, 236, '2023-10-25', '02:01 AM', '1', 'Pending'),
-(213, 2, 237, '2023-10-25', '02:02 AM', '3', 'Declined'),
-(214, 2, 238, '2023-10-25', '09:33 AM', 'NULL', 'Pending');
+(215, 2, 239, '2023-10-26', '04:49 PM', '3', 'Pending'),
+(217, 2, 241, '2023-10-26', '04:51 PM', '3', 'Pending'),
+(224, 2, 248, '2023-10-26', '05:17 PM', '1', 'Accepted'),
+(225, 2, 249, '2023-10-26', '06:10 PM', '1', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -481,19 +522,7 @@ CREATE TABLE `referral_transaction` (
 --
 
 INSERT INTO `referral_transaction` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`, `reason`) VALUES
-(34, 3, 168, 'Accepted', '2023-10-09', '03:49 AM', 'NULL'),
-(35, 3, 169, 'Declined', '2023-10-09', '03:50 AM', 'asdaad'),
-(36, 1, 169, 'Accepted', '2023-10-09', '03:51 AM', 'NULL'),
-(38, 3, 172, 'Declined', '2023-10-09', '04:39 AM', 'Ambot'),
-(39, 1, 172, 'Accepted', '2023-10-09', '04:40 AM', 'NULL'),
-(40, 1, 173, 'Accepted', '2023-10-23', '09:11 PM', 'NULL'),
-(41, 3, 171, 'Accepted', '2023-10-23', '09:12 PM', 'NULL'),
-(45, 3, 170, 'Declined', '2023-10-24', '12:54 AM', 'asdads'),
-(46, 1, 233, 'Accepted', '2023-10-25', '01:35 AM', 'NULL'),
-(47, 1, 234, 'Accepted', '2023-10-25', '01:48 AM', 'NULL'),
-(48, 3, 235, 'Declined', '2023-10-25', '01:50 AM', 'idk'),
-(49, 1, 235, 'Accepted', '2023-10-25', '02:00 AM', 'NULL'),
-(51, 3, 237, 'Declined', '2023-10-25', '02:02 AM', 'wla ra');
+(56, 1, 248, 'Accepted', '2023-10-26', '05:17 PM', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -542,7 +571,8 @@ INSERT INTO `second_trimester` (`id`, `check-up`, `patients_id`, `asdada`, `asda
 (35, 'first_checkup', 29, 'kak', 'kaka', 'kaka'),
 (36, 'first_checkup', 34, 'kok', 'kok', 'kok'),
 (37, 'first_checkup', 31, 'll', 'lll', 'll'),
-(38, 'first_checkup', 33, 'asd', 'asd', 'asd');
+(38, 'first_checkup', 33, 'asd', 'asd', 'asd'),
+(39, 'first_checkup', 36, 'as', 'as', 'as');
 
 -- --------------------------------------------------------
 
@@ -586,6 +616,20 @@ INSERT INTO `third_trimester` (`id`, `check-up`, `patients_id`, `asdaasd`, `asda
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `uploaded_files`
+--
+
+CREATE TABLE `uploaded_files` (
+  `id` int(11) NOT NULL,
+  `file_name` text NOT NULL,
+  `file_path` text NOT NULL,
+  `name` text NOT NULL,
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -596,6 +640,7 @@ CREATE TABLE `users` (
   `usersUid` varchar(128) NOT NULL,
   `usersrole` varchar(255) NOT NULL,
   `usersPwd` varchar(128) NOT NULL,
+  `usersImg` text NOT NULL,
   `fclt_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -603,9 +648,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`usersId`, `usersName`, `usersEmail`, `usersUid`, `usersrole`, `usersPwd`, `fclt_id`) VALUES
-(7, 'Jezrael Salino', 'jezraelsalino@gmail.com', 'admin', 'Admin', '$2y$10$zyga/EpPBf7Gw8iGIdELGOwxGVV5cKsMPcTG7G7DmDqhop6tdZpBK', 0),
-(8, 'Jezmahboi', 'jezraelsalino@yahoo.com', 'Jezipoo', 'Staff', '$2y$10$KHzZQ20quKBf7qR/AGUSz.BTjnZjYpm5pHrVOinVYz3Rbo1Ab251i', 0);
+INSERT INTO `users` (`usersId`, `usersName`, `usersEmail`, `usersUid`, `usersrole`, `usersPwd`, `usersImg`, `fclt_id`) VALUES
+(7, 'Jezrael Salino', 'jezraelsalino@gmail.com', 'admin', 'Admin', '$2y$10$zyga/EpPBf7Gw8iGIdELGOwxGVV5cKsMPcTG7G7DmDqhop6tdZpBK', 'images/65435628ea089_🤓.png', 0),
+(8, 'Jezmahboi', 'jezraelsalino@yahoo.com', 'Jezipoo', 'Staff', '$2y$10$KHzZQ20quKBf7qR/AGUSz.BTjnZjYpm5pHrVOinVYz3Rbo1Ab251i', 'images/boy.png', 0);
 
 --
 -- Indexes for dumped tables
@@ -640,6 +685,12 @@ ALTER TABLE `patients`
 --
 ALTER TABLE `patients_details`
   ADD PRIMARY KEY (`patients_details_id`);
+
+--
+-- Indexes for table `profile_image`
+--
+ALTER TABLE `profile_image`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `referral_format`
@@ -684,6 +735,12 @@ ALTER TABLE `third_trimester`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `uploaded_files`
+--
+ALTER TABLE `uploaded_files`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -709,19 +766,25 @@ ALTER TABLE `first_trimester`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `patients_details`
 --
 ALTER TABLE `patients_details`
-  MODIFY `patients_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `patients_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
+--
+-- AUTO_INCREMENT for table `profile_image`
+--
+ALTER TABLE `profile_image`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `referral_format`
@@ -733,37 +796,43 @@ ALTER TABLE `referral_format`
 -- AUTO_INCREMENT for table `referral_forms`
 --
 ALTER TABLE `referral_forms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
 -- AUTO_INCREMENT for table `referral_notification`
 --
 ALTER TABLE `referral_notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=706;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=725;
 
 --
 -- AUTO_INCREMENT for table `referral_records`
 --
 ALTER TABLE `referral_records`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
 
 --
 -- AUTO_INCREMENT for table `referral_transaction`
 --
 ALTER TABLE `referral_transaction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `second_trimester`
 --
 ALTER TABLE `second_trimester`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `third_trimester`
 --
 ALTER TABLE `third_trimester`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `uploaded_files`
+--
+ALTER TABLE `uploaded_files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`
