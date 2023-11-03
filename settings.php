@@ -10,182 +10,173 @@ $referrals = referrals();
 $prenatal_format = prenatal_format();
 ?>
 
-
-<!-- Modal -->
+<!-- Modal for Referral Fields -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title" id="staticBackdropLabel">Add referral fields</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
+        <h5 class="modal-title" id="staticBackdropLabel">Add Referral Field</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-<form id="addField">
-      <div class="modal-body">
-        <div class="alert alert-warning d-none" id="errorMessage"></div>
-    <div class="mb-3">
-      <label for="field_name">Field Name</label>
-        <input class="form-control" type="text" name="field_name" id="field_name" placeholder="Enter name">
+      <form id="addField">
+        <div class="modal-body">
+          <div class="alert alert-warning d-none" id="errorMessage"></div>
+          <div class="mb-3">
+            <label for="field_name">Field Name</label>
+            <input class="form-control" type="text" name="field_name" id="field_name" placeholder="Enter name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
     </div>
- 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add</button>
-      </div>
-    </div>
-    </form>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="prenatalModalAdd" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- Modal for Prenatal Fields -->
+<div class="modal fade" id="prenatalModalAdd" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="prenatalModalAddLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title" id="staticBackdropLabel">Add prenatal field</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
+        <h5 class="modal-title" id="prenatalModalAddLabel">Add Prenatal Field</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-<form id="addPrenatalField">
-      <div class="modal-body">
-        <div class="alert alert-warning d-none" id="errorMessage"></div>
-    <div class="mb-3">
-        <label for="field_name">Field Name</label>
-        <input class="form-control" type="text" name="field_name" id="field_name" placeholder="Enter name">
+      <form id="addPrenatalField">
+        <div class="modal-body">
+          <div class="alert alert-warning d-none" id="prenatalErrorMessage"></div>
+          <div class="mb-3">
+            <label for="prenatal_field_name">Field Name</label>
+            <input class="form-control" type="text" name="prenatal_field_name" id="prenatal_field_name" placeholder="Enter name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
     </div>
- 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add</button>
-      </div>
-    </div>
-    </form>
   </div>
 </div>
 
 <h2 class="left-heading mb-4">Settings</h2>
-<div class="feed">
-<div class="head">
-<h4 class="left-heading mb-4">Referral input fields</h4>
-<button type="button" class="right-button btn btn-primary " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add</button>
 
-</div>
-         <!-- Card Content  -->
+<!-- Referral Input Fields -->
+<div class="feed">
+  <div class="head">
+    <h4 class="left-heading mb-4">Referral Input Fields</h4>
+    <button type="button" class="btn btn-primary right-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add</button>
+  </div>
+  <!-- Card Content -->
   <div class="card">
-  <h6 class="card-header">Input Fields</h6>
-  <div class="card-body">
-  <table id="fieldTable" class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Field Name</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-    foreach ($referral_format as $referral) {
-      if ($referral['field_name'] !== 'id') {
-          $fieldName = str_replace('_', ' ', $referral['field_name']); // Replace underscores with spaces
-          ?>
+    <h6 class="card-header">Input Fields</h6>
+    <div class="card-body">
+      <table id="fieldTable" class="table table-bordered table-hover">
+        <thead>
           <tr>
-              <td><?= $fieldName ?></td>
-              <td>
-                  <button type="button" value="<?= $referral['field_name']; ?>" class="deleteField btn btn-outline-danger">Delete</button>
-              </td>
+            <th scope="col">Field Name</th>
+            <th scope="col">Action</th>
           </tr>
+        </thead>
+        <tbody>
           <?php
-      }
-    }
-    ?>
-  </tbody>
-</table>
-
-  </div>
-</div>
-</div>
-
-         <!-- Card Content  -->
-  <div class="feed">
-  <h4 class="left-heading mb-4">Referral forms</h4>
-  <div class="card">
-  <h6 class="card-header">Referrals</h6>
-  <div class="card-body">
-  <table id="referralsTable" class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Patient's Name</th>
-      <th scope="col">Facility</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-        <?php
-        // Loop through the referrals and display each patient in a table row
-        foreach ($referrals as $referrals) {
-            ?>
-            <tr>
-            <td><?=$referrals['id']?></td>
-            <td><?=$referrals['Name']?></td>
-            <td><?=$referrals['fclt_name']?></td>
-            <td>
-            <button type="button" value="<?=$referrals['id'];?>" class="deleteReferral btn btn-outline-danger">Delete</button>
-            </td>
-            </tr>
-            <?php
-        }
-        ?>
-            </tbody>
-</table>
-
-  </div>
-</div>
-</div>
-
-<div class="feed">
-<div class="head">
-<h4 class="left-heading mb-4">Prenatal input fields</h4>
-<button type="button" class="right-button btn btn-primary" data-bs-toggle="modal" data-bs-target="#prenatalModalAdd"><i class="fi fi-br-plus"></i> Add</button>
-</div>
-         <!-- Card Content  -->
-  <div class="card">
-  <h6 class="card-header">Input Fields</h6>
-  <div class="card-body">
-  <table id="prenatalFieldTable" class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Field Name</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php
-    foreach ($prenatal_format as $referral) {
-        if ($referral['Field'] !== 'patients_details_id' && $referral['Field'] !== 'patients_id') {
-            $fieldName = str_replace('_', ' ', $referral['Field']); // Replace underscores with spaces
-            $fieldName = ucfirst($fieldName); // Make the first letter uppercase
-            ?>
-            <tr>
+          foreach ($referral_format as $referral) {
+            if ($referral['field_name'] !== 'id') {
+              $fieldName = str_replace('_', ' ', $referral['field_name']); // Replace underscores with spaces
+              ?>
+              <tr>
                 <td><?= $fieldName ?></td>
                 <td>
-                    <button type="button" value="<?= $referral['Field']; ?>" class="deletePrenatalField btn btn-outline-danger">Delete</button>
+                  <button type="button" value="<?= $referral['field_name']; ?>" class="deleteField btn btn-outline-danger">Delete</button>
                 </td>
-            </tr>
-            <?php
-        }
-    }
-    ?>
-
-  </tbody>
-</table>
-
+              </tr>
+              <?php
+            }
+          }
+          ?>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+
+<!-- Referral Forms -->
+<div class="feed">
+  <h4 class="left-heading mb-4">Referral Forms</h4>
+  <div class="card">
+    <h6 class="card-header">Referrals</h6>
+    <div class="card-body">
+      <table id="referralsTable" class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Patient's Name</th>
+            <th scope="col">Facility</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          foreach ($referrals as $referral) {
+            ?>
+            <tr>
+              <td><?= $referral['id'] ?></td>
+              <td><?= $referral['Name'] ?></td>
+              <td><?= $referral['fclt_name'] ?></td>
+              <td>
+                <button type="button" value="<?= $referral['id']; ?>" class="deleteReferral btn btn-outline-danger">Delete</button>
+              </td>
+            </tr>
+            <?php
+          }
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
+<!-- Prenatal Input Fields -->
+<div class="feed">
+  <div class="head">
+    <h4 class="left-heading mb-4">Prenatal Input Fields</h4>
+    <button type="button" class="btn btn-primary right-button" data-bs-toggle="modal" data-bs-target="#prenatalModalAdd"><i class="fi fi-br-plus"></i> Add</button>
+  </div>
+  <!-- Card Content -->
+  <div class="card">
+    <h6 class="card-header">Input Fields</h6>
+    <div class="card-body">
+      <table id="prenatalFieldTable" class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Field Name</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          foreach ($prenatal_format as $prenatal) {
+            if ($prenatal['Field'] !== 'patients_details_id' && $prenatal['Field'] !== 'patients_id') {
+              $fieldName = str_replace('_', ' ', $prenatal['Field']); // Replace underscores with spaces
+              $fieldName = ucfirst($fieldName); // Make the first letter uppercase
+              ?>
+              <tr>
+                <td><?= $fieldName ?></td>
+                <td>
+                  <button type="button" value="<?= $prenatal['Field']; ?>" class="deletePrenatalField btn btn-outline-danger">Delete</button>
+                </td>
+              </tr>
+              <?php
+            }
+          }
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-
-
-    <?php
+<?php
 require 'footer.php';
 ?>

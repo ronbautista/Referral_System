@@ -16,7 +16,7 @@ $messages = messages();
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    height: 88vh;
+    height: 85vh;
     background-color: #f2f2f2;
     border-radius: 10px;
 }
@@ -151,6 +151,11 @@ $messages = messages();
 .messages-head img {
   width: 25px; /* Adjust the width of the logo within the mini-referral-logo */
   height: 25px; /* Adjust the height of the logo within the mini-referral-logo */
+}
+
+.messages-feed {
+  background-color: #ffffff;
+  border-radius: 10px;
 }
 
 </style>

@@ -26,48 +26,6 @@
 
 
 <script>
-          function displaySelectedImage() {
-            const input = document.getElementById('formFile');
-            const imagePreview = document.getElementById('imagePreview');
-            const imageName = document.getElementById('image_name');
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    imageName.textContent = input.files[0].name;
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Add an event listener to the button to trigger the file input
-        document.getElementById('uploadButton').addEventListener('click', function () {
-            document.getElementById('formFile').click(); // Trigger the file input
-        });
-
-        document.getElementById('saveButton').addEventListener('click', function () {
-            const formData = new FormData(document.getElementById('user_profile'));
-
-            fetch('upload.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('status').textContent = data.message;
-                if (data.message === 'File uploaded successfully') {
-                    // Close the modal if the upload is successful
-                    const staffEditModal = new bootstrap.Modal(document.getElementById('staffEditModal'));
-                    staffEditModal.hide();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
 
 // JavaScript to toggle the sidebar
     const sidebar = document.getElementById('sidebar');
@@ -650,13 +608,13 @@ if(res.status == 422){
 $('#fclt_name').text(res.data.fclt_name);
 $('#rffrl_id').val(res.data.id);
 <?php 
-$query = "SELECT * FROM referral_format";
+$query = "SHOW COLUMNS FROM referral_forms";
 $query_run = mysqli_query($conn, $query);
 
 if(mysqli_num_rows($query_run) > 0){
 foreach($query_run as $field){
 ?>
-$('#<?=  $field['field_name'] ?>').val(res.data.<?=  $field['field_name'] ?>);
+$('#<?=  $field['Field'] ?>').val(res.data.<?=  $field['Field'] ?>);
 <?php 
 }
 }
@@ -667,37 +625,7 @@ $('#referralModal').modal('show');
 });
 });
 
-$(document).on('click', '.viewMyRecord', function(){
 
-var rffrl_id = $(this).val();
-$.ajax({
-    type:"GET",
-    url:"new_function.php?myrecord_rffrl_id=" + rffrl_id,
-    success: function(response){
-
-var res = jQuery.parseJSON(response);
-if(res.status == 422){
-    alert(res.message);
-}else if(res.status == 200){
-$('#fclt_name').text(res.data.fclt_name);
-$('#rffrl_id').val(res.data.id);
-<?php 
-$query = "SELECT * FROM referral_format";
-$query_run = mysqli_query($conn, $query);
-
-if(mysqli_num_rows($query_run) > 0){
-foreach($query_run as $field){
-?>
-$('#<?=  $field['field_name'] ?>').val(res.data.<?=  $field['field_name'] ?>);
-<?php 
-}
-}
-?>
-$('#referralModal').modal('show');
-        }
-    }
-});
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   // Get the 'leftTab' and 'rightTab' values from URL parameters
@@ -724,8 +652,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set the active left button based on the 'leftTab' value
   buttonsLeft.forEach((button) => {
     const dataTab = button.getAttribute("data-tab");
-   // console.log("Button data-tab:", dataTab);
-    //console.log("leftTab value:", leftTab);
+    console.log("Button data-tab:", dataTab);
+    console.log("leftTab value:", leftTab);
 
     if (dataTab === leftTab) {
       setActiveButton(buttonsLeft, button);
@@ -736,8 +664,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set the active right button based on the 'rightTab' value
   buttonsRight.forEach((button) => {
     const dataTab = button.getAttribute("data-tab");
-    //console.log("Button data-tab:", dataTab);
-   // console.log("rightTab value:", rightTab);
+    console.log("Button data-tab:", dataTab);
+    console.log("rightTab value:", rightTab);
 
     if (dataTab === rightTab) {
       setActiveButton(buttonsRight, button);
@@ -812,7 +740,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       dataType: "json",
       success: function (response) {
-        //console.log("Fetch data success:", response);
+        console.log("Fetch data success:", response);
 
         if (response.success) {
           // Log the data received
@@ -851,7 +779,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       dataType: "json",
       success: function (response) {
-        //console.log("AJAX success:", response);
+        console.log("AJAX success:", response);
         if (response.success) {
           displayForm(response.columns);
         } else {
@@ -1036,7 +964,7 @@ function loadLatestMessageForContact(contactIDValue) {
 if (referralCards.length > 0) {
     var firstCard = referralCards[0];
     contactIDValue = firstCard.getAttribute('data-contact-id');
-    //console.log("Contact ID: " + contactIDValue);
+    console.log("Contact ID: " + contactIDValue);
     firstCard.click();
     loadMessages(contactIDValue);
     displayFirstContactName();
@@ -1067,7 +995,7 @@ function loadLatestMessage(contactID) {
             var time = response.time; // Get the time from the response
 
             // Log the latest message and time to the console
-            //console.log("Latest Message: " + latestMessage);
+           // console.log("Latest Message: " + latestMessage);
             //console.log("Time: " + time);
 
             // Update the latest message for the specific contact card
@@ -1151,6 +1079,8 @@ function scrollMessageContainerToBottom() {
             });
         }
     });
+
+
 </script>
 
 </body>

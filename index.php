@@ -328,8 +328,6 @@ if ($result1 && $result2) {
 
 
 
-
-
 <?php
 include_once 'footer.php'
 ?>

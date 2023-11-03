@@ -70,7 +70,7 @@ if (isset($_SESSION["first_account"])) {
   </div>
 
     
-    <!-- Form Content  -->
+    <!-- CREATE REFERRAL  -->
     <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -122,7 +122,7 @@ if (isset($_SESSION["first_account"])) {
         </div>
 
    
-<!-- Form Content -->
+<!-- REFERRAL RECORDS -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content new_modal">

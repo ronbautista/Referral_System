@@ -391,11 +391,12 @@ if (isset($_POST['login'])) {
             // Verify the provided password against the stored hash
             if (password_verify($pwd, $hashed_password)) {
                 $_SESSION["second_account"] = true;
-                $_SESSION["userid"] = $user["usersId"];
+                $_SESSION["usersid"] = $user["usersId"];
                 $_SESSION["usersname"] = $user["usersName"];
                 $_SESSION["usersuid"] = $user["usersUid"];
                 $_SESSION["usersrole"] = $user["usersrole"];
                 $_SESSION["email"] = $user["usersEmail"];
+                $_SESSION["usersimg"] = $user["usersImg"];
 
                 // Return a JSON response for a successful login
                 $res = [
@@ -700,7 +701,7 @@ if (isset($_POST['send_message'])) {
     }
 
     if ($query_run) {
-        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Message from ' . $fclt_name));
+        $pusher->trigger('my-channel', 'my-event', array());
         $res = [
             'status' => 200,
             'message' => 'Message successfully sent'

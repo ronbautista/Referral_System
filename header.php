@@ -129,7 +129,7 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                       echo '<li class="nav-item">
                       <div class="dropdown">
                       <div class="logo-container">
-                          <img src="images/boy.png" alt="Logo" class="logo-icon">
+                          <img src="' . $_SESSION["usersimg"] . '" alt="Logo" class="logo-icon">
                       </div>
                       <div class="button-container">
                       <a href="#" role="button" class="user-name">' . $_SESSION["usersname"] . '<i class="fi fi-sr-angle-small-down"></i></a>
@@ -189,7 +189,6 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
   </div>
 </div>
 
-
     <!-- EDIT STAFF PROFILE modal -->
     <div class="modal fade" id="staffEditModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" id="staffEdit">
@@ -202,9 +201,15 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                     <div id="status"></div>
                     <form id="user_profile" enctype="multipart/form-data">
                         <div class="image-profile">
+                        <?php
+                              if (isset($_SESSION["second_account"])) {
+                                ?>
                             <div class="image-content">
-                                <img src="images/boy.png" alt="Logo" class="profile-icon" id="imagePreview">
+                                <img src="<?php echo $_SESSION["usersimg"] ?>" alt="Logo" class="profile-icon" id="imagePreview">
                             </div>
+                            <?php
+                              }
+                              ?>
                             <div class="edit-button">
                                 <!-- Use a button to trigger the file input -->
                                 <button type="button" class="btn btn-primary" id="uploadButton">Upload Image</button>
@@ -217,14 +222,25 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
                         </div>
                         <div class="profile-details">
                             <!-- Additional form fields for name and description -->
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" name="description" id="description" placeholder="Description"></textarea>
-                            </div>
+                            <?php
+                              if (isset($_SESSION["second_account"])) {
+                                ?>
+                                <input type="text" hidden class="form-control" name="id" value="<?php echo $_SESSION["usersid"] ?>">
+                                <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" name="username" aria-describedby="emailHelp" value="<?php echo $_SESSION["usersname"] ?>">
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email" value="<?php echo $_SESSION["email"] ?>">
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="*****">
+                                      </div>
+                                <?php
+                              }
+                              ?>
                             <button type="button" class="btn btn-primary" id="saveButton">Save</button>
                         </div>
                     </form>
@@ -234,8 +250,47 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
     </div>
 
     <script>
+        function displaySelectedImage() {
+          const input = document.getElementById('formFile');
+          const imagePreview = document.getElementById('imagePreview');
+          const imageName = document.getElementById('image_name');
 
+          if (input.files && input.files[0]) {
+              const reader = new FileReader();
+
+              reader.onload = function (e) {
+                  imagePreview.src = e.target.result;
+                  imageName.textContent = input.files[0].name;
+              };
+
+              reader.readAsDataURL(input.files[0]);
+          }
+      }
+
+      // Add an event listener to the button to trigger the file input
+      document.getElementById('uploadButton').addEventListener('click', function () {
+          document.getElementById('formFile').click(); // Trigger the file input
+      });
+
+      document.getElementById('saveButton').addEventListener('click', function () {
+          const formData = new FormData(document.getElementById('user_profile'));
+
+          fetch('upload.php', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById('status').textContent = data.message;
+              if (data.message === 'File uploaded successfully') {
+                  // Close the modal if the upload is successful
+                  const staffEditModal = new bootstrap.Modal(document.getElementById('staffEditModal'));
+                  staffEditModal.hide();
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+      });
     </script>
-
-
 
