@@ -647,6 +647,7 @@ $(document).on('click', '.viewMyRecord', function () {
                 // Display referral transactions
                 var querytransactions_data = res.transactions;
                 var referralTransactionsDiv = $('#referral_transactions');
+                var audit = document.querySelector(".referral-audit");
                 referralTransactionsDiv.empty(); // Clear any previous data
 
                 for (var i = 0; i < querytransactions_data.length; i++) {
@@ -656,6 +657,7 @@ $(document).on('click', '.viewMyRecord', function () {
                     var fclt_name = transactionData.fclt_name;
 
                     if (status) {
+                        audit.classList.remove("d-none");
                         var pElement = $('<p></p>'); // Create a new <p> element
                         pElement.text(status +" by "+ fclt_name +" at "+ time); // Include the label
                         referralTransactionsDiv.append(pElement); // Append the <p> element to the div

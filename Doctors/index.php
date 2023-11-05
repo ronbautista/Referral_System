@@ -13,30 +13,26 @@
   <body>
 
   <div class="container">
-  <h1>Referral System Project</h1>
+  <h1>Dorctors login</h1>
   <div class="cards-container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4" style="width: 18rem;">
-                <img src="images/medical.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Referral System</h5>
-                    <p class="card-text">Referral system interface here</p>
-                    <a href="System/index.php" class="btn btn-primary">Login</a>
-                </div>
-            </div>
+      <div class="image">
+        <img src="images/doctor.jpg" alt="">
+      </div>
+      <div class="form">
+        <h1>Login in your account</h1>
+        <form>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username">
         </div>
-        <div class="col-md-6">
-            <div class="card mb-4" style="width: 18rem;">
-                <img src="images/doctor-illustration.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Doctors</h5>
-                    <p class="card-text">Doctor interface here</p>
-                    <a href="Doctors/index.php" class="btn btn-primary">Login</a>
-                </div>
-            </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label" aria-describedby="password">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1">
+          <div id="password" class="form-text">Forgot password?</div>
         </div>
-    </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      </div>
     </div>
 </div>
 

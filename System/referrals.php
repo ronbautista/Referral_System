@@ -123,7 +123,7 @@ if (isset($_SESSION["first_account"])) {
             </div>
           </div>
             <div class="modal-footer">
-            <div class="referral-audit">
+            <div class="referral-audit d-none">
           <div class="mb-3">
             <h5>Referral Audit</h5>
             <div id="referral_transactions"></div>
