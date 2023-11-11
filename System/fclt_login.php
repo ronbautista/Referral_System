@@ -41,7 +41,7 @@
             <input type="password" class="form-control" name="pwd" id="pwd">
         </div>
         <button class="btn btn-primary" type="submit" name="submit">Login</button>
-         <a class="btn btn-primary" href="fclt_signup.php" role="button">Sign Up</a> 
+         <a class="btn btn-outline-primary" href="fclt_signup.php" role="button">Sign Up</a> 
             </form>
             </div>
             </div>

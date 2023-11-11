@@ -48,41 +48,53 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
             <?php 
             if (isset($_SESSION["first_account"])) {
               if ($_SESSION["facility"] == 'Birthing Home') {
-                echo '<li>
-                <a href="referrals.php" class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'referrals.php' ? 'active' : '') . '" id="referrals-link">
-                    <i class="fi fi-sr-document"></i><span class="sidebar-label">Referrals</span>
-                </a>
-                </li>';
+               ?>
+                <li>
+                    <a href="referrals.php" class="sidebarbtn <?php echo (basename($_SERVER['PHP_SELF']) === 'referrals.php' ? 'active' : '') ?>" id="referrals-link">
+                        <i class="fi fi-sr-document"></i><span class="sidebar-label">Referrals</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="messages.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'messages.php' ? 'active' : ''; ?>" id="messages-link">
+                      <i class="fi fi-sr-envelope"></i><span class="sidebar-label">Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="prenatal.php" class="sidebarbtn <?php echo (basename($_SERVER['PHP_SELF']) === 'prenatal.php' || basename($_SERVER['PHP_SELF']) === 'add_prenatal.php' || basename($_SERVER['PHP_SELF']) === 'view_prenatal.php') ? 'active' : ''; ?>" id="prenatal-link">
+                        <i class="fi fi-ss-users"></i><span class="sidebar-label">Prenatal</span>
+                    </a>
+                </li>
+
+              <?php 
             }else if ($_SESSION["facility"] == 'Hospital' || $_SESSION["facility"] == 'Provincial Hospital') {
-                  echo '
-                  <li>
-                  <a href="new_referrals.php" class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'new_referrals.php' ? 'active' : '') . '" id="new-referrals-link">
+              ?>
+                <li>
+                  <a href="new_referrals.php" class="sidebarbtn <?php echo (basename($_SERVER['PHP_SELF']) === 'new_referrals.php' ? 'active' : ''); ?>" id="new-referrals-link">
                       <i class="fi fi-sr-document"></i><span class="sidebar-label">New Referrals</span>
                   </a>
-                    </li>
+                </li>
                 <li>
-                  <a href="accepted_referrals.php"class="sidebarbtn ' . (basename($_SERVER['PHP_SELF']) === 'accepted_referrals.php' ? 'active' : '') . '" id="accepted-referrals-link">
-                  <i class="fi fi-sr-vote-yea"></i><span class="sidebar-label">Referral Transactions</span>
-                  </a
-                  >
-                </li>';
+                    <a href="accepted_referrals.php" class="sidebarbtn <?php echo (basename($_SERVER['PHP_SELF']) === 'accepted_referrals.php' ? 'active' : ''); ?>" id="accepted-referrals-link">
+                        <i class="fi fi-sr-vote-yea"></i><span class="sidebar-label">Referral Transactions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="messages.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'messages.php' ? 'active' : ''; ?>" id="messages-link">
+                      <i class="fi fi-sr-envelope"></i><span class="sidebar-label">Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="prenatal_list.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'prenatal_list.php' ? 'active' : ''; ?>" id="prenatal-list-link">
+                      <i class="fi fi-ss-users"></i><span class="sidebar-label">Prenatal List</span>
+                    </a>
+                </li>
+              <?php 
               }
                 else{
                   echo '';
                 }
             }
             ?>
-            <li>
-              <a href="messages.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'messages.php' ? 'active' : ''; ?>" id="messages-link">
-              <i class="fi fi-sr-envelope"></i><span class="sidebar-label">Messages</span>
-              </a
-              >
-            </li>
-              <li>
-                <a href="prenatal.php" class="sidebarbtn <?php echo basename($_SERVER['PHP_SELF']) === 'prenatal.php' ? 'active' : ''; ?>" id="prenatal-link">
-                <i class="fi fi-ss-users"></i><span class="sidebar-label">Prenatal</span></a
-                >
-              </li>
               <?php 
               if (isset($_SESSION["second_account"])) {
                   if ($_SESSION["usersrole"] == 'Admin') {

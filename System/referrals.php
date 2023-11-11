@@ -10,11 +10,14 @@ $referral_transactions = referral_transactions();
 ?>
 <div class="feed">
 <div class="head" id="reload">
-<h2 class="left-heading mb-4">Your Referrals</h2>
+<h2 class="mb-4">Your Referrals</h2>
 <?php 
 if (isset($_SESSION["first_account"])) {
     if ($_SESSION["facility"] == 'Birthing Home' || $_SESSION["facility"] == 'Provincial Hospital') {
-        echo '<button type="button" class="right-button btn btn-primary " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Create Referral</button>';
+        echo '
+        <div class = "buttons">
+        <button type="button" class="right-button btn btn-primary " data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Create Referral</button>
+        </div>';
     }
 }
 ?>
@@ -108,7 +111,7 @@ if (isset($_SESSION["first_account"])) {
                       ?>
                         <div class="col-sm-12 col-md-6 col-lg-3">
                           <label for="<?= $field ?>"><?= $fieldNameLabel ?></label>
-                          <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" class="form-control">
+                          <input type="text" readonly name="<?= $field ?>" id="<?= $field ?>" value="<?= $field ?>" class="form-control">
                         </div>
                       <?php
                           }
@@ -161,42 +164,142 @@ if (isset($_SESSION["first_account"])) {
             <div class="alert alert-danger d-none" id="referralError"></div>
           <form id="createReferral">
             <div class="row">
-              <?php 
-              $query = "SHOW COLUMNS FROM referral_forms";
-              $query_run = mysqli_query($conn, $query);
 
-              if (mysqli_num_rows($query_run) > 0) {
-                foreach ($query_run as $field) {
-                    if ($field['Field'] !== 'id') {
-                        $fieldLabel = str_replace('_', ' ', $field['Field']);
-            ?>
-                <div class="col-sm-12 col-md-6 col-lg-3">
-                <label for="<?= $field['Field'] ?>"><?= $fieldLabel ?></label>
-                <input type="text" name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
-                </div>
-            <?php
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Name</label>
+              <input type="text" name="name" id="name" class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Age</label>
+              <input type="text" name="age" id="age" class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Sex</label>
+              <input type="text" name="sex" id="sex" class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Birth Date</label>
+              <input type="date" name="bdate" id="bdate" class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Sex</label>
+              <input type="text" name="sex" id="sex" class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Address</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Admitting Dx</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Rtpcr</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Antigen</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Clinical ssx of covid</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Exposure to covid</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Temp</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>HR</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Resp</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Bp</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>O2sat</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>O2aided</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Procedures needed</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>FH</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>IE</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>FHT</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>LMP</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>EDC</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>AOG</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>UTZ</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>UTZ AOG</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>EDD</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Enterpretation</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+              <label>Diagnostic test</label>
+              <input type="text" name="address" id="address " class="form-control">
+              </div>
+
+              <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Select Refer Hospital</label>
+                <select class="form-select" name="referred_hospital">
+                <option value="NULL"></option>
+                <?php 
+                $query = "SELECT * FROM facilities WHERE fclt_id != '" . $_SESSION["id"] . "'";
+                  $query_run = mysqli_query($conn, $query);
+
+                  if (mysqli_num_rows($query_run) > 0) {
+                    while ($row = mysqli_fetch_assoc($query_run)) {
+                ?>
+                    <option value="<?= $row['fclt_id'] ?>"><?= $row['fclt_name'] ?></option>
+                <?php
                     }
-                }
-            }
-              ?>
-      <div class="col-sm-12 col-md-6 col-lg-3">
-        <label>Select Refer Hospital</label>
-        <select class="form-select" name="referred_hospital">
-        <option value="NULL"></option>
-        <?php 
-         $query = "SELECT * FROM facilities WHERE fclt_id != '" . $_SESSION["id"] . "'";
-          $query_run = mysqli_query($conn, $query);
-
-          if (mysqli_num_rows($query_run) > 0) {
-            while ($row = mysqli_fetch_assoc($query_run)) {
-        ?>
-            <option value="<?= $row['fclt_id'] ?>"><?= $row['fclt_name'] ?></option>
-        <?php
-            }
-          }
-        ?>
-      </select>
-      </div>
+                  }
+                ?>
+              </select>
+              </div>
       </div>
           </div>
           <div class="tab-pane fade" id="records" role="tabpanel" aria-labelledby="records-tab">

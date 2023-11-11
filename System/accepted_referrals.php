@@ -61,25 +61,6 @@ $getreferral = getAllReferrals();
   </div>
   </div>
 
-
-      
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-    <div class="toast-header">
-      <strong class="me-auto">Notification</strong>
-      <small>Just Now</small>
-      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-    <p class="toast-message">Hello, world! This is a toast message.</p> 
-    <div class="mt-2 pt-2 border-top">
-    <a class="btn btn-primary btn-sm" href="accepted_referrals.php" role="button">View</a>
-    </div>
-  </div>
-  </div>
-</div>
-    </div>
-
   
 <!-- Form Content -->
 <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -134,6 +115,12 @@ $getreferral = getAllReferrals();
         </div>
       </div>
       <div class="modal-footer">
+      <div class="referral-audit d-none">
+          <div class="mb-3">
+            <h5>Referral Audit</h5>
+            <div id="referral_transactions"></div>
+          </div>
+        </div>
       <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
       <button type="button" class="btn btn-primary" id="restore_button">Restore Referral</button>
         </div>

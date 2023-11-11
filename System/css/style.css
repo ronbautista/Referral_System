@@ -9,7 +9,7 @@
 @import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: url('/Referral_System/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf');
+  src: url('/Referral_System/System/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf');
 }
 
 body {
@@ -200,8 +200,18 @@ body {
 
 .head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+}
+
+.head .buttons{
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+.head h2{
+  margin-top: 10px; 
 }
 .head a{
   text-decoration: none;
@@ -505,8 +515,10 @@ h1 h2 h3 h4 h5 h6 {
 }
 
 .mini-referral-logo {
-  width: 50px; /* Reduce the width to make the logo smaller */
-  height: 50px; /* Reduce the height to make the logo smaller */
+  min-width: 50px; /* Reduce the width to make the logo smaller */
+  min-height: 50px; /* Reduce the height to make the logo smaller */
+  max-width: 50px; /* Reduce the width to make the logo smaller */
+  max-height: 50px; 
   padding: 10px;
   border-radius: 50%;
   margin-right: 16px;
@@ -576,8 +588,8 @@ h1 h2 h3 h4 h5 h6 {
 #viewbtn{
   background-color: rgba(141, 140, 140, 0.2);
   color: #5a5a5a;
-  width: 70px;
-  height: 30px;
+  min-width: 70px;
+  min-height: 30px;
 }
 #icon-btn {
   color: #5a5a5a;
@@ -711,14 +723,6 @@ label{
   font-weight: 500;
   padding: 6px 15px;
   border-radius: 4px;
-}
-
-.head .btn{
-  font-size: 16px;
-  font-weight: 500;
-  padding: 6px 15px;
-  border-radius: 4px;
-  margin-top: -30px;
 }
 
 .modal .close{
@@ -857,4 +861,7 @@ label{
 #referral_transactions{
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 0.9rem;
+}
+.prenatal_table{
+  min-height: 560px;
 }

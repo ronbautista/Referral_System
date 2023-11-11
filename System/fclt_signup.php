@@ -2,19 +2,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    <link rel="stylesheet" href="css/login.css?v=<?php echo time();?>">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/signup.css?v=<?php echo time();?>">
     <title>Document</title>
 </head>
-<body>
+<style>
 
-<div class="fclt-signup">
+</style>
+<body>
+<div class="container">
+  <h1>Facility Signup</h1>
+  <div class="cards-container">
+      <div class="image">
+        <img src="images/facility.jpg" alt="">
+      </div>
+      <div class="form">
+        <h1>Sign in account</h1>
 <form action="includes/fclt_signup.inc.php" method="post">
-<h2>Sign Up</h2>
 <div class="row">
   <div class="col-6">
   <label for="name" class="form-label">Facility Name</label>
@@ -48,10 +54,6 @@
   <label for="formFile" class="form-label">Profile Picture</label>
   <input class="form-control" type="file" id="formFile">
 </div>
-  <center>
-        <a class="btn btn-outline-primary" href="fclt_login.php" role="button">Login</a>
-        <button class="btn btn-outline-primary" type="submit" name="submit">Sign In</button>
-        </center>
         <div class="alert">
         <?php
         if(isset($_GET["error"])){
@@ -70,7 +72,14 @@
         }
     ?>
 </div>
+</div>
+<center>
+  <button class="btn btn-primary" type="submit" name="submit">Sign In</button>
+  <a class="btn btn-outline-primary" href="fclt_login.php" role="button">Login</a>
+</center>
 </form>
+</div>
+</div>
 </div>
 </body>
 </html>

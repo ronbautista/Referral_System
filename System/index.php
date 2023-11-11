@@ -29,7 +29,6 @@ if ($result1 && $result2) {
 ?>
 
 <div class="main-cards">
-
 <div class="mini-cards" id="card1">
   <div class="mini-logo">
     <img src="images/person.png" class="mini-logo-image" alt="Logo">
@@ -55,23 +54,16 @@ if ($result1 && $result2) {
     <button class="mini-menu-button">...</button>
   </div>
 </div>
-
-
 </div>
-
-
 
 <div class="main-feed">
   <div class="row">
-
   <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
         <div class="head">
               <h3 class="left-heading mb-4">New Referrals</h3>
-              <a class="see_all" href="#" role="button">View All</a>
             </div>
           <div class="home-feed">
           <div class="yourDivClass">
-
   <?php
       $count=0;
               // Loop through the referrals and display each patient in a table row
@@ -99,18 +91,7 @@ if ($result1 && $result2) {
                     }
                   ?>
                 </div>
-                <?php 
-                if($status == NULL){
-                  ?>
-                  <button class="confirm-button" id="Pendingbtn">Pending</button>
-                  <?php
-                }else{
-                  ?>
-                  <button class="confirm-button" id="<?= $status ?>btn"><?= $status ?></button>
-                  <?php
-                }
-                ?>
-                
+                <button class="confirm-button" id="viewbtn">View</button>
             </div>
             <?php
       $count++;
@@ -126,7 +107,6 @@ if ($result1 && $result2) {
     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
     <div class="head">
           <h3 class="left-heading mb-4">Prenatal</h3>
-          <a class="see_all" href="#" role="button">View All</a>
         </div>
       <div class="home-feed">
         <div class="yourDivClass">
@@ -159,7 +139,6 @@ if ($result1 && $result2) {
     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4">
     <div class="head">
           <h3 class="left-heading mb-4">Messages</h3>
-          <a class="see_all" href="#" role="button">View All</a>
         </div>
       <div class="home-feed">
         <div class="yourDivClass">
@@ -205,96 +184,6 @@ if ($result1 && $result2) {
   </div>
 </div>
 
-
-
-    
-    <!-- Form Content  -->
-    <div class="modal fade" id="referralModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">From: <span id="fclt_name"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
-        </div>
-    <div class="modal-body">
-    <form id="referral_form">
-    <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-3">
-        <label for="rffrl_id">Patient's ID</label>
-        <input type="text" readonly name="rffrl_id" id="rffrl_id" class="form-control">
-        </div>
-        <?php 
-          $query = "SELECT * FROM referral_format";
-          $query_run = mysqli_query($conn, $query);
-
-          if (mysqli_num_rows($query_run) > 0) {
-              foreach ($query_run as $field) {
-                  $fieldNameLabel = str_replace('_', ' ', $field['field_name']);
-          ?>
-                  <div class="col-sm-12 col-md-6 col-lg-3">
-                      <label for="<?= $field['field_name'] ?>"><?= $fieldNameLabel ?></label>
-                      <input type="text" readonly name="<?= $field['field_name'] ?>" id="<?= $field['field_name'] ?>" class="form-control">
-                  </div>
-          <?php
-              }
-          }
-
-        ?>
-        </div>
-            </div>
-            <div class="modal-footer">
-        <button type="button" class="btn btn1" id="decline_button">Decline Referral</button>
-        <button type="button" class="btn btn2" id="accept_button">Accept Referral</button>
-    </div>
-    </form>
-        </div>
-        </div>
-        </div>
-
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" id="staticBackdropLabel">Create Referral</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
-      </div>
-    <div class="modal-body">
-    <form id="createReferral">
-    <div class="row">
-      <?php 
-      $query = "SHOW COLUMNS FROM referral_forms";
-      $query_run = mysqli_query($conn, $query);
-
-      if (mysqli_num_rows($query_run) > 0) {
-        foreach ($query_run as $field) {
-            if ($field['Field'] !== 'id') {
-                $fieldLabel = str_replace('_', ' ', $field['Field']);
-    ?>
-                <div class="col-sm-12 col-md-6 col-lg-3">
-                    <label for="<?= $field['Field'] ?>"><?= $fieldLabel ?></label>
-                    <input type="text" name="<?= $field['Field'] ?>" id="<?= $field['Field'] ?>" class="form-control">
-                </div>
-    <?php
-            }
-        }
-    }
-
-      ?>
-        </div>
-
-
-    </div>
-    <div class="modal-footer">
-    <button type="button" class="btn btn1" data-bs-dismiss="modal">Close</button>
-      <button type="submit" class="btn btn2">Create</button>
-    </div>
-    </div>
-    </form>
-    </div>
-    </div>
-
-
-
     <!-- STAFF LOGIN FORM -->
   <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog" id="staffModalLogin">
@@ -324,8 +213,6 @@ if ($result1 && $result2) {
     </div>
   </div>
 </div>
-
-
 
 
 <?php

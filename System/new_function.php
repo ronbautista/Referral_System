@@ -129,6 +129,12 @@ if (isset($_GET['rffrl_id'])) {
     $queryclumn = "SHOW COLUMNS FROM referral_forms";
     $querycolumn_run = mysqli_query($conn, $queryclumn);
 
+    $querytransactions = "SELECT *
+	FROM referral_transaction
+    INNER JOIN facilities ON referral_transaction.fclt_id = facilities.fclt_id
+    WHERE rfrrl_id = '$rffrl_id'";
+    $querytransactions_run = mysqli_query($conn, $querytransactions);
+
     $queryData = mysqli_fetch_array($query_run);
 
     $columnData = [];
@@ -136,11 +142,19 @@ if (isset($_GET['rffrl_id'])) {
         $columnNames[] = $row['Field'];
     }
 
+    $querytransactions_run = mysqli_query($conn, $querytransactions);
+
+    $querytransactions_data = [];
+    while ($row = mysqli_fetch_array($querytransactions_run)) {
+        $querytransactions_data[] = $row;
+    }
+
     $res = [
         'status' => 200,
         'message' => 'Data fetched successfully',
         'data' => $queryData,
         'column_data' => $columnNames,
+        'transactions' => $querytransactions_data,
     ];
 
     echo json_encode($res);
@@ -301,6 +315,7 @@ if (isset($_POST['add_patient'])) {
     echo json_encode($responseArray);
 }
 
+
 if (isset($_POST['patients_details'])) {
     $data = [];
 
@@ -330,7 +345,7 @@ if (isset($_POST['patients_details'])) {
             'status' => 500,
             'message' => 'Patient not created successfully'
         ];
-        echo json_encode($res);
+        echo json_encode($responseArray);
         return;
     }
 }
@@ -462,15 +477,20 @@ if (isset($_POST['save_field'])) {
         return false;
     }
 
+    if (strpos($field, '/') !== false) {
+        $res = [
+            'status' => 300,
+            'message' => 'Invalid Field Name'
+        ];
+        echo json_encode($res);
+        return false;
+    }
+
     if (!preg_match('/^\d+$/', $field)) {
 
         // Execute the second query
         $query = "ALTER TABLE referral_forms ADD $field varchar(255)";
         $query_run = mysqli_query($conn, $query);
-
-        $second_query = "INSERT INTO referral_format (field_name) values('$field')";
-        $second_query_run = mysqli_query($conn, $second_query);
-
         
     } else {
         $res = [
@@ -481,7 +501,7 @@ if (isset($_POST['save_field'])) {
         return false;
     }
 
-    if ($query_run && $second_query_run) {
+    if ($query_run) {
         // Both queries executed successfully
         $res = [
             'status' => 200,
@@ -503,7 +523,7 @@ if (isset($_POST['save_field'])) {
 }
 
 if (isset($_POST['save_prenatal_field'])) {
-    $field = mysqli_real_escape_string($conn, $_POST['field_name']);
+    $field = mysqli_real_escape_string($conn, $_POST['prenatal_field_name']);
     $field = preg_replace('/\s+/', ' ', $field); // Replace multiple spaces with one space
     $field = str_replace(' ', '_', $field);
     $field = strtolower($field); // Convert the field name to lowercase

@@ -283,10 +283,9 @@ function minireferrals() {
     // Perform the query to fetch all rows from the "referrals" table
     $sql = "SELECT *
     FROM referral_records
-    INNER JOIN referral_transaction ON referral_transaction.rfrrl_id = referral_records.rfrrl_id
-    INNER JOIN referral_forms ON referral_forms.id = referral_transaction.rfrrl_id
+    INNER JOIN referral_forms ON referral_forms.id = referral_records.rfrrl_id
     INNER JOIN facilities ON facilities.fclt_id = referral_records.fclt_id
-    WHERE referral_transaction.fclt_id = '$fclt_id' OR referral_records.fclt_id = '$fclt_id'
+    WHERE referred_hospital = '$fclt_id' AND referral_records.status = 'Pending' OR facilities.fclt_type = 'Provincial Hospital' AND referral_records.status = 'Declined'
     LIMIT 4";
     $result = mysqli_query($conn, $sql);
 

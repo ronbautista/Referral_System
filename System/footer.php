@@ -317,7 +317,7 @@ $(document).on("submit", "#addPatient", function (e) {
 
   $.ajax({
     type: "POST",
-    url: "new_function.php",
+    url: "prenatal_function.php",
     data: formData,
     processData: false,
     contentType: false,
@@ -330,9 +330,10 @@ $(document).on("submit", "#addPatient", function (e) {
       } else if (res.status == 200) {
         $("#errorMessage").addClass("d-none");
         $("#staticBackdrop").modal("hide");
-        console.log(response);
         $("#addPatient")[0].reset();
 
+        
+        $("#nav_buttons").load(location.href + " #nav_buttons");
         $("#table").load(location.href + " #table");
       }
     },
@@ -593,32 +594,50 @@ $(document).on("submit", "#addPrenatalField", function (e) {
 });
 
 // Code to View Records to Modal
-$(document).on('click', '.viewRecord', function(){
+$(document).on('click', '.viewRecord', function () {
+    var rffrl_id = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "new_function.php?rffrl_id=" + rffrl_id,
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 422) {
+                alert(res.message);
+            } else if (res.status == 200) {
+                $('#fclt_name').text(res.data.fclt_name);
+                $('#rffrl_id').val(res.data.rfrrl_id);
+                $('#referralModal').modal('show');
 
-var rffrl_id = $(this).val();
-$.ajax({
-    type:"GET",
-    url:"new_function.php?rffrl_id=" + rffrl_id,
-    success: function(response){
+                var columnNames = res.column_data;
 
-var res = jQuery.parseJSON(response);
-if(res.status == 422){
-    alert(res.message);
-}else if(res.status == 200){
-$('#fclt_name').text(res.data.fclt_name);
-$('#rffrl_id').val(res.data.rfrrl_id);
-$('#referralModal').modal('show');
+                for (var i = 0; i < columnNames.length; i++) {
+                    var columnName = columnNames[i];
+                    var columnData = res.data[columnName];
+                    $('#' + columnName).val(columnData);
+                }
 
-var columnNames = res.column_data;
+                // Display referral transactions
+                var querytransactions_data = res.transactions;
+                var referralTransactionsDiv = $('#referral_transactions');
+                var audit = document.querySelector(".referral-audit");
+                referralTransactionsDiv.empty(); // Clear any previous data
 
-for (var i = 0; i < columnNames.length; i++) {
-    var columnName = columnNames[i];
-    var columnData = res.data[columnName];
-    $('#' + columnName).val(columnData);
-}
-      }
-    }
-});
+                for (var i = 0; i < querytransactions_data.length; i++) {
+                    var transactionData = querytransactions_data[i];
+                    var status = transactionData.status;
+                    var time = transactionData.time;
+                    var fclt_name = transactionData.fclt_name;
+
+                    if (status) {
+                        audit.classList.remove("d-none");
+                        var pElement = $('<p></p>'); // Create a new <p> element
+                        pElement.text(status +" by "+ fclt_name +" at "+ time); // Include the label
+                        referralTransactionsDiv.append(pElement); // Append the <p> element to the div
+                    }
+                }
+            }
+        }
+    });
 });
 
 // Code to View Records to Modal
@@ -670,271 +689,382 @@ $(document).on('click', '.viewMyRecord', function () {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Get the 'leftTab' and 'rightTab' values from URL parameters
+
+
+  let rightTab = document.querySelector(".nav-link.right-button.active").getAttribute("data-tab");
+  let leftTab = document.querySelector(".nav-link.left-button.active").getAttribute("data-tab");
   const urlParams = new URLSearchParams(window.location.search);
-  const leftTab = urlParams.get("table_name");
-  const rightTab = urlParams.get("Check_up");
+  const patientID = urlParams.get("id");
+  
 
-  // DOM elements
-  const buttonsLeft = document.querySelectorAll(
-    ".button-container-left .button"
-  );
-  const buttonsRight = document.querySelectorAll(
-    ".button-container-right .button"
-  );
 
-  // Default left and right tabs
-  const defaultLeftTab = buttonsLeft[0].getAttribute("data-tab");
-  const defaultRightTab = buttonsRight[0].getAttribute("data-tab");
+  const rightBtn = document.querySelectorAll(".nav-link.right-button");
+  const leftBtn = document.querySelectorAll(".nav-link.left-button");
 
-  // Active buttons
-  let activeLeftButton = buttonsLeft[0];
-  let activeRightButton = buttonsRight[0];
+  $(document).on('click', '#createNewRecord', function () {
+   
+   console.log("clicked");
+   
+ 
+ 
+ 
+ });
+ 
 
-  // Set the active left button based on the 'leftTab' value
-  buttonsLeft.forEach((button) => {
-    const dataTab = button.getAttribute("data-tab");
-    console.log("Button data-tab:", dataTab);
-    console.log("leftTab value:", leftTab);
-
-    if (dataTab === leftTab) {
-      setActiveButton(buttonsLeft, button);
-      activeLeftButton = button;
-    }
-  });
-
-  // Set the active right button based on the 'rightTab' value
-  buttonsRight.forEach((button) => {
-    const dataTab = button.getAttribute("data-tab");
-    console.log("Button data-tab:", dataTab);
-    console.log("rightTab value:", rightTab);
-
-    if (dataTab === rightTab) {
-      setActiveButton(buttonsRight, button);
-      activeRightButton = button;
-    }
-  });
-
-  // Fetch and display data for the selected tabs
-  fetchAndDisplayForm(
-    activeLeftButton.getAttribute("data-tab"),
-    activeRightButton.getAttribute("data-tab")
-  );
-
-  // Event handler for button click
-  function handleButtonClick(buttons, activeButton) {
-    return (event) => {
-      const clickedButton = event.target;
-
-      setActiveButton(buttons, clickedButton);
-
-      if (buttons === buttonsLeft) {
-        activeLeftButton = clickedButton;
-      } else if (buttons === buttonsRight) {
-        activeRightButton = clickedButton;
-      }
-
-      // Fetch and display data for the selected tabs
-      fetchAndDisplayForm(
-        activeLeftButton.getAttribute("data-tab"),
-        activeRightButton.getAttribute("data-tab")
-      );
-    };
+  if(rightTab && rightTab){
+    getTrimesterData(leftTab, rightTab, patientID);
   }
 
-  // Add event listeners for left buttons
-  buttonsLeft.forEach((button) => {
-    button.addEventListener(
-      "click",
-      handleButtonClick(buttonsLeft, activeLeftButton)
-    );
-  });
-
-  // Add event listeners for right buttons
-  buttonsRight.forEach((button) => {
-    button.addEventListener(
-      "click",
-      handleButtonClick(buttonsRight, activeRightButton)
-    );
-  });
-
-  // Set active button style
-  function setActiveButton(buttons, activeButton) {
-    buttons.forEach((button) => {
-      button.classList.remove("active");
+  rightBtn.forEach((button) => {
+    button.addEventListener("click", function () {
+      rightTab = this.getAttribute("data-tab");
+      console.log(rightTab);
+      getTrimesterData(leftTab, rightTab, patientID);
     });
-    activeButton.classList.add("active");
-  }
+  });
 
-  // Fetch and display form data
-  function fetchAndDisplayForm(leftTab, rightTab) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-
-    $.ajax({
-      type: "POST",
-      url: "server_script.php",
-      data: {
-        getc_columns: true,
-        table_name: leftTab,
-        Check_up: rightTab,
-        patients_id: id,
-      },
-      dataType: "json",
-      success: function (response) {
-        console.log("Fetch data success:", response);
-
-        if (response.success) {
-          // Log the data received
-          console.log("Data:", response.data);
-
-          if (response.data.length > 0) {
-            // Data exists, generate form with data
-            const formHtml = generateFormHtmlWithData(response.data);
-            const formContainer = document.getElementById("formContainer");
-            formContainer.innerHTML = formHtml;
-          }
-        } else {
-          console.error("Error:", response.message);
-          fetchColumns(leftTab);
-        }
-      },
-      error: function (error) {
-        console.log("Fetch data error:", error);
-        console.error("Error:", error);
-      },
+  leftBtn.forEach((button) => {
+    button.addEventListener("click", function () {
+      leftTab = this.getAttribute("data-tab");
+      console.log(leftTab);
+      getTrimesterData(leftTab, rightTab, patientID);
     });
-  }
+  });
+  getBirthExData(patientID);
+  getPatientDetailsData(patientID)
 
-  function fetchColumns(leftTab) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-
-    $.ajax({
-      type: "POST",
-      url: "fetch_columns.php",
-      data: {
-        getc_columns: true,
-        table_name: leftTab,
-        Check_up: activeRightButton.getAttribute("data-tab"),
-        patients_id: id,
-      },
-      dataType: "json",
-      success: function (response) {
-        console.log("AJAX success:", response);
-        if (response.success) {
-          displayForm(response.columns);
-        } else {
-          console.error("Error:", response.message);
-        }
-      },
-      error: function (error) {
-        console.log("AJAX error:", error);
-        console.error("Error:", error);
-      },
-    });
-  }
-
-  function displayForm(columns) {
-    const formHtml = generateFormHtmlWithoutData(columns);
-    const contentTab = document.getElementById("contenttab");
-    const formContainer = contentTab.querySelector("#formContainer");
-    formContainer.innerHTML = formHtml;
-
-    const insertForm = document.getElementById("insertForm");
-    insertForm.addEventListener("submit", handleFormSubmit);
-  }
-
-  function generateFormHtmlWithData(data) {
-    let formHtml = '<form id="insertForm" method="post" class="row">';
-    for (const column in data[0]) {
-      if (
-        column !== "id" &&
-        column !== "check-up" &&
-        column !== "patients_id"
-      ) {
-        const label = column.replace(/_/g, " ");
-        const value = data && data[0] && data[0][column] ? data[0][column] : "";
-        formHtml += `<div class="col-sm-4 mb-3">`;
-        formHtml += `<label for="${column}">${label}:</label>`;
-        formHtml += `<input type="text" name="${column}" id="${column}" class="form-control" value="${value}">`;
-        formHtml += `</div>`;
+  function getTrimesterData(trimester, checkup, patient_id) {
+  $.ajax({
+    type: "GET",
+    url: "prenatal_function.php",
+    data: {
+      trimester_table: trimester,
+      patientid: patient_id,
+      check_up: checkup
+    },
+    success: function (response) {
+      var res = JSON.parse(response);
+      if (res.table == "first_trimester") {
+        $('#firstTri_date').val(res.data.date);
+        $('#firstTri_date').datepicker('update');
+        $('#firstTri_weight').val(res.data.weight);
+        $('#firstTri_height').val(res.data.height);
+        $('#firstTri_age_of_gestation').val(res.data.age_of_gestation);
+        $('#firstTri_blood_pressure').val(res.data.blood_pressure);
+        $('#firstTri_nutritional_status').val(res.data.nutritional_status);
+        $('#firstTri_laboratory_tests_done').val(res.data.laboratory_tests_done);
+        $('#firstTri_hemoglobin_count').val(res.data.hemoglobin_count);
+        $('#firstTri_urinalysis').val(res.data.urinalysis);
+        $('#firstTri_complete_blood_count').val(res.data.complete_blood_count);
+        $('#firstTri_stis_using_a_syndromic_approach').val(res.data.stis_using_a_syndromic_approach);
+        $('#firstTri_tetanus_containing_vaccine').val(res.data.tetanus_containing_vaccine);
+        $('#firstTri_given_services').val(res.data.given_services);
+        $('#firstTri_date_of_return').val(res.data.date_of_return);
+        $('#firstTri_date_of_return').datepicker('update');
+        $('#firstTri_health_provider_name').val(res.data.health_provider_name);
+        $('#firstTri_hospital_referral').val(res.data.hospital_referral);
+        $("#firstTriSave").hide();
+        $("#firstTriUpdate").show();
+      }else if(res.table == "second_trimester"){
+        $('#secondTri_date').val(res.data.date);
+        $('#secondTri_date').datepicker('update');
+        $('#secondTri_weight').val(res.data.weight);
+        $('#secondTri_height').val(res.data.height);
+        $('#secondTri_age_of_gestation').val(res.data.age_of_gestation);
+        $('#secondTri_blood_pressure').val(res.data.blood_pressure);
+        $('#secondTri_nutritional_status').val(res.data.nutritional_status);
+        $('#secondTri_given_advise').val(res.data.given_advise);
+        $('#secondTri_laboratory_tests_done').val(res.data.laboratory_tests_done);
+        $('#secondTri_urinalysis').val(res.data.urinalysis);
+        $('#secondTri_complete_blood_count').val(res.data.complete_blood_count);
+        $('#secondTri_given_services').val(res.data.given_services);
+        $('#secondTri_date_of_return').val(res.data.date_of_return);
+        $('#secondTri_date_of_return').datepicker('update');
+        $('#secondTri_health_provider_name').val(res.data.health_provider_name);
+        $('#secondTri_hospital_referral').val(res.data.hospital_referral);
+        $("#secondTriSave").hide();
+        $("#secondTriUpdate").show();
+      }else if(res.table == "third_trimester"){
+        $('#thirdTri_date').val(res.data.date);
+        $('#thirdTri_date').datepicker('update');
+        $('#thirdTri_weight').val(res.data.weight);
+        $('#thirdTri_height').val(res.data.height);
+        $('#thirdTri_age_of_gestation').val(res.data.age_of_gestation);
+        $('#thirdTri_blood_pressure').val(res.data.blood_pressure);
+        $('#thirdTri_nutritional_status').val(res.data.nutritional_status);
+        $('#thirdTri_given_advise').val(res.data.given_advise);
+        $('#thirdTri_laboratory_tests_done').val(res.data.laboratory_tests_done);
+        $('#thirdTri_urinalysis').val(res.data.urinalysis);
+        $('#thirdTri_complete_blood_count').val(res.data.complete_blood_count);
+        $('#thirdTri_given_services').val(res.data.given_services);
+        $('#thirdTri_date_of_return').val(res.data.date_of_return);
+        $('#thirdTri_date_of_return').datepicker('update');
+        $('#thirdTri_health_provider_name').val(res.data.health_provider_name);
+        $('#thirdTri_hospital_referral').val(res.data.hospital_referral);
+        $("#thirdTriSave").hide();
+        $("#thirdTriUpdate").show();
+        }else if(res.status == 404){
+        $("#firstTriSave").show();
+        $("#secondTriSave").show();
+        $("#thirdTriSave").show();
+        $("#firstTriUpdate").hide();
+        $("#secondTriUpdate").hide();
+        $("#thirdTriUpdate").hide();
+        $("#firstTrimesterInsert")[0].reset();
+        $('#firstTri_date').val('');
+        $('#firstTri_date').datepicker('update');
+        $('#secondTri_date').val('');
+        $('#secondTri_date').datepicker('update');
+        $('#thirdTri_date').val('');
+        $('#thirdTri_date').datepicker('update');
+        $("#secondTrimesterInsert")[0].reset();
+        $("#thirdTrimesterInsert")[0].reset();
       }
     }
-    formHtml +=
-      '<div hidden class="col-sm-12"><button type="submit" id="submitForm" class="btn btn-primary">Submit</button></div>';
-    formHtml += "</form>";
-    return formHtml;
-  }
+  });
+}
 
-  function generateFormHtmlWithoutData(columns) {
-    let formHtml = '<form id="insertForm" method="post" class="row">';
-    columns.forEach((column) => {
-      if (
-        column !== "id" &&
-        column !== "check-up" &&
-        column !== "patients_id"
-      ) {
-        const label = column.replace(/_/g, " ");
-        formHtml += `<div class="col-sm-4 mb-3">`;
-        formHtml += `<label for="${column}">${label}:</label>`;
-        formHtml += `<input type="text" name="${column}" id="${column}" class="form-control">`;
-        formHtml += `</div>`;
+function getBirthExData(patient_id) {
+  $.ajax({
+    type: "GET",
+    url: "prenatal_function.php",
+    data: {
+      patient_id: patient_id
+    },
+    success: function (response) {
+      var res = JSON.parse(response);
+      if (res.status == 200) {
+        $('#date_of_delivery').val(res.data.date_of_delivery);
+        $('#date_of_delivery').datepicker('update');
+        $('#type_of_delivery').val(res.data.type_of_delivery);
+        $('#birth_outcome').val(res.data.birth_outcome);
+        $('#number_of_children_delivered').val(res.data.number_of_children_delivered);
+        $('#pregnancy_hypertension').val(res.data.pregnancy_hypertension);
+        $('#preeclampsia_eclampsia').val(res.data.preeclampsia_eclampsia);
+        $('#bleeding_during_pregnancy').val(res.data.bleeding_during_pregnancy);
+        $("#birthExSave").hide();
+        $("#birthExUpdate").show();
+      }else if(res.status == 404){
+        $('#date_of_delivery').val('');
+        $('#date_of_delivery').datepicker('update');
+        $("#birthExperienceInsert")[0].reset();
+        $("#birthExSave").show();
+        $("#birthExUpdate").hide();
       }
-    });
-    formHtml +=
-      '<div class="col-sm-12"><button type="submit" id="submitForm" class="btn btn-primary">Submit</button></div>';
-    formHtml += "</form>";
-    return formHtml;
+    }
+  });
+}
+
+function getPatientDetailsData(patient_id) {
+  $.ajax({
+    type: "GET",
+    url: "prenatal_function.php",
+    data: {
+      patient_details_id: patient_id
+    },
+    success: function (response) {
+      var res = JSON.parse(response);
+      if (res.status == 200) {
+        $('#petsa_ng_unang_checkup').val(res.data.petsa_ng_unang_checkup);
+        $('#petsa_ng_unang_checkup').datepicker('update');
+        $('#edad').val(res.data.edad);
+        $('#timbang').val(res.data.timbang);
+        $('#taas').val(res.data.taas);
+        $('#kalagayan_ng_kalusugan').val(res.data.kalagayan_ng_kalusugan);
+        $('#petsa_ng_huling_regla').val(res.data.petsa_ng_huling_regla);
+        $('#kailan_ako_manganganak').val(res.data.kailan_ako_manganganak);
+        $('#pang_ilang_pagbubuntis').val(res.data.pang_ilang_pagbubuntis);
+        $("#patientSave").addClass("d-none");
+        $("#patientUpdate").removeClass("d-none");
+      }else if(res.status == 404){
+        $('#petsa_ng_unang_checkup').val('');
+        $('#petsa_ng_unang_checkup').datepicker('update');
+        $("#patientsDetailsInsert")[0].reset();
+        $("#patientUpdate").addClass("d-none");
+        $("#patientSave").removeClass("d-none");
+      }
+    }
+  });
+}
+
+$(document).ready(function () {
+  $('.prenatal-datepicker').datepicker({
+    format: 'mm/dd/yyyy',
+    autoclose: true,
+    todayHighlight: true
+  });
+});
+
+  $(document).on("submit", "#firstTrimesterInsert", function (e) {
+  e.preventDefault();
+
+  var formData = new FormData(this);
+
+  var clickedButton = e.originalEvent.submitter;
+  if (clickedButton.id === 'firstTriSave') {
+    formData.append("first_trimesters_insert", true);
+  } else if (clickedButton.id === 'firstTriUpdate') {
+    formData.append("first_trimesters_update", true);
   }
 
-  function handleFormSubmit(event) {
-    event.preventDefault();
+  formData.append("checkup", rightTab);
+  formData.append("patient_id", patientID);
 
-    const form = event.target;
-    const formData = new FormData(form);
+  $.ajax({
+    type: "POST",
+    url: "prenatal_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if(res.status == 200) {
+        $("#firstTriSave").hide();
+        $("#firstTriUpdate").show();
+      } else if (res.status == 300) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }
+    },
+  });
+});
 
-    formData.append("table_name", activeLeftButton.getAttribute("data-tab"));
-    formData.append("Check-up", activeRightButton.getAttribute("data-tab"));
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    formData.append("patients_id", id);
+$(document).on("submit", "#secondTrimesterInsert", function (e) {
+  e.preventDefault();
 
-    $.ajax({
-      type: "POST",
-      url: "insert_data.php",
-      data: formData,
-      processData: false,
-      contentType: false,
-      dataType: "json", // Ensure that the response is treated as JSON
-      success: function (response) {
-        console.log("Insertion success:", response);
-        console.log(response); // Add this line to inspect the entire response
-        if (response.reloadPage === true) {
-          // Save the active buttons and other parameters
-          const urlParams = new URLSearchParams(window.location.search);
-          urlParams.set(
-            "table_name",
-            activeLeftButton.getAttribute("data-tab")
-          );
-          urlParams.set("Check_up", activeRightButton.getAttribute("data-tab"));
+  var formData = new FormData(this);
 
-          // Update the URL with the new parameters
-          const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-          history.replaceState(null, null, newUrl);
-
-          // Reload the page
-          location.reload();
-        }
-      },
-
-      error: function (xhr, status, error) {
-        console.error("Insertion error:", error);
-        console.log(xhr.responseText); // Log the full server response
-        // Handle insertion error, if needed
-      },
-    });
+  var clickedButton = e.originalEvent.submitter;
+  if (clickedButton.id === 'secondTriSave') {
+    formData.append("second_trimesters_insert", true);
+  } else if (clickedButton.id === 'secondTriUpdate') {
+    formData.append("second_trimesters_update", true);
   }
+
+  formData.append("checkup", rightTab);
+  formData.append("patient_id", patientID);
+
+  $.ajax({
+    type: "POST",
+    url: "prenatal_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if (res.status == 200) {
+        $("#secondTriSave").hide();
+        $("#secondTriUpdate").show();
+      } else if (res.status == 300) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }
+    },
+  });
+});
+
+$(document).on("submit", "#thirdTrimesterInsert", function (e) {
+  e.preventDefault();
+
+  var formData = new FormData(this);
+
+  var clickedButton = e.originalEvent.submitter;
+  if (clickedButton.id === 'thirdTriSave') {
+    formData.append("third_trimesters_insert", true);
+  } else if (clickedButton.id === 'thirdTriUpdate') {
+    formData.append("third_trimesters_update", true);
+  }
+
+  formData.append("checkup", rightTab);
+  formData.append("patient_id", patientID);
+
+  $.ajax({
+    type: "POST",
+    url: "prenatal_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if (res.status == 200) {
+        $("#thirdTriSave").hide();
+        $("#thirdTriUpdate").show();
+      } else if (res.status == 300) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }
+    },
+  });
+});
+
+$(document).on("submit", "#birthExperienceInsert", function (e) {
+  e.preventDefault();
+
+  var formData = new FormData(this);
+
+  var clickedButton = e.originalEvent.submitter;
+  if (clickedButton.id === 'birthExSave') {
+    formData.append("birth_experience_insert", true);
+  } else if (clickedButton.id === 'birthExUpdate') {
+    formData.append("birth_experience_update", true);
+  }
+
+  formData.append("patient_id", patientID);
+
+  $.ajax({
+    type: "POST",
+    url: "prenatal_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if(res.status == 200) {
+        $("#birthExSave").hide();
+        $("#birthExUpdate").show();
+      } else if (res.status == 300) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }
+    },
+  });
+});
+
+$(document).on("submit", "#patientsDetailsInsert", function (e) {
+  e.preventDefault();
+
+  var formData = new FormData(this);
+
+  var clickedButton = e.originalEvent.submitter;
+  if (clickedButton.id === 'patientSave') {
+    formData.append("patients_details_insert", true);
+  } else if (clickedButton.id === 'patientUpdate') {
+    formData.append("patients_details_update", true);
+  }
+
+  formData.append("patient_id", patientID);
+
+  $.ajax({
+    type: "POST",
+    url: "prenatal_function.php",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      var res = jQuery.parseJSON(response);
+      if(res.status == 200) {
+        $("#patientSave").addClass("d-none");
+        $("#patientUpdate").removeClass("d-none");
+        //$("#patientSave").hide();
+        //$("#patientUpdate").show();
+      } else if (res.status == 300) {
+        $("#errorMessage").removeClass("d-none");
+        $("#errorMessage").text(res.message);
+      }
+    },
+  });
+});
+
 });
 
 var pusher = new Pusher('4c140a667948d3f0c3b4', {
@@ -1117,6 +1247,47 @@ function scrollMessageContainerToBottom() {
             });
         }
     });
+
+$(document).on('click', '.viewPatient', function () {
+    var rffrl_id = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "prenatal_function.php?view_patient_id=" + rffrl_id,
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 422) {
+                alert(res.message);
+            } else if (res.status == 200) {
+              $('#view_fname').val(res.data.fname);
+              $('#view_mname').val(res.data.mname);
+              $('#view_lname').val(res.data.lname);
+              $('#view_contactNum').val(res.data.contact);
+              $('#view_address').val(res.data.address);
+              $('#viewPatientModal').modal('show');
+            }
+        }
+    });
+});
+
+$(document).on('click', '.viewPatientRecords', function () {
+    var patients_id = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "prenatal_function.php?view_patient_records_id=" + patients_id,
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if (res.status == 404) {
+              $("#createRecordBtn").attr("href", "add_prenatal.php?id=" + res.data.id);
+              $("#viewRecordBtn").attr("href", "view_prenatal.php?id=" + res.data.id);
+              $('#viewPatientRecordsModal').modal('show');
+            } else if (res.status == 200) {
+              $("#createRecordBtn").attr("href", "add_prenatal.php?id=" + res.data.id);
+              $("#viewRecordBtn").attr("href", "view_prenatal.php?id=" + res.data.id);
+              $('#viewPatientRecordsModal').modal('show');
+            }
+        }
+    });
+});
 
 
 </script>
