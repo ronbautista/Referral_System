@@ -1277,12 +1277,11 @@ $(document).on('click', '.viewPatientRecords', function () {
         success: function (response) {
             var res = jQuery.parseJSON(response);
             if (res.status == 404) {
-              $("#createRecordBtn").attr("href", "add_prenatal.php?id=" + res.data.id);
-              $("#viewRecordBtn").attr("href", "view_prenatal.php?id=" + res.data.id);
               $('#viewPatientRecordsModal').modal('show');
             } else if (res.status == 200) {
+              //$(".createNewPrenatalRecord").attr("href", "view_prenatal.php?id=" + res.data.id);
+              $(".createNewPrenatalRecord").attr("data-patient-id", res.data.id);
               $(".createNewPrenatalRecord").attr("href", "view_prenatal.php?id=" + res.data.id);
-              $("#viewRecordBtn").attr("href", "view_prenatal.php?id=" + res.data.id);
               $('#viewPatientRecordsModal').modal('show');
               
               $.ajax({
@@ -1293,10 +1292,8 @@ $(document).on('click', '.viewPatientRecords', function () {
                     if (res.status == 404) {
                         $("#createRecordBtn").attr("href", "add_prenatal.php?id=" + res.data.id);
                         $("#viewRecordBtn").attr("href", "view_prenatal.php?id=" + res.data.id);
-                        $('#viewPatientRecordsModal').modal('show');
                     } else if (res.status == 200) {
-                        $("#createRecordBtn").attr("href", "add_prenatal.php?id=" + res.data.id);
-                        $("#viewRecordBtn").attr("href", "view_prenatal.php?id=" + res.data.id);
+
 
                         // Check if data array exists
                         if (Array.isArray(res.data) && res.data.length > 0) {
@@ -1321,6 +1318,42 @@ $(document).on('click', '.viewPatientRecords', function () {
             }
         }
     });
+});
+
+$(document).on('click', '.createNewPrenatalRecord', function () {
+  var patients_id = $('.createNewPrenatalRecord').data('patient-id');
+
+  alert(patients_id);
+ $.ajax({
+    type: "POST",
+    url: "prenatal_function.php",
+    data: {
+       new_record: true,
+       patients_id: patients_id
+    },
+    success: function (response) {
+       var res = jQuery.parseJSON(response);
+       if (res.status == 200) {
+        const record = urlParams.get("record");
+        var recordNumber = parseInt(record, 10);
+        var total = recordNumber + 1;
+
+        if (total) {
+          urlParams.set('record', total);
+        } else {
+          urlParams.delete('record');
+        }
+        var newURL = window.location.origin + window.location.pathname + '?' + urlParams.toString();
+        window.history.replaceState({}, document.title, newURL);
+        location.reload();
+
+       } else if (res.status == 300) {
+          $("#errorMessage").removeClass("d-none");
+          $("#errorMessage").text(res.message);
+       }
+    },
+ });
+
 });
 
 const facilityCheckboxes = document.querySelectorAll('.facility .btn-check');

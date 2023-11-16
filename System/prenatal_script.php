@@ -80,6 +80,7 @@ $(document).on('click', '#createNewRecords', function () {
 });
 
 
+
 rightBtn.forEach((button) => {
   button.addEventListener("click", function () {
     rightTab = this.getAttribute("data-tab"); 
