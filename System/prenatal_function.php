@@ -1,16 +1,17 @@
 <?php
 include_once 'db_conn.php';
+require_once 'pusher.php';
 
 session_start();
 
 $fclt_id = $_SESSION['id'];
+$fclt_name = $_SESSION["names"];
 
 if (isset($_GET['trimester_table'])) {
     $trimester = $_GET['trimester_table'];
     $patient_id = $_GET['patientid'];
     $checkup = $_GET['check_up'];
-
-    // Assuming db_conn.php includes the $conn variable for database connection
+    $records_count = $_GET['records_count'];
 
     // Use prepared statements to prevent SQL injection
     $countQuery = "SELECT COUNT(*) AS record_count FROM prenatal_records WHERE patients_id = ?";
@@ -33,7 +34,13 @@ if (isset($_GET['trimester_table'])) {
     // Close the count query
     mysqli_stmt_close($countStmt);
 
-    // Use prepared statements for the data retrieval
+    
+    if($records_count == ''){
+        $currentCount = $countData['record_count'];
+    }else{
+        $currentCount = $_GET['records_count'];
+    }
+
     $dataQuery = "
         SELECT *
         FROM prenatal_records pr
@@ -83,13 +90,14 @@ if (isset($_GET['trimester_table'])) {
 
 if (isset($_GET['patient_id'])) {
     $patient_id = $_GET['patient_id'];
+    $records_count = $_GET['records_count'];
 
     // Call the stored procedure
-    $query = "CALL get_birth_experience(?)";
+    $query = "CALL get_birth_experience(?,?)";
     $stmt = mysqli_prepare($conn, $query);
 
     // Assuming 'i' is the correct type for patient_id; adjust if needed
-    mysqli_stmt_bind_param($stmt, "i", $patient_id);
+    mysqli_stmt_bind_param($stmt, "ii", $patient_id, $records_count);
     mysqli_stmt_execute($stmt);
 
     $result = mysqli_stmt_get_result($stmt);
@@ -123,13 +131,14 @@ if (isset($_GET['patient_id'])) {
 
 if (isset($_GET['patient_details_id'])) {
     $patient_id = $_GET['patient_details_id'];
+    $records_count = $_GET['records_count'];
 
     // Call the stored procedure
-    $query = "CALL get_patients_details(?)";
+    $query = "CALL get_patients_details(?,?)";
     $stmt = mysqli_prepare($conn, $query);
 
     // Assuming 'i' is the correct type for patient_id; adjust if needed
-    mysqli_stmt_bind_param($stmt, "i", $patient_id);
+    mysqli_stmt_bind_param($stmt, "ii", $patient_id, $records_count);
     mysqli_stmt_execute($stmt);
 
     $result = mysqli_stmt_get_result($stmt);
@@ -151,7 +160,8 @@ if (isset($_GET['patient_details_id'])) {
     } else {
         $res = [
             'status' => 404,
-            'message' => 'Data not found'
+            'message' => 'Data not found',
+            'record' => $records_count
         ];
     }
 
@@ -164,6 +174,7 @@ if (isset($_GET['patient_details_id'])) {
 if (isset($_POST['first_trimesters_insert'])) {
     $checkup = $_POST['checkup'];
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date = $_POST['firstTri_date'];
     $weight = $_POST['firstTri_weight'];
     $height = $_POST['firstTri_height'];
@@ -182,7 +193,7 @@ if (isset($_POST['first_trimesters_insert'])) {
     $hospital_referral = $_POST['firstTri_hospital_referral'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL insert_first_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL insert_first_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -190,7 +201,7 @@ if (isset($_POST['first_trimesters_insert'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("sissssssssssssssss", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $laboratory_tests_done, $hemoglobin_count, $urinalysis, $complete_blood_count, $stis_using_a_syndromic_approach, $tetanus_containing_vaccine, $given_services, $date_of_return, $health_provider_name, $hospital_referral);
+    $stmt->bind_param("sissssssssssssssssi", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $laboratory_tests_done, $hemoglobin_count, $urinalysis, $complete_blood_count, $stis_using_a_syndromic_approach, $tetanus_containing_vaccine, $given_services, $date_of_return, $health_provider_name, $hospital_referral, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -217,6 +228,7 @@ if (isset($_POST['first_trimesters_insert'])) {
 if (isset($_POST['first_trimesters_update'])) {
     $checkup = $_POST['checkup'];
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date = $_POST['firstTri_date'];
     $weight = $_POST['firstTri_weight'];
     $height = $_POST['firstTri_height'];
@@ -235,7 +247,7 @@ if (isset($_POST['first_trimesters_update'])) {
     $hospital_referral = $_POST['firstTri_hospital_referral'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL update_first_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL update_first_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -243,7 +255,7 @@ if (isset($_POST['first_trimesters_update'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("sissssssssssssssss", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $laboratory_tests_done, $hemoglobin_count, $urinalysis, $complete_blood_count, $stis_using_a_syndromic_approach, $tetanus_containing_vaccine, $given_services, $date_of_return, $health_provider_name, $hospital_referral);
+    $stmt->bind_param("sissssssssssssssssi", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $laboratory_tests_done, $hemoglobin_count, $urinalysis, $complete_blood_count, $stis_using_a_syndromic_approach, $tetanus_containing_vaccine, $given_services, $date_of_return, $health_provider_name, $hospital_referral, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -270,6 +282,7 @@ if (isset($_POST['first_trimesters_update'])) {
 if (isset($_POST['second_trimesters_insert'])) {
     $checkup = $_POST['checkup'];
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date = $_POST['secondTri_date'];
     $weight = $_POST['secondTri_weight'];
     $height = $_POST['secondTri_height'];
@@ -286,7 +299,7 @@ if (isset($_POST['second_trimesters_insert'])) {
     $hospital_referral = $_POST['secondTri_hospital_referral'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL insert_second_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL insert_second_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -294,7 +307,7 @@ if (isset($_POST['second_trimesters_insert'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("sissssssssssssss", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $given_advise , $laboratory_tests_done,  $urinalysis, $complete_blood_count, $given_services, $date_of_return, $health_provider_name, $hospital_referral);
+    $stmt->bind_param("sissssssssssssssi", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $given_advise , $laboratory_tests_done,  $urinalysis, $complete_blood_count, $given_services, $date_of_return, $health_provider_name, $hospital_referral, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -321,6 +334,7 @@ if (isset($_POST['second_trimesters_insert'])) {
 if (isset($_POST['second_trimesters_update'])) {
     $checkup = $_POST['checkup'];
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date = $_POST['secondTri_date'];
     $weight = $_POST['secondTri_weight'];
     $height = $_POST['secondTri_height'];
@@ -337,7 +351,7 @@ if (isset($_POST['second_trimesters_update'])) {
     $hospital_referral = $_POST['secondTri_hospital_referral'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL update_second_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL update_second_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -345,7 +359,7 @@ if (isset($_POST['second_trimesters_update'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("sissssssssssssss", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $given_advise , $laboratory_tests_done,  $urinalysis, $complete_blood_count, $given_services, $date_of_return, $health_provider_name, $hospital_referral);
+    $stmt->bind_param("sissssssssssssssi", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $given_advise , $laboratory_tests_done,  $urinalysis, $complete_blood_count, $given_services, $date_of_return, $health_provider_name, $hospital_referral, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -372,6 +386,7 @@ if (isset($_POST['second_trimesters_update'])) {
 if (isset($_POST['third_trimesters_insert'])) {
     $checkup = $_POST['checkup'];
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date = $_POST['thirdTri_date'];
     $weight = $_POST['thirdTri_weight'];
     $height = $_POST['thirdTri_height'];
@@ -388,7 +403,7 @@ if (isset($_POST['third_trimesters_insert'])) {
     $hospital_referral = $_POST['thirdTri_hospital_referral'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL insert_third_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL insert_third_trimester(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -396,7 +411,7 @@ if (isset($_POST['third_trimesters_insert'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("sissssssssssssss", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $given_advise , $laboratory_tests_done,  $urinalysis, $complete_blood_count, $given_services, $date_of_return, $health_provider_name, $hospital_referral);
+    $stmt->bind_param("sissssssssssssssi", $checkup, $patient_id, $date, $weight, $height, $age_of_gestation, $blood_pressure, $nutritional_status, $given_advise , $laboratory_tests_done,  $urinalysis, $complete_blood_count, $given_services, $date_of_return, $health_provider_name, $hospital_referral, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -473,6 +488,7 @@ if (isset($_POST['third_trimesters_update'])) {
 
 if (isset($_POST['birth_experience_insert'])) {
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date_of_delivery = $_POST['date_of_delivery'];
     $type_of_delivery = $_POST['type_of_delivery'];
     $birth_outcome = $_POST['birth_outcome'];
@@ -482,7 +498,7 @@ if (isset($_POST['birth_experience_insert'])) {
     $bleeding_during_pregnancy = $_POST['bleeding_during_pregnancy'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL insert_birth_experience(?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL insert_birth_experience(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -490,7 +506,7 @@ if (isset($_POST['birth_experience_insert'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("isssssss", $patient_id, $date_of_delivery, $type_of_delivery, $birth_outcome, $number_of_children_delivered, $pregnancy_hypertension, $preeclampsia_eclampsia, $bleeding_during_pregnancy);
+    $stmt->bind_param("isssssssi", $patient_id, $date_of_delivery, $type_of_delivery, $birth_outcome, $number_of_children_delivered, $pregnancy_hypertension, $preeclampsia_eclampsia, $bleeding_during_pregnancy, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -516,6 +532,7 @@ if (isset($_POST['birth_experience_insert'])) {
 
 if (isset($_POST['birth_experience_update'])) {
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $date_of_delivery = $_POST['date_of_delivery'];
     $type_of_delivery = $_POST['type_of_delivery'];
     $birth_outcome = $_POST['birth_outcome'];
@@ -525,7 +542,7 @@ if (isset($_POST['birth_experience_update'])) {
     $bleeding_during_pregnancy = $_POST['bleeding_during_pregnancy'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL update_birth_experience(?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL update_birth_experience(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -533,13 +550,15 @@ if (isset($_POST['birth_experience_update'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("isssssss", $patient_id, $date_of_delivery, $type_of_delivery, $birth_outcome, $number_of_children_delivered, $pregnancy_hypertension, $preeclampsia_eclampsia, $bleeding_during_pregnancy);
+    $stmt->bind_param("isssssssi", $patient_id, $date_of_delivery, $type_of_delivery, $birth_outcome, $number_of_children_delivered, $pregnancy_hypertension, $preeclampsia_eclampsia, $bleeding_during_pregnancy, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
         $res = [
             'status' => 200,
-            'message' => 'Patient updated successfully'
+            'message' => 'Patient updated successfully',
+            'record' => $records_count,
+            'patient_id' => $patient_id
         ];
         echo json_encode($res);
     } else {
@@ -640,6 +659,7 @@ if (isset($_GET['view_patient_id'])) {
 
 if (isset($_POST['patients_details_insert'])) {
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $petsa_ng_unang_checkup = $_POST['petsa_ng_unang_checkup'];
     $edad = $_POST['edad'];
     $timbang = $_POST['timbang'];
@@ -650,7 +670,7 @@ if (isset($_POST['patients_details_insert'])) {
     $pang_ilang_pagbubuntis = $_POST['pang_ilang_pagbubuntis'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL insert_patients_details(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL insert_patients_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -658,7 +678,7 @@ if (isset($_POST['patients_details_insert'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("ssssssssi", $petsa_ng_unang_checkup, $edad, $timbang, $taas, $kalagayan_ng_kalusugan, $petsa_ng_huling_regla, $kailan_ako_manganganak, $pang_ilang_pagbubuntis, $patient_id);
+    $stmt->bind_param("ssssssssii", $petsa_ng_unang_checkup, $edad, $timbang, $taas, $kalagayan_ng_kalusugan, $petsa_ng_huling_regla, $kailan_ako_manganganak, $pang_ilang_pagbubuntis, $patient_id, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -684,6 +704,7 @@ if (isset($_POST['patients_details_insert'])) {
 
 if (isset($_POST['patients_details_update'])) {
     $patient_id = $_POST['patient_id'];
+    $records_count = $_POST['selected_row'];
     $petsa_ng_unang_checkup = $_POST['petsa_ng_unang_checkup'];
     $edad = $_POST['edad'];
     $timbang = $_POST['timbang'];
@@ -694,7 +715,7 @@ if (isset($_POST['patients_details_update'])) {
     $pang_ilang_pagbubuntis = $_POST['pang_ilang_pagbubuntis'];
 
     // Create a prepared statement for the stored procedure
-    $sql = "CALL update_patients_details(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL update_patients_details(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     if ($stmt === false) {
@@ -702,7 +723,7 @@ if (isset($_POST['patients_details_update'])) {
     }
 
     // Bind the parameters
-    $stmt->bind_param("ssssssssi", $petsa_ng_unang_checkup, $edad, $timbang, $taas, $kalagayan_ng_kalusugan, $petsa_ng_huling_regla, $kailan_ako_manganganak, $pang_ilang_pagbubuntis, $patient_id);
+    $stmt->bind_param("ssssssssii", $petsa_ng_unang_checkup, $edad, $timbang, $taas, $kalagayan_ng_kalusugan, $petsa_ng_huling_regla, $kailan_ako_manganganak, $pang_ilang_pagbubuntis, $patient_id, $records_count);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -764,4 +785,211 @@ if (isset($_GET['view_patient_records_id'])) {
     mysqli_stmt_close($stmt);
 
     echo json_encode($res);
+}
+
+if (isset($_GET['patient_count_id'])) {
+    $patients_id = $_GET['patient_count_id'];
+
+    // Use prepared statements to prevent SQL injection
+    $query = "SELECT * FROM prenatal_records WHERE patients_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Assuming 'i' is the correct type for patients_id; adjust if needed
+    mysqli_stmt_bind_param($stmt, "i", $patients_id);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Check for errors in the query execution
+    if (!$result) {
+        die('Error in query: ' . mysqli_error($conn));
+    }
+
+    // Check the number of rows
+    if (mysqli_num_rows($result) > 0) {
+        $data = array();
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Append each row to the $data array
+            $data[] = $row;
+        }
+
+        $res = [
+            'status' => 200,
+            'message' => 'Data fetched',
+            'data' => $data
+        ];
+    } else {
+        $res = [
+            'status' => 404,
+            'message' => 'Data not found'
+        ];
+    }
+
+    // Close the prepared statement
+    mysqli_stmt_close($stmt);
+
+    echo json_encode($res);
+}
+
+if (isset($_GET['record_count_id'])) {
+    $patients_id = $_GET['record_count_id'];
+    $record_count = $_GET['record'];
+
+    // Use prepared statements to prevent SQL injection
+    $query = "SELECT * FROM prenatal_records WHERE patients_id = ? AND records_count = ?";
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Assuming 'i' is the correct type for patients_id; adjust if needed
+    mysqli_stmt_bind_param($stmt, "ii", $patients_id, $record_count);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Check for errors in the query execution
+    if (!$result) {
+        die('Error in query: ' . mysqli_error($conn));
+    }
+
+    // Check the number of rows
+    if (mysqli_num_rows($result) > 0) {
+        $data = array();
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Append each row to the $data array
+            $data[] = $row;
+        }
+
+        $res = [
+            'status' => 200,
+            'message' => 'Data fetched',
+            'data' => $data
+        ];
+    } else {
+        $res = [
+            'status' => 404,
+            'message' => 'Data not found'
+        ];
+    }
+
+    // Close the prepared statement
+    mysqli_stmt_close($stmt);
+
+    echo json_encode($res);
+}
+
+
+if (isset($_POST['new_record'])) {
+    $patient_id = $_POST['patients_id'];
+    
+    date_default_timezone_set('Asia/Manila');
+    $date = date("Y-m-d");
+    $time = date("H:i:s");
+
+    $sql = "CALL insert_patient_record(?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    $stmt->bind_param("iiss", $patient_id, $fclt_id, $date, $time);
+
+    if ($stmt->execute()) {
+        $res = [
+            'status' => 200,
+            'message' => 'Patient added successfully'
+        ];
+        echo json_encode($res);
+    } else {
+
+        error_log("Execution failed: " . $stmt->error);
+        
+        $res = [
+            'status' => 500,
+            'message' => 'Patient not created successfully. Please try again later.'
+        ];
+        echo json_encode($res);
+    }
+
+    $stmt->close();
+}
+
+if (isset($_POST['patients_ids'])) {
+    $patient_id = $_POST['patients_ids'];
+    
+    date_default_timezone_set('Asia/Manila');
+    $date = date("Y-m-d");
+    $time = date("H:i:s");
+
+    $sql = "CALL insert_patient_record(?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    $stmt->bind_param("iiss", $patient_id, $fclt_id, $date, $time);
+
+    if ($stmt->execute()) {
+        $res = [
+            'status' => 200,
+            'message' => 'Patient added successfullyppp',
+        ];
+        echo json_encode($res);
+    } else {
+
+        error_log("Execution failed: " . $stmt->error);
+        
+        $res = [
+            'status' => 500,
+            'message' => 'Patient not created successfully. Please try again later.'
+        ];
+        echo json_encode($res);
+    }
+
+    $stmt->close();
+}
+
+if (isset($_POST['create_referral'])) {
+    $name = $_POST['name'];
+    $age = $_POST['age'];
+    $referred_hospital = $_POST['referred_hospital'];
+
+    date_default_timezone_set('Asia/Manila');
+    $date = date("Y-m-d");
+    $time = date("H:i:s");
+
+    // Create a prepared statement for the stored procedure
+    $sql = "CALL create_referral(?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    // Bind the parameters
+    $stmt->bind_param("ssssii", $name, $age, $date, $time, $referred_hospital, $fclt_id);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral from ' . $fclt_name));
+        $res = [
+            'status' => 200,
+            'message' => 'Referral created successfully'
+        ];
+        echo json_encode($res);
+    } else {
+        $error = $stmt->error;
+        $res = [
+            'status' => 500,
+            'message' => 'Patient not created successfully',
+            'error' => $error
+        ];
+        echo json_encode($res);
+    }
+
+    // Close the statement and the database connection
+    $stmt->close();
+    $conn->close();
 }

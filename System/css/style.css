@@ -7,6 +7,8 @@
 @import url('https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css');
 @import url('https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css');
 @import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
+@import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
+@import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @font-face {
   font-family: 'Plus Jakarta Sans';
   src: url('/Referral_System/System/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf');
@@ -203,13 +205,16 @@ body {
   align-items: center;
 }
 
-.head .buttons{
-  margin-top: 0;
-  margin-bottom: 10px;
+.head_buttons {
   margin-left: auto;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
+  margin-bottom: 10px;
+  margin-left: auto;
 }
+
 .head h2{
   margin-top: 10px; 
 }
@@ -217,7 +222,6 @@ body {
   text-decoration: none;
 }
 .feed {
-  margin-top: 30px;
   background-color: #ffffff;
   padding: 30px;
   border-radius: 10px;
@@ -294,10 +298,6 @@ a.btn.btn-primary {
   display: flex;
   align-items: center;
   margin-right: 20px;
-}
-.notification {
-  text-decoration: none;
-  color: #36363D;
 }
 .navbar-nav {
   display: flex;
@@ -865,3 +865,124 @@ label{
 .prenatal_table{
   min-height: 560px;
 }
+.modal .modal-body {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  max-height: 70vh;
+}
+
+#createReferralModal .modal-dialog{
+  max-width: 80%;
+}
+
+.modal .modal-body::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+
+.modal .modal-body::-webkit-scrollbar-thumb {
+  background: #ECECF1; /* Change the color of the scrollbar thumb */
+  border-radius: 6px; /* Make the scrollbar thumb round */
+}
+
+.modal .modal-body::-webkit-scrollbar-track {
+  background: #FFFFFF; /* Change the color of the scrollbar track */
+}
+.table-header{
+  display: flex;
+  gap: 10px;
+  padding: 15px 0;
+}
+.table-header .btn{
+  padding: 7px 15px 5px 20px;
+}
+#report{
+  margin-left: auto;
+}
+.notification-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  padding: 20px;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  min-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  cursor: default;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: darkgray lightgray; /* For Firefox */
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: lightgray;
+  }
+}
+
+.notification-content h5{
+  margin-bottom: 25px;
+}
+
+.notification:hover .notification-content {
+  display: block;
+  color: #36363D;
+}
+.notification {
+  text-decoration: none;
+  color: #36363D;
+  position: relative;
+  display: inline-block;
+}
+.notification-card{
+  padding: 15px 10px 0 0;
+  margin-bottom: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.notification-card:hover{
+  background-color: #7f7f7f;
+}
+.accordion .accordion-item{
+  border: none;
+}
+.accordion .accordion-button:focus {
+  z-index: 3;
+  border-color: blue;
+  outline: 0;
+  box-shadow: none;
+}
+.accordion .accordion-button:not(.collapsed) {
+  color: #000306;
+  background-color: #040d1800;
+  box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 #dee2e600;
+}
+.acordion-body.btn-sm{
+  outline-color: #000;
+  background-color: #000306;
+}
+.btn-group label {
+  margin-right: 10px; /* Adjust the value as needed */
+}
+.offcanvas .offcanvas-body{
+  padding: 0;
+}
+
+.records_alert h6{
+margin-top: 8px;
+}
+.records_alert .btn{
+  margin-left: auto;
+  }

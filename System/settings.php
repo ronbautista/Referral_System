@@ -58,7 +58,7 @@ $prenatal_format = prenatal_format();
             ?>
             <tr>
               <td><?= $referral['id'] ?></td>
-              <td><?= $referral['Name'] ?></td>
+              <td><?= $referral['name'] ?></td>
               <td><?= $referral['fclt_name'] ?></td>
               <td>
                 <button type="button" value="<?= $referral['id']; ?>" class="deleteReferral btn btn-outline-danger">Delete</button>

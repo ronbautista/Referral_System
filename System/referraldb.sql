@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2023 at 03:12 PM
+-- Generation Time: Nov 11, 2023 at 08:16 AM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,451 @@ SET time_zone = "+00:00";
 --
 -- Database: `referraldb`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_experience` (IN `new_patients_id` INT)   BEGIN
+    DECLARE current_count INT;
+
+    SELECT COUNT(*)
+    INTO current_count
+    FROM prenatal_records
+    WHERE patients_id = new_patients_id;
+
+    SET current_count = current_count;
+    
+    SELECT *
+    FROM prenatal_records
+    INNER JOIN birth_experience ON birth_experience.patients_id = prenatal_records.patients_id
+        AND birth_experience.records_count = prenatal_records.records_count
+    WHERE birth_experience.patients_id = new_patients_id
+        AND birth_experience.records_count = current_count ORDER BY birth_experience.records_count DESC LIMIT 1;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_details` (IN `new_patients_id` INT)   BEGIN
+    DECLARE current_count INT;
+
+    SELECT COUNT(*)
+    INTO current_count
+    FROM prenatal_records
+    WHERE patients_id = new_patients_id;
+
+    SET current_count = current_count;
+    
+    SELECT *
+    FROM prenatal_records
+    INNER JOIN patients_details ON patients_details.patients_id = prenatal_records.patients_id
+        AND patients_details.records_count = prenatal_records.records_count
+    WHERE patients_details.patients_id = new_patients_id
+        AND patients_details.records_count = current_count ORDER BY patients_details.records_count DESC LIMIT 1;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_trimester` (IN `new_patients_id` INT, IN `trimester_table_name` VARCHAR(255), IN `new_check_up` VARCHAR(255))   BEGIN
+    DECLARE current_count INT;
+
+    SELECT COUNT(*)
+    INTO current_count
+    FROM prenatal_records
+    WHERE patients_id = new_patients_id;
+
+    SET current_count = current_count;
+    
+    SELECT *
+    FROM prenatal_records
+    INNER JOIN trimester_table_name ON trimester_table_name.patients_id = prenatal_records.patients_id
+        AND trimester_table_name.records_count = prenatal_records.records_count
+    WHERE trimester_table_name.patients_id = new_patients_id
+        AND trimester_table_name.records_count = current_count AND trimester_table_name.check_up = new_check_up ORDER BY trimester_table_name.records_count DESC LIMIT 1;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_birth_experience` (IN `new_patient_id` INT, IN `new_date_of_delivery` VARCHAR(100), IN `new_type_of_delivery` VARCHAR(255), IN `new_birth_outcome` VARCHAR(255), IN `new_number_of_children_delivered` VARCHAR(100), IN `new_pregnancy_hypertension` VARCHAR(255), IN `new_preeclampsia_eclampsia` VARCHAR(255), IN `new_bleeding_during_pregnancy` VARCHAR(255))   BEGIN
+	DECLARE current_count INT;
+
+    SELECT COUNT(*)
+    INTO current_count
+    FROM birth_experience
+    WHERE patients_id = new_patient_id;
+    
+    SET current_count = current_count + 1;
+    
+    INSERT INTO birth_experience (
+        patients_id,
+        date_of_delivery,
+        type_of_delivery,
+        birth_outcome,
+        number_of_children_delivered,
+        pregnancy_hypertension,
+        preeclampsia_eclampsia,
+        bleeding_during_pregnancy,
+        records_count
+    ) VALUES (
+        new_patient_id,
+        new_date_of_delivery,
+        new_type_of_delivery,
+        new_birth_outcome,
+        new_number_of_children_delivered,
+        new_pregnancy_hypertension,
+        new_preeclampsia_eclampsia,
+        new_bleeding_during_pregnancy,
+        current_count
+    );
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_first_trimester` (IN `new_checkup` VARCHAR(255), IN `new_patient_id` INT, IN `new_date` VARCHAR(100), IN `new_weight` VARCHAR(100), IN `new_height` VARCHAR(100), IN `new_age_of_gestation` VARCHAR(100), IN `new_blood_pressure` VARCHAR(255), IN `new_nutritional_status` VARCHAR(255), IN `new_laboratory_tests_done` VARCHAR(255), IN `new_hemoglobin_count` VARCHAR(100), IN `new_urinalysis` VARCHAR(255), IN `new_complete_blood_count` VARCHAR(255), IN `new_stis_using_a_syndromic_approach` VARCHAR(255), IN `new_tetanus_containing_vaccine` VARCHAR(255), IN `new_given_services` VARCHAR(255), IN `new_date_of_return` VARCHAR(100), IN `new_health_provider_name` VARCHAR(255), IN `new_hospital_referral` VARCHAR(255))   BEGIN
+    DECLARE current_count INT;
+
+    SELECT COUNT(*) INTO current_count
+    FROM first_trimester
+    WHERE patients_id = new_patient_id
+      AND check_up = new_checkup;
+
+    -- Check if the patient and check_up combination already exists
+    IF current_count > 0 THEN
+        SET current_count = current_count + 1;
+    ELSE
+        SET current_count = 1;
+    END IF;
+
+    INSERT INTO first_trimester (
+        check_up,
+        patients_id,
+        date,
+        weight,
+        height,
+        age_of_gestation,
+        blood_pressure,
+        nutritional_status,
+        laboratory_tests_done,
+        hemoglobin_count,
+        urinalysis,
+        complete_blood_count,
+        stis_using_a_syndromic_approach,
+        tetanus_containing_vaccine,
+        given_services,
+        date_of_return,
+        health_provider_name,
+        hospital_referral,
+        records_count
+    ) VALUES (
+        new_checkup,
+        new_patient_id,
+        new_date,
+        new_weight,
+        new_height,
+        new_age_of_gestation,
+        new_blood_pressure,
+        new_nutritional_status,
+        new_laboratory_tests_done,
+        new_hemoglobin_count,
+        new_urinalysis,
+        new_complete_blood_count,
+        new_stis_using_a_syndromic_approach,
+        new_tetanus_containing_vaccine,
+        new_given_services,
+        new_date_of_return,
+        new_health_provider_name,
+        new_hospital_referral,
+        current_count
+    );
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_patient` (IN `new_fname` VARCHAR(255), IN `new_mname` VARCHAR(255), IN `new_lname` VARCHAR(255), IN `new_contactNum` VARCHAR(20), IN `new_address` VARCHAR(255), IN `new_fclt_id` INT)   BEGIN
+    INSERT INTO patients (
+        fname,
+        mname,
+        lname,
+        contactNum,
+        address,
+        fclt_id
+    ) VALUES (
+        new_fname,
+        new_mname,
+        new_lname,
+        new_contactNum,
+        new_address,
+        new_fclt_id
+    );
+    
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_patients_details` (IN `new_petsa_ng_unang_checkup` VARCHAR(100), IN `new_edad` VARCHAR(100), IN `new_timbang` VARCHAR(100), IN `new_taas` VARCHAR(100), IN `new_kalagayan_ng_kalusugan` VARCHAR(255), IN `new_petsa_ng_huling_regla` VARCHAR(100), IN `new_kailan_ako_manganganak` VARCHAR(100), IN `new_pang_ilang_pagbubuntis` INT, IN `new_patient_id` INT)   BEGIN
+    DECLARE current_count INT;
+
+    SELECT COUNT(*)
+    INTO current_count
+    FROM patients_details
+    WHERE patients_id = new_patient_id;
+
+    SET current_count = current_count + 1;
+
+    INSERT INTO patients_details (
+        petsa_ng_unang_checkup,
+        edad,
+        timbang,
+        taas,
+        kalagayan_ng_kalusugan,
+        petsa_ng_huling_regla,
+        kailan_ako_manganganak,
+        pang_ilang_pagbubuntis,
+        patients_id,
+        records_count
+    ) VALUES (
+        new_petsa_ng_unang_checkup,
+        new_edad,
+        new_timbang,
+        new_taas,
+        new_kalagayan_ng_kalusugan,
+        new_petsa_ng_huling_regla,
+        new_kailan_ako_manganganak,
+        new_pang_ilang_pagbubuntis,
+        new_patient_id,
+        current_count
+    );
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_second_trimester` (IN `new_checkup` VARCHAR(255), IN `new_patient_id` INT, IN `new_date` VARCHAR(100), IN `new_weight` VARCHAR(100), IN `new_height` VARCHAR(100), IN `new_age_of_gestation` VARCHAR(100), IN `new_blood_pressure` VARCHAR(255), IN `new_nutritional_status` VARCHAR(255), IN `new_given_advise` VARCHAR(255), IN `new_laboratory_tests_done` VARCHAR(255), IN `new_urinalysis` VARCHAR(255), IN `new_complete_blood_count` VARCHAR(255), IN `new_given_services` VARCHAR(255), IN `new_date_of_return` VARCHAR(100), IN `new_health_provider_name` VARCHAR(255), IN `new_hospital_referral` VARCHAR(255))   BEGIN
+	DECLARE current_count INT;
+
+	SELECT COUNT(*) INTO current_count
+    FROM second_trimester
+    WHERE patients_id = new_patient_id
+      AND check_up = new_checkup;
+
+    -- Check if the patient and check_up combination already exists
+    IF current_count > 0 THEN
+        SET current_count = current_count + 1;
+    ELSE
+        SET current_count = 1;
+    END IF;
+    
+    INSERT INTO second_trimester (
+        check_up,
+        patients_id,
+        date,
+        weight,
+        height,
+        age_of_gestation,
+        blood_pressure,
+        nutritional_status,
+        given_advise,
+        laboratory_tests_done,
+        urinalysis,
+        complete_blood_count,
+        given_services,
+        date_of_return,
+        health_provider_name,
+        hospital_referral,
+        records_count
+    ) VALUES (
+        new_checkup,
+        new_patient_id,
+        new_date,
+        new_weight,
+        new_height,
+        new_age_of_gestation,
+        new_blood_pressure,
+        new_nutritional_status,
+        new_given_advise,
+        new_laboratory_tests_done,
+        new_urinalysis,
+        new_complete_blood_count,
+        new_given_services,
+        new_date_of_return,
+        new_health_provider_name,
+        new_hospital_referral,
+        current_count
+    );
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_third_trimester` (IN `new_checkup` VARCHAR(255), IN `new_patient_id` INT, IN `new_date` VARCHAR(100), IN `new_weight` VARCHAR(100), IN `new_height` VARCHAR(100), IN `new_age_of_gestation` VARCHAR(100), IN `new_blood_pressure` VARCHAR(255), IN `new_nutritional_status` VARCHAR(255), IN `new_given_advise` VARCHAR(255), IN `new_laboratory_tests_done` VARCHAR(255), IN `new_urinalysis` VARCHAR(255), IN `new_complete_blood_count` VARCHAR(255), IN `new_given_services` VARCHAR(255), IN `new_date_of_return` VARCHAR(100), IN `new_health_provider_name` VARCHAR(255), IN `new_hospital_referral` VARCHAR(255))   BEGIN
+	DECLARE current_count INT;
+
+    SELECT COUNT(*) INTO current_count
+    FROM third_trimester
+    WHERE patients_id = new_patient_id
+      AND check_up = new_checkup;
+
+    -- Check if the patient and check_up combination already exists
+    IF current_count > 0 THEN
+        SET current_count = current_count + 1;
+    ELSE
+        SET current_count = 1;
+    END IF;
+    
+    INSERT INTO third_trimester (
+        check_up,
+        patients_id,
+        date,
+        weight,
+        height,
+        age_of_gestation,
+        blood_pressure,
+        nutritional_status,
+        given_advise,
+        laboratory_tests_done,
+        urinalysis,
+        complete_blood_count,
+        given_services,
+        date_of_return,
+        health_provider_name,
+        hospital_referral,
+        records_count
+    ) VALUES (
+        new_checkup,
+        new_patient_id,
+        new_date,
+        new_weight,
+        new_height,
+        new_age_of_gestation,
+        new_blood_pressure,
+        new_nutritional_status,
+        new_given_advise,
+        new_laboratory_tests_done,
+        new_urinalysis,
+        new_complete_blood_count,
+        new_given_services,
+        new_date_of_return,
+        new_health_provider_name,
+        new_hospital_referral,
+        current_count
+    );
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_birth_experience` (IN `new_patient_id` INT, IN `new_date_of_delivery` VARCHAR(100), IN `new_type_of_delivery` VARCHAR(255), IN `new_birth_outcome` VARCHAR(255), IN `new_number_of_children_delivered` VARCHAR(100), IN `new_pregnancy_hypertension` VARCHAR(255), IN `new_preeclampsia_eclampsia` VARCHAR(255), IN `new_bleeding_during_pregnancy` VARCHAR(255))   BEGIN
+    UPDATE birth_experience
+    SET
+        date_of_delivery = new_date_of_delivery,
+        type_of_delivery = new_type_of_delivery,
+        birth_outcome = new_birth_outcome,
+        number_of_children_delivered = new_number_of_children_delivered,
+        pregnancy_hypertension = new_pregnancy_hypertension,
+        preeclampsia_eclampsia = new_preeclampsia_eclampsia,
+        bleeding_during_pregnancy = new_bleeding_during_pregnancy
+    WHERE
+        patients_id = new_patient_id;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_first_trimester` (IN `new_checkup` VARCHAR(255), IN `new_patient_id` INT, IN `new_date` VARCHAR(100), IN `new_weight` VARCHAR(100), IN `new_height` VARCHAR(100), IN `new_age_of_gestation` VARCHAR(100), IN `new_blood_pressure` VARCHAR(255), IN `new_nutritional_status` VARCHAR(255), IN `new_laboratory_tests_done` VARCHAR(255), IN `new_hemoglobin_count` VARCHAR(100), IN `new_urinalysis` VARCHAR(255), IN `new_complete_blood_count` VARCHAR(255), IN `new_stis_using_a_syndromic_approach` VARCHAR(255), IN `new_tetanus_containing_vaccine` VARCHAR(255), IN `new_given_services` VARCHAR(255), IN `new_date_of_return` VARCHAR(100), IN `new_health_provider_name` VARCHAR(255), IN `new_hospital_referral` VARCHAR(255))   BEGIN
+    UPDATE first_trimester
+    SET
+        check_up = new_checkup,
+        date = new_date,
+        weight = new_weight,
+        height = new_height,
+        age_of_gestation = new_age_of_gestation,
+        blood_pressure = new_blood_pressure,
+        nutritional_status = new_nutritional_status,
+        laboratory_tests_done = new_laboratory_tests_done,
+        hemoglobin_count = new_hemoglobin_count,
+        urinalysis = new_urinalysis,
+        complete_blood_count = new_complete_blood_count,
+        stis_using_a_syndromic_approach = new_stis_using_a_syndromic_approach,
+        tetanus_containing_vaccine = new_tetanus_containing_vaccine,
+        given_services = new_given_services,
+        date_of_return = new_date_of_return,
+        health_provider_name = new_health_provider_name,
+        hospital_referral = new_hospital_referral
+    WHERE
+        patients_id = new_patient_id;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_patients_details` (IN `new_petsa_ng_unang_checkup` VARCHAR(100), IN `new_edad` VARCHAR(100), IN `new_timbang` VARCHAR(100), IN `new_taas` VARCHAR(100), IN `new_kalagayan_ng_kalusugan` VARCHAR(255), IN `new_petsa_ng_huling_regla` VARCHAR(100), IN `new_kailan_ako_manganganak` VARCHAR(100), IN `new_pang_ilang_pagbubuntis` INT, IN `new_patient_id` INT)   BEGIN
+    UPDATE patients_details
+    SET
+        petsa_ng_unang_checkup = new_petsa_ng_unang_checkup,
+        edad = new_edad,
+        timbang = new_timbang,
+        taas = new_taas,
+        kalagayan_ng_kalusugan = new_kalagayan_ng_kalusugan,
+        petsa_ng_huling_regla = new_petsa_ng_huling_regla,
+        kailan_ako_manganganak = new_kailan_ako_manganganak,
+        pang_ilang_pagbubuntis = new_pang_ilang_pagbubuntis
+    WHERE
+        patients_id = new_patient_id;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_second_trimester` (IN `new_checkup` VARCHAR(255), IN `new_patient_id` INT, IN `new_date` VARCHAR(100), IN `new_weight` VARCHAR(100), IN `new_height` VARCHAR(100), IN `new_age_of_gestation` VARCHAR(100), IN `new_blood_pressure` VARCHAR(255), IN `new_nutritional_status` VARCHAR(255), IN `new_given_advise` VARCHAR(255), IN `new_laboratory_tests_done` VARCHAR(255), IN `new_urinalysis` VARCHAR(255), IN `new_complete_blood_count` VARCHAR(255), IN `new_given_services` VARCHAR(255), IN `new_date_of_return` VARCHAR(100), IN `new_health_provider_name` VARCHAR(255), IN `new_hospital_referral` VARCHAR(255))   BEGIN
+    UPDATE second_trimester
+    SET
+        check_up = new_checkup,
+        date = new_date,
+        weight = new_weight,
+        height = new_height,
+        age_of_gestation = new_age_of_gestation,
+        blood_pressure = new_blood_pressure,
+        nutritional_status = new_nutritional_status,
+        given_advise = new_given_advise,
+        laboratory_tests_done = new_laboratory_tests_done,
+        urinalysis = new_urinalysis,
+        complete_blood_count = new_complete_blood_count,
+        given_services = new_given_services,
+        date_of_return = new_date_of_return,
+        health_provider_name = new_health_provider_name,
+        hospital_referral = new_hospital_referral
+    WHERE
+        patients_id = new_patient_id;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_third_trimester` (IN `new_checkup` VARCHAR(255), IN `new_patient_id` INT, IN `new_date` VARCHAR(100), IN `new_weight` VARCHAR(100), IN `new_height` VARCHAR(100), IN `new_age_of_gestation` VARCHAR(100), IN `new_blood_pressure` VARCHAR(100), IN `new_nutritional_status` VARCHAR(255), IN `new_given_advise` VARCHAR(255), IN `new_laboratory_tests_done` VARCHAR(255), IN `new_urinalysis` VARCHAR(255), IN `new_complete_blood_count` VARCHAR(255), IN `new_given_services` VARCHAR(255), IN `new_date_of_return` VARCHAR(100), IN `new_health_provider_name` VARCHAR(255), IN `new_hospital_referral` VARCHAR(255))   BEGIN
+    UPDATE third_trimester
+    SET
+        check_up = new_checkup,
+        date = new_date,
+        weight = new_weight,
+        height = new_height,
+        age_of_gestation = new_age_of_gestation,
+        blood_pressure = new_blood_pressure,
+        nutritional_status = new_nutritional_status,
+        given_advise = new_given_advise,
+        laboratory_tests_done = new_laboratory_tests_done,
+        urinalysis = new_urinalysis,
+        complete_blood_count = new_complete_blood_count,
+        given_services = new_given_services,
+        date_of_return = new_date_of_return,
+        health_provider_name = new_health_provider_name,
+        hospital_referral = new_hospital_referral
+    WHERE
+        patients_id = new_patient_id;
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `birth_experience`
+--
+
+CREATE TABLE `birth_experience` (
+  `birth_experience_id` int(11) NOT NULL,
+  `date_of_delivery` varchar(50) NOT NULL,
+  `type_of_delivery` varchar(100) NOT NULL,
+  `birth_outcome` varchar(100) NOT NULL,
+  `number_of_children_delivered` varchar(100) NOT NULL,
+  `pregnancy_hypertension` varchar(10) NOT NULL,
+  `preeclampsia_eclampsia` varchar(10) NOT NULL,
+  `bleeding_during_pregnancy` varchar(10) NOT NULL,
+  `patients_id` int(11) NOT NULL,
+  `records_count` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `birth_experience`
+--
+
+INSERT INTO `birth_experience` (`birth_experience_id`, `date_of_delivery`, `type_of_delivery`, `birth_outcome`, `number_of_children_delivered`, `pregnancy_hypertension`, `preeclampsia_eclampsia`, `bleeding_during_pregnancy`, `patients_id`, `records_count`) VALUES
+(7, '11/18/2023', '', '', '', '', '', '', 38, 1),
+(8, '11/18/2023', '', '', '', '', '', '', 38, 2);
 
 -- --------------------------------------------------------
 
@@ -54,42 +499,37 @@ INSERT INTO `facilities` (`fclt_id`, `fclt_name`, `fclt_password`, `fclt_ref_id`
 --
 
 CREATE TABLE `first_trimester` (
-  `id` int(11) NOT NULL,
-  `check-up` varchar(255) NOT NULL,
+  `first_trimester_id` int(11) NOT NULL,
+  `check_up` varchar(255) NOT NULL,
   `patients_id` int(11) NOT NULL,
-  `Date` varchar(255) NOT NULL,
-  `Weight` varchar(255) NOT NULL,
-  `Height` varchar(255) NOT NULL,
-  `Age_of_Gestation` varchar(255) NOT NULL,
-  `Blood_Pressure` varchar(255) NOT NULL,
-  `Nutritional_Status` varchar(255) NOT NULL,
-  `Laboratory_Tests_Done` varchar(255) NOT NULL,
-  `Hemoglobin_Count` varchar(255) NOT NULL,
-  `Urinalysis` varchar(255) NOT NULL,
-  `Complete_Blood_Count_(CBC)` varchar(255) NOT NULL,
-  `STIs_using_a_syndromic_approach` varchar(255) NOT NULL,
-  `Tetanus-containing_Vaccine` varchar(255) NOT NULL,
-  `Date_of_Return` varchar(255) NOT NULL,
-  `Health_Provider_Name` varchar(255) NOT NULL,
-  `Hospital_Referral` varchar(255) NOT NULL
+  `date` varchar(255) NOT NULL,
+  `weight` varchar(255) NOT NULL,
+  `height` varchar(255) NOT NULL,
+  `age_of_gestation` varchar(255) NOT NULL,
+  `blood_pressure` varchar(255) NOT NULL,
+  `nutritional_status` varchar(255) NOT NULL,
+  `laboratory_tests_done` varchar(255) NOT NULL,
+  `hemoglobin_count` varchar(255) NOT NULL,
+  `urinalysis` varchar(255) NOT NULL,
+  `complete_blood_count` varchar(255) NOT NULL,
+  `stis_using_a_syndromic_approach` varchar(255) NOT NULL,
+  `tetanus_containing_vaccine` varchar(255) NOT NULL,
+  `given_services` varchar(255) NOT NULL,
+  `date_of_return` varchar(255) NOT NULL,
+  `health_provider_name` varchar(255) NOT NULL,
+  `hospital_referral` varchar(255) NOT NULL,
+  `records_count` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `first_trimester`
 --
 
-INSERT INTO `first_trimester` (`id`, `check-up`, `patients_id`, `Date`, `Weight`, `Height`, `Age_of_Gestation`, `Blood_Pressure`, `Nutritional_Status`, `Laboratory_Tests_Done`, `Hemoglobin_Count`, `Urinalysis`, `Complete_Blood_Count_(CBC)`, `STIs_using_a_syndromic_approach`, `Tetanus-containing_Vaccine`, `Date_of_Return`, `Health_Provider_Name`, `Hospital_Referral`) VALUES
-(28, 'first_checkup', 1, 'first', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd'),
-(31, 'third_checkup', 1, 'date', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', '', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd'),
-(33, 'second_checkup', 4, 'second', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd'),
-(35, 'first_checkup', 2, 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew', 'wew'),
-(36, 'first_checkup', 11, 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx', 'xx'),
-(37, 'first_checkup', 3, 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd'),
-(38, 'first_checkup', 6, 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw'),
-(39, 'first_checkup', 9, 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw', 'aw'),
-(40, 'first_checkup', 26, 'asdadad', 'adasdad', 'asdada', 'asda', 'dasdas', 'asda', 'asdad', 'asdasda', 'dasdd', 'sda', 'adasd', 'asda', 'asdas', 'asda', 'dasdasd'),
-(41, 'first_checkup', 19, 'asd', 'aasd', 'dasda', 'aasda', 'dsa', 'asda', 'asda', 'asd', 'dasda', 'asdd', 'dasd', 'asdsa', 'asd', 'asdad', 'asda'),
-(42, 'first_checkup', 30, 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd', 'asd');
+INSERT INTO `first_trimester` (`first_trimester_id`, `check_up`, `patients_id`, `date`, `weight`, `height`, `age_of_gestation`, `blood_pressure`, `nutritional_status`, `laboratory_tests_done`, `hemoglobin_count`, `urinalysis`, `complete_blood_count`, `stis_using_a_syndromic_approach`, `tetanus_containing_vaccine`, `given_services`, `date_of_return`, `health_provider_name`, `hospital_referral`, `records_count`) VALUES
+(68, 'first_checkup', 38, '', '1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1),
+(69, 'second_checkup', 38, '', '1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1),
+(70, 'first_checkup', 38, '', '2', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 2),
+(71, 'third_checkup', 38, '', '1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -112,7 +552,11 @@ CREATE TABLE `messages` (
 
 INSERT INTO `messages` (`id`, `user1`, `message`, `user2`, `date`, `time`) VALUES
 (108, '1', 'hey', '2', '2023-11-02', '02:12:34 PM'),
-(109, '2', 'yow', '1', '2023-11-02', '02:12:41 PM');
+(109, '2', 'yow', '1', '2023-11-02', '02:12:41 PM'),
+(110, '3', 'hi', '1', '2023-11-08', '05:21:04 PM'),
+(111, '2', 'lol', '3', '2023-11-09', '09:51:04 PM'),
+(112, '1', 'hi', '2', '2023-11-10', '06:13:39 PM'),
+(113, '1', 'hi love', '2', '2023-11-10', '06:13:44 PM');
 
 -- --------------------------------------------------------
 
@@ -135,12 +579,8 @@ CREATE TABLE `patients` (
 --
 
 INSERT INTO `patients` (`id`, `fname`, `mname`, `lname`, `contact`, `address`, `fclt_id`) VALUES
-(28, 'asd', 'asdad', 'asd', 'asdad', 'asd', 3),
-(30, 'Sarah', '', 'Jane', '009090', 'Airport', 2),
-(31, 'asda', 'asdad', 'asdasd', 'asdas', 'asdad', 3),
-(34, 'asd', 'asd', 'asd', 'asdasa', 'asd', 3),
-(35, 'uhuy', 'b', 'ubu', 'buyb', 'uyb', 2),
-(36, 'asdad', 'asd', 'asdada', 'asd', '', 1);
+(38, 'Jezrael', 'Juarez', 'Salino', '09090676022', 'P-4, Brgy. Togbongon', 2),
+(58, 'Nyko', '', 'Jumamil', '09090676022', 'Nueva', 2);
 
 -- --------------------------------------------------------
 
@@ -154,28 +594,44 @@ CREATE TABLE `patients_details` (
   `edad` varchar(255) NOT NULL,
   `timbang` varchar(255) NOT NULL,
   `taas` varchar(255) NOT NULL,
-  `patients_id` int(11) NOT NULL,
   `kalagayan_ng_kalusugan` varchar(255) DEFAULT NULL,
   `petsa_ng_huling_regla` varchar(255) DEFAULT NULL,
   `kailan_ako_manganganak` varchar(255) DEFAULT NULL,
-  `pang_ilang_pagbubuntis` varchar(255) DEFAULT NULL
+  `pang_ilang_pagbubuntis` varchar(255) DEFAULT NULL,
+  `patients_id` int(11) NOT NULL,
+  `records_count` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `patients_details`
 --
 
-INSERT INTO `patients_details` (`patients_details_id`, `petsa_ng_unang_checkup`, `edad`, `timbang`, `taas`, `patients_id`, `kalagayan_ng_kalusugan`, `petsa_ng_huling_regla`, `kailan_ako_manganganak`, `pang_ilang_pagbubuntis`) VALUES
-(65, '10/28/2023', 'adsada', 'asdd', 'asdad', 30, '', '', '', ''),
-(66, '10/27/2023', 'adsada', 'aasds', 'asdad', 35, 'asd', 'dasd', 'asda', 'dasdsa'),
-(67, '10/26/2023', '', '', '', 28, '', '', '', ''),
-(68, '10/26/2023', '', '', 'asd', 36, '', '', '', ''),
-(69, '', '', '', '', 0, NULL, NULL, NULL, NULL),
-(70, '', '', '', '', 0, NULL, NULL, NULL, NULL),
-(71, '', '', '', '', 0, NULL, NULL, NULL, NULL),
-(72, '', '', '', '', 0, NULL, NULL, NULL, NULL),
-(73, '', '', '', '', 0, NULL, NULL, NULL, NULL),
-(74, '', '', '', '', 0, NULL, NULL, NULL, NULL);
+INSERT INTO `patients_details` (`patients_details_id`, `petsa_ng_unang_checkup`, `edad`, `timbang`, `taas`, `kalagayan_ng_kalusugan`, `petsa_ng_huling_regla`, `kailan_ako_manganganak`, `pang_ilang_pagbubuntis`, `patients_id`, `records_count`) VALUES
+(83, '11/11/2023', '', '', '', '', '', '', '0', 38, 1),
+(88, '11/25/2023', '', '', '', '', '', '', '0', 38, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `prenatal_records`
+--
+
+CREATE TABLE `prenatal_records` (
+  `prenatal_records_id` int(11) NOT NULL,
+  `patients_id` int(11) NOT NULL,
+  `fclt_id` int(11) NOT NULL,
+  `date` varchar(100) NOT NULL,
+  `time` varchar(100) NOT NULL,
+  `records_count` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `prenatal_records`
+--
+
+INSERT INTO `prenatal_records` (`prenatal_records_id`, `patients_id`, `fclt_id`, `date`, `time`, `records_count`) VALUES
+(3, 38, 2, 'adas', 'adadsd', 1),
+(4, 38, 2, 'asdadsda', 'asdad', 2);
 
 -- --------------------------------------------------------
 
@@ -214,7 +670,8 @@ CREATE TABLE `referral_format` (
 --
 
 INSERT INTO `referral_format` (`id`, `field_name`) VALUES
-(1, 'Name');
+(1, 'Name'),
+(18, 'V/s');
 
 -- --------------------------------------------------------
 
@@ -225,19 +682,19 @@ INSERT INTO `referral_format` (`id`, `field_name`) VALUES
 CREATE TABLE `referral_forms` (
   `id` int(11) NOT NULL,
   `Name` varchar(255) DEFAULT NULL,
-  `dadaad` varchar(255) NOT NULL
+  `Vs` varchar(255) DEFAULT NULL,
+  `kjbj` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `referral_forms`
 --
 
-INSERT INTO `referral_forms` (`id`, `Name`, `dadaad`) VALUES
-(239, 'asdadadasd', ''),
-(240, 'asdadad', ''),
-(241, 'asdada', ''),
-(248, 'First', ''),
-(249, 'Second', '');
+INSERT INTO `referral_forms` (`id`, `Name`, `Vs`, `kjbj`) VALUES
+(251, 'First', NULL, NULL),
+(252, 'Second', NULL, NULL),
+(253, 'Third', NULL, NULL),
+(254, 'heyy', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -473,7 +930,16 @@ INSERT INTO `referral_notification` (`id`, `message`, `rfrrl_id`, `fclt_id`, `da
 (721, 'New referral', 247, 2, '2023-10-26', '04:54 PM', 0),
 (722, 'New referral', 248, 2, '2023-10-26', '05:17 PM', 0),
 (723, 'Referral Accepted', 248, 1, '2023-10-26', '05:17 PM', 0),
-(724, 'New referral', 249, 2, '2023-10-26', '06:10 PM', 0);
+(724, 'New referral', 249, 2, '2023-10-26', '06:10 PM', 0),
+(725, 'New referral', 250, 2, '2023-11-08', '05:30 PM', 0),
+(726, 'New referral', 251, 2, '2023-11-08', '05:39 PM', 0),
+(727, 'Referral Accepted', 251, 3, '2023-11-08', '06:00 PM', 0),
+(728, 'New referral', 252, 2, '2023-11-08', '06:00 PM', 0),
+(729, 'Referral Declined', 252, 3, '2023-11-08', '06:01 PM', 0),
+(730, 'New referral', 253, 2, '2023-11-08', '06:10 PM', 0),
+(731, 'Referral Accepted', 253, 1, '2023-11-08', '06:17 PM', 0),
+(732, 'Referral Accepted', 252, 1, '2023-11-08', '06:26 PM', 0),
+(733, 'New referral', 254, 2, '2023-11-08', '10:41 PM', 0);
 
 -- --------------------------------------------------------
 
@@ -496,10 +962,10 @@ CREATE TABLE `referral_records` (
 --
 
 INSERT INTO `referral_records` (`id`, `fclt_id`, `rfrrl_id`, `date`, `time`, `referred_hospital`, `status`) VALUES
-(215, 2, 239, '2023-10-26', '04:49 PM', '3', 'Pending'),
-(217, 2, 241, '2023-10-26', '04:51 PM', '3', 'Pending'),
-(224, 2, 248, '2023-10-26', '05:17 PM', '1', 'Accepted'),
-(225, 2, 249, '2023-10-26', '06:10 PM', '1', 'Pending');
+(227, 2, 251, '2023-11-08', '05:39 PM', '3', 'Accepted'),
+(228, 2, 252, '2023-11-08', '06:00 PM', '3', 'Accepted'),
+(229, 2, 253, '2023-11-08', '06:10 PM', '1', 'Accepted'),
+(230, 2, 254, '2023-11-08', '10:41 PM', '3', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -522,7 +988,10 @@ CREATE TABLE `referral_transaction` (
 --
 
 INSERT INTO `referral_transaction` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date`, `time`, `reason`) VALUES
-(56, 1, 248, 'Accepted', '2023-10-26', '05:17 PM', 'NULL');
+(57, 3, 251, 'Accepted', '2023-11-08', '06:00 PM', 'NULL'),
+(58, 3, 252, 'Declined', '2023-11-08', '06:01 PM', 'idk'),
+(59, 1, 253, 'Accepted', '2023-11-08', '06:17 PM', 'NULL'),
+(60, 1, 252, 'Accepted', '2023-11-08', '06:26 PM', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -531,48 +1000,36 @@ INSERT INTO `referral_transaction` (`id`, `fclt_id`, `rfrrl_id`, `status`, `date
 --
 
 CREATE TABLE `second_trimester` (
-  `id` int(11) NOT NULL,
-  `check-up` varchar(255) NOT NULL,
-  `patients_id` int(11) NOT NULL,
-  `asdada` varchar(255) NOT NULL,
-  `asdaasd` varchar(255) NOT NULL,
-  `asd_asd` varchar(255) NOT NULL
+  `second_trimester_id` int(11) NOT NULL,
+  `check_up` varchar(255) DEFAULT NULL,
+  `patients_id` int(11) DEFAULT NULL,
+  `date` varchar(50) DEFAULT NULL,
+  `weight` varchar(50) DEFAULT NULL,
+  `height` varchar(50) DEFAULT NULL,
+  `age_of_gestation` varchar(50) DEFAULT NULL,
+  `blood_pressure` varchar(20) DEFAULT NULL,
+  `nutritional_status` varchar(50) DEFAULT NULL,
+  `given_advise` varchar(255) DEFAULT NULL,
+  `laboratory_tests_done` varchar(255) DEFAULT NULL,
+  `urinalysis` varchar(255) DEFAULT NULL,
+  `complete_blood_count` varchar(255) DEFAULT NULL,
+  `given_services` varchar(255) DEFAULT NULL,
+  `date_of_return` varchar(50) DEFAULT NULL,
+  `health_provider_name` varchar(255) DEFAULT NULL,
+  `hospital_referral` varchar(255) DEFAULT NULL,
+  `records_count` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `second_trimester`
 --
 
-INSERT INTO `second_trimester` (`id`, `check-up`, `patients_id`, `asdada`, `asdaasd`, `asd_asd`) VALUES
-(11, 'first_checkup', 1, 'second', 'asda', 'asd'),
-(12, 'second_checkup', 1, 'asd', 'asd', 'asd'),
-(13, 'first_checkup', 9, 'wew', 'wew', 'wew'),
-(14, 'first_checkup', 3, 'wew', 'wew', 'wew'),
-(15, 'first_checkup', 8, 'aw', 'aw', 'aw'),
-(16, 'first_checkup', 6, 'wew', 'wew', 'wew'),
-(17, 'first_checkup', 12, 'wew', 'wew', 'wew'),
-(18, 'third_checkup', 1, 'aw', 'aw', 'aw'),
-(19, 'first_checkup', 2, 'wew', 'wewe', 'wew'),
-(20, 'first_checkup', 4, 'aw', 'aw', 'aw'),
-(21, 'second_checkup', 4, 'aw', 'aw', 'aw'),
-(22, 'third_checkup', 4, 'wew', 'wew', 'wew'),
-(23, 'second_checkup', 9, 'aw', 'aw', 'aw'),
-(24, 'second_checkup', 6, 'wew', 'wew', 'wew'),
-(25, 'first_checkup', 11, 'wew', 'wew', 'wew'),
-(26, 'second_checkup', 11, 'wew', 'wew', 'wew'),
-(27, 'third_checkup', 9, 'wew', 'wew', 'wew'),
-(28, 'second_checkup', 8, 'wew', 'wew', 'wew'),
-(29, 'first_checkup', 23, 'aw', 'aw', 'aw'),
-(30, 'first_checkup', 19, 'aw', 'aw', 'aw'),
-(31, 'first_checkup', 26, 'asd', 'asd', 'asd'),
-(32, 'second_checkup', 27, '', '', ''),
-(33, 'first_checkup', 28, 'asd', 'asd', 'asd'),
-(34, 'second_checkup', 30, 'asda', 'asdad', 'asda'),
-(35, 'first_checkup', 29, 'kak', 'kaka', 'kaka'),
-(36, 'first_checkup', 34, 'kok', 'kok', 'kok'),
-(37, 'first_checkup', 31, 'll', 'lll', 'll'),
-(38, 'first_checkup', 33, 'asd', 'asd', 'asd'),
-(39, 'first_checkup', 36, 'as', 'as', 'as');
+INSERT INTO `second_trimester` (`second_trimester_id`, `check_up`, `patients_id`, `date`, `weight`, `height`, `age_of_gestation`, `blood_pressure`, `nutritional_status`, `given_advise`, `laboratory_tests_done`, `urinalysis`, `complete_blood_count`, `given_services`, `date_of_return`, `health_provider_name`, `hospital_referral`, `records_count`) VALUES
+(10, 'first_checkup', 38, '', '1', '', '', '', '', '', '', '', '', '', '', '', '', 1),
+(11, 'second_checkup', 38, '', '1', '', '', '', '', '', '', '', '', '', '', '', '', 1),
+(12, 'third_checkup', 38, '', '1', '', '', '', '', '', '', '', '', '', '', '', '', 1),
+(13, 'first_checkup', 38, '', '2', '', '', '', '', '', '', '', '', '', '', '', '', 2),
+(14, 'third_checkup', 38, '', '2', '', '', '', '', '', '', '', '', '', '', '', '', 2);
 
 -- --------------------------------------------------------
 
@@ -581,37 +1038,38 @@ INSERT INTO `second_trimester` (`id`, `check-up`, `patients_id`, `asdada`, `asda
 --
 
 CREATE TABLE `third_trimester` (
-  `id` int(11) NOT NULL,
-  `check-up` varchar(255) NOT NULL,
-  `patients_id` int(11) NOT NULL,
-  `asdaasd` varchar(255) NOT NULL,
-  `asdad` varchar(255) NOT NULL
+  `third_trimester_id` int(11) NOT NULL,
+  `check_up` varchar(255) NOT NULL,
+  `patients_id` int(11) DEFAULT NULL,
+  `date` varchar(50) DEFAULT NULL,
+  `weight` varchar(50) DEFAULT NULL,
+  `height` varchar(50) DEFAULT NULL,
+  `age_of_gestation` varchar(50) DEFAULT NULL,
+  `blood_pressure` varchar(50) DEFAULT NULL,
+  `nutritional_status` varchar(50) DEFAULT NULL,
+  `given_advise` text DEFAULT NULL,
+  `laboratory_tests_done` text DEFAULT NULL,
+  `urinalysis` text DEFAULT NULL,
+  `complete_blood_count` text DEFAULT NULL,
+  `given_services` text DEFAULT NULL,
+  `date_of_return` varchar(20) DEFAULT NULL,
+  `health_provider_name` varchar(100) DEFAULT NULL,
+  `hospital_referral` varchar(100) DEFAULT NULL,
+  `records_count` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `third_trimester`
+-- Table structure for table `trimester_demo`
 --
 
-INSERT INTO `third_trimester` (`id`, `check-up`, `patients_id`, `asdaasd`, `asdad`) VALUES
-(1, 'first_checkup', 1, 'third', 'asd'),
-(2, 'first_checkup', 3, 'as', 'asd'),
-(3, 'first_checkup', 9, 'asd', 'asd'),
-(4, 'first_checkup', 6, 'aw', 'aw'),
-(5, 'first_checkup', 12, 'wew', 'wew'),
-(6, 'first_checkup', 12, 'wew', 'wew'),
-(7, 'first_checkup', 12, 'wew', 'wew'),
-(8, 'third_checkup', 1, 'wew', 'wew'),
-(9, 'first_checkup', 4, 'aws', 'aws'),
-(10, 'second_checkup', 4, 'aw', 'aaw'),
-(11, 'third_checkup', 4, 'aw', 'aw'),
-(12, 'second_checkup', 9, 'wew', 'wew'),
-(13, 'third_checkup', 11, 'wew', 'wew'),
-(14, 'second_checkup', 11, 'ww', 'ww'),
-(15, 'second_checkup', 8, 'wew', 'wew'),
-(16, 'second_checkup', 1, 'safaf', 'asfasa'),
-(17, 'first_checkup', 19, 'asda', 'asda'),
-(18, 'second_checkup', 19, 'w', 'qvq'),
-(19, 'third_checkup', 19, 'asd', 'asd');
+CREATE TABLE `trimester_demo` (
+  `id` int(11) NOT NULL,
+  `check-up` varchar(255) NOT NULL,
+  `patients_id` varchar(255) NOT NULL,
+  `hospital_referral` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -657,6 +1115,12 @@ INSERT INTO `users` (`usersId`, `usersName`, `usersEmail`, `usersUid`, `usersrol
 --
 
 --
+-- Indexes for table `birth_experience`
+--
+ALTER TABLE `birth_experience`
+  ADD PRIMARY KEY (`birth_experience_id`);
+
+--
 -- Indexes for table `facilities`
 --
 ALTER TABLE `facilities`
@@ -666,7 +1130,7 @@ ALTER TABLE `facilities`
 -- Indexes for table `first_trimester`
 --
 ALTER TABLE `first_trimester`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`first_trimester_id`);
 
 --
 -- Indexes for table `messages`
@@ -685,6 +1149,12 @@ ALTER TABLE `patients`
 --
 ALTER TABLE `patients_details`
   ADD PRIMARY KEY (`patients_details_id`);
+
+--
+-- Indexes for table `prenatal_records`
+--
+ALTER TABLE `prenatal_records`
+  ADD PRIMARY KEY (`prenatal_records_id`);
 
 --
 -- Indexes for table `profile_image`
@@ -726,12 +1196,18 @@ ALTER TABLE `referral_transaction`
 -- Indexes for table `second_trimester`
 --
 ALTER TABLE `second_trimester`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`second_trimester_id`);
 
 --
 -- Indexes for table `third_trimester`
 --
 ALTER TABLE `third_trimester`
+  ADD PRIMARY KEY (`third_trimester_id`);
+
+--
+-- Indexes for table `trimester_demo`
+--
+ALTER TABLE `trimester_demo`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -751,6 +1227,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `birth_experience`
+--
+ALTER TABLE `birth_experience`
+  MODIFY `birth_experience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
@@ -760,25 +1242,31 @@ ALTER TABLE `facilities`
 -- AUTO_INCREMENT for table `first_trimester`
 --
 ALTER TABLE `first_trimester`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `first_trimester_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `patients_details`
 --
 ALTER TABLE `patients_details`
-  MODIFY `patients_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `patients_details_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+
+--
+-- AUTO_INCREMENT for table `prenatal_records`
+--
+ALTER TABLE `prenatal_records`
+  MODIFY `prenatal_records_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `profile_image`
@@ -790,43 +1278,49 @@ ALTER TABLE `profile_image`
 -- AUTO_INCREMENT for table `referral_format`
 --
 ALTER TABLE `referral_format`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `referral_forms`
 --
 ALTER TABLE `referral_forms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=255;
 
 --
 -- AUTO_INCREMENT for table `referral_notification`
 --
 ALTER TABLE `referral_notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=725;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=734;
 
 --
 -- AUTO_INCREMENT for table `referral_records`
 --
 ALTER TABLE `referral_records`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
 
 --
 -- AUTO_INCREMENT for table `referral_transaction`
 --
 ALTER TABLE `referral_transaction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `second_trimester`
 --
 ALTER TABLE `second_trimester`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `second_trimester_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `third_trimester`
 --
 ALTER TABLE `third_trimester`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `third_trimester_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `trimester_demo`
+--
+ALTER TABLE `trimester_demo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `uploaded_files`

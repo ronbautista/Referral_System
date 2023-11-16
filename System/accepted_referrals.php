@@ -33,7 +33,7 @@ $getreferral = getAllReferrals();
           $count++;
           $rffrl_id = $displayreferral['rfrrl_id'];
           $fclt_name = $displayreferral['fclt_name'];
-          $Name = $displayreferral['Name'];
+          $Name = $displayreferral['name'];
           $date = $displayreferral['date'];
           $time = $displayreferral['time'];
           $status = $displayreferral['status'];

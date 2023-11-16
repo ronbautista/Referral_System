@@ -49,22 +49,21 @@ $columnNames = ($row) ? array_keys($row) : [];
     <div class="head">
         <?php
         if ($row) {
-            echo '<h2 class="mb-4"> Patient Name: ' . $row['lname'] . ', ' . $row['fname'] . ' ' . $row['mname'] . '</h2> ';
+            echo '<h2> Patient Name: ' . $row['lname'] . ', ' . $row['fname'] . ' ' . $row['mname'] . '</h2> ';
         }
         ?>
-        <div class="buttons">
-            <select class="form-select" name="number_of_children_delivered" id="number_of_children_delivered">
-                <option selected value="">Choose...</option>
-                <option value="Single">Single</option>
-                <option value="Twins">Twins</option>
-                <option value="Multiple Birth">Multiple Birth</option>
-            </select>
-            <button type="button" class="btn btn-primary" id="createNewRecord">New Record</button>
-             <a class="btn btn-primary" href="prenatal.php" role="button">Back</a>
+        <div class="head_buttons">
+        <div class="col">
+        <select class="form-select" name="recordsCount" id="recordsCount">
+            <!-- PATIENT RECORDS DISPLAY HERE FROM JS  -->
+        </select>
+        </div>
+        <button type="button" class="btn btn-primary" id="createNewRecords">Create New Record</button>
+        <a class="btn btn-primary" href="prenatal.php" role="button">Back</a>
         </div>
     </div>
 
-    <div class="card new_modal">
+    <div class="card new_modal" style="margin-bottom: -10px;">
         <div class="card-header" id="hahaha">
         <div class="d-flex justify-content-between" >
             <ul class="nav nav-tabs" id="myTabs" role="tablist">
@@ -97,7 +96,7 @@ $columnNames = ($row) ? array_keys($row) : [];
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                     <label>Age</label>
-                    <input type="text" class="form-control" name="edad" id="edad">
+                    <input type="number" class="form-control" name="edad" id="edad">
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                     <label>Weight</label>
@@ -121,7 +120,7 @@ $columnNames = ($row) ? array_keys($row) : [];
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                     <label>Birth Count</label>
-                    <input type="text" class="form-control" name="pang_ilang_pagbubuntis" id="pang_ilang_pagbubuntis">
+                    <input type="number" class="form-control" name="pang_ilang_pagbubuntis" id="pang_ilang_pagbubuntis">
                 </div>
                 <div class="col-12" style="margin-top: 15px;">
                     <button type="submit" id="patientSave" class="btn btn-primary">Save</button>
@@ -494,6 +493,7 @@ $columnNames = ($row) ? array_keys($row) : [];
 
 
       
-    <?php
-include_once 'footer.php'
+<?php
+include_once 'prenatal_script.php';
+include_once 'footer.php';
 ?>

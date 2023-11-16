@@ -15,11 +15,20 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
 
 <div class="feed" id="patients_list">
   <div class="head">
-    <h2 class="mb-4">Prenatal List</h2>
-    <div class="buttons">
+    <h2>Prenatal List</h2>
+    <div class="head_buttons">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fi fi-br-plus"></i> Add Patient</button>
     </div>  
   </div>
+  <div class="table-header">
+ <div class="col-2">
+  <input type="text" name="address" id="address " class="form-control" placeholder="Search">
+  </div>
+  <div class="col-2">
+  <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fi fi-rr-settings-sliders"></i> Filter</button>
+  </div>
+  <button type="button" class="btn btn-primary" id="report"><i class="fi fi-rr-upload"></i> Export</button>
+ </div>
   <div class="prenatal_table">
   <table class="table table-hover" id="table" style="text-align: center;">
     <thead>
@@ -156,6 +165,7 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
   </div>
 </div>
 
+
 <!-- VIEW PATIENT RECORDS -->
 <div class="modal fade" id="viewPatientRecordsModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -165,21 +175,19 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
       <div class="modal-body">
-          <div class="alert alert-primary d-flex" role="alert">
-            <h6 style="margin-top: 8px;">A simple primary alert—check it out!</h6>
-            <a class="btn btn-primary" href="view_prenatal.php" id="viewRecordBtn" style="margin-left: auto;" role="button">View</a>
-          </div>
-          <div class="alert alert-danger d-none" id="errorMessage"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
-            <a class="btn btn-primary" href="add_prenatal.php" id="createRecordBtn" role="button">Create New Record</a>
-          </div>
+          <!-- DISPLAY PATIENTS RECORDS HERE -->
+        <div class="alert alert-primary d-none" id="noRecords"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+        <a class="btn btn-primary createNewPrenatalRecord" href="view_prenatal.php" data-patient-id="" role="button">Create New Record</a>
+      </div>
     </div>
   </div>
 </div>
 
 
-    <?php
-include_once 'footer.php'
+<?php
+include_once 'prenatal_script.php';
+include_once 'footer.php';
 ?>
