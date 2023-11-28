@@ -2,82 +2,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let rightTab = document.querySelector(".nav-link.right-button.active").getAttribute("data-tab");
     let leftTab = document.querySelector(".nav-link.left-button.active").getAttribute("data-tab");
-    const urlParams = new URLSearchParams(window.location.search);
-    const patientID = urlParams.get("id");
-    const record = urlParams.get("record");
-    
-    var recordNumber = parseInt(record, 10);
-    var total = recordNumber + 1;
-    
-    
     const rightBtn = document.querySelectorAll(".nav-link.right-button");
     const leftBtn = document.querySelectorAll(".nav-link.left-button");
-    
-    // Get the select element by its id
+    const urlParams = new URLSearchParams(window.location.search);
     var selectElement = document.getElementById('recordsCount');
+    const patientID = urlParams.get("id");
+    const record = urlParams.get("record");
+
+    $(document).ready(function () {
+      $('.prenatal-datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+        todayHighlight: true
+      });
+    });
     
-    // Attach the onchange event listener
     selectElement.addEventListener('change', function() {
-      // Get the selected value
-      var selectedValue = selectElement.value;
-    
-      console.log(selectedValue);
-      if (selectedValue) {
-      urlParams.set('record', selectedValue);
-    } else {
-      urlParams.delete('record');
-    }
-    var newURL = window.location.origin + window.location.pathname + '?' + urlParams.toString();
-    window.history.replaceState({}, document.title, newURL);
-    
-      getPatientDetailsData(patientID, selectedValue);
-      getBirthExData(patientID, selectedValue);
-      getTrimesterData(leftTab, rightTab, patientID, selectedValue);
+        var selectedValue = selectElement.value;
+        
+        console.log(selectedValue);
+        if (selectedValue) {
+          urlParams.set('record', selectedValue);
+        } else {
+          urlParams.delete('record');
+        }
+        var newURL = window.location.origin + window.location.pathname + '?' + urlParams.toString();
+        window.history.replaceState({}, document.title, newURL);
+      
+        getPatientDetailsData(patientID, selectedValue);
+        getBirthExData(patientID, selectedValue);
+        getTrimesterData(leftTab, rightTab, patientID, selectedValue);
     });
     
     if(record == null){
-      getBirthExData(patientID, '');
-      getPatientDetailsData(patientID, '');
-      getTrimesterData(leftTab, rightTab, patientID, '');
+      empty();
     }else{
-      getBirthExData(patientID, record);
-      getPatientDetailsData(patientID, record);
-      getTrimesterData(leftTab, rightTab, patientID, record);
+      withrecord();
+    }
+
+    function empty(){
+        getBirthExData(patientID, '');
+        getPatientDetailsData(patientID, '');
+        getTrimesterData(leftTab, rightTab, patientID, '');
+    }
+    function withrecord(){
+        getBirthExData(patientID, record);
+        getPatientDetailsData(patientID, record);
+        getTrimesterData(leftTab, rightTab, patientID, record);
     }
     
     $(document).on('click', '#createNewRecords', function () {
-     $.ajax({
-        type: "POST",
-        url: "server/prenatal_function.php",
-        data: {
-           new_record: true,
-           patients_id: patientID
-        },
-        success: function (response) {
-           var res = jQuery.parseJSON(response);
-           if (res.status == 200) {
-            const record = urlParams.get("record");
-            var recordNumber = parseInt(record, 10);
-            var total = recordNumber + 1;
-    
-            if (total) {
-              urlParams.set('record', total);
-            } else {
-              urlParams.delete('record');
-            }
-            var newURL = window.location.origin + window.location.pathname + '?' + urlParams.toString();
-            window.history.replaceState({}, document.title, newURL);
-            location.reload();
-    
-           } else if (res.status == 300) {
-              $("#errorMessage").removeClass("d-none");
-              $("#errorMessage").text(res.message);
-           }
-        },
-     });
-    
-    });
-    
+      $.ajax({
+          type: "POST",
+          url: "server/prenatal_function.php",
+          data: {
+              new_record: true,
+              patients_id: patientID
+          },
+          success: function (response) {
+              var res = jQuery.parseJSON(response);
+              if (res.status == 200) {
+                  urlParams.delete('record');
+                  const updatedUrl = window.location.pathname + '?' + urlParams.toString();
+                  window.history.replaceState({}, document.title, updatedUrl);
+                  location.reload();
+                  empty();
+              } else if (res.status == 300) {
+                  $("#errorMessage").removeClass("d-none");
+                  $("#errorMessage").text(res.message);
+              }
+          },
+      });
+  });
     
     
     rightBtn.forEach((button) => {
@@ -267,8 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var res = JSON.parse(response);
         if (res.status == 200) {
           var recordsSelect = $('#recordsCount');
-    
-          // Clear existing options
+
           recordsSelect.empty();
     
           var lastRecord = null;
@@ -298,8 +293,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     }
-    
-    
     
     $(document).on("submit", "#firstTrimesterInsert", function (e) {
     e.preventDefault();

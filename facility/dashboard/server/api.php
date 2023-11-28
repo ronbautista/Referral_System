@@ -1,6 +1,6 @@
 <?php
 include_once '../../../db/db_conn.php';
-require_once '../pusher.php';
+require_once '../../../config/pusher.php';
 session_start();
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -51,7 +51,8 @@ if (isset($_POST['create_referral'])) {
         $notify_query_run = mysqli_stmt_execute($stmt_notify);
 
         if ($query_another_table_run && $notify_query_run) {
-            $pusher->trigger('my-channel', 'my-event', array('message' => 'New Referral ' . $fclt_name));
+            $data = $fclt_name;
+            $pusher->trigger($referred_hospital, 'referral', $data);
             $response = [
                 'status' => 200,
                 'message' => 'Referral data inserted successfully',

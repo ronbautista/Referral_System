@@ -2,78 +2,182 @@
 include_once 'header.php';
 
 include_once 'includes/referral_functions.inc.php';
-include_once 'includes/prenatal_functions.inc.php';
+//include_once 'includes/prenatal_functions.inc.php';
+include_once 'includes/staff_functions.inc.php';
 
-// Call the function and fetch all the referrals
-$referral_format = referral_format();
-$referrals = referrals();
-$prenatal_format = prenatal_format();
+// Define the number of items per page
+$itemsPerPage = 9;
+
+// Get the current page number from the URL parameter, default to 1 if not set
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Call the function and fetch paginated referrals
+$staff = getPaginatedStaff($page, $itemsPerPage);
 ?>
 
-<!-- Modal for Referral Fields -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<!-- Referral Forms -->
+<div class="feed">
+  <div class="head">
+      <h2>Staff List</h2>
+      <div class="head_buttons">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staffModal"><i class="fi fi-br-plus"></i> Add Staff</button>
+      </div>  
+    </div>
+    <div class="table-header">
+ <div class="col-2">
+  <input type="text" name="address" id="address " class="form-control" placeholder="Search">
+  </div>
+  <div class="col-2">
+  <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fi fi-rr-settings-sliders"></i> Filter</button>
+  </div>
+  <button type="button" class="btn btn-primary" id="report"><i class="fi fi-rr-upload"></i> Export</button>
+ </div>
+  <div class="prenatal_table">
+  <table class="table table-hover" id="staffTable">
+    <thead class="table-light">
+      <tr>
+        <th scope="col" class="px-5">Avatar</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Contact No.</th>
+        <th scope="col">Role</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+      // Loop through the paginated patients and display each in a table row
+      foreach ($staff as $key => $staff) {
+        $id = $staff['staff_id'];
+        $fname = $staff['fname'];
+        $mname = $staff['mname'];
+        $lname = $staff['lname'];
+        $address = $staff['address'];
+        $role = $staff['role'];
+        $img = $staff['img'];
+        $contact = $staff['contact_num'];
+        ?>
+
+
+        <tr>
+        <td class="px-5"><img class="shadow" src="../dashboard/assets/<?php echo $img?>" alt=""></td>
+        <td><?php echo $fname?></td>
+        <td><?php echo $lname?></td>
+        <td><?php echo $address?></td>
+        <td><?php echo $contact?></td>
+        <td><p class="<?php echo $role?>"><?php echo $role?></p></td>
+        <td>
+          <button type="button" class="btn btn-primary table-btn editStaff" value="<?php echo $id?>" data-toggle="tooltip" data-placement="left" title="Edit"><i class="fi fi-rs-pencil"></i></button>
+          <button type="button" class="btn btn-primary table-btn deleteStaff" value="<?php echo $id?>" data-toggle="tooltip" data-placement="left" title="Delete"><i class="fi fi-rs-trash"></i></button>
+        </td>
+        </tr>
+        <?php
+      }
+      ?>
+    </tbody>
+  </table>
+  </div>
+
+  <?php
+  // Display pagination controls
+  $totalPages = ceil(getTotalStaff() / $itemsPerPage);
+
+  echo '<nav aria-label="Page navigation" id="nav_buttons">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>';
+  for ($i = 1; $i <= $totalPages; $i++) {
+    echo '<li class="page-item"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+  }
+  echo '<li class="page-item"><a class="page-link" href="?page=' . $totalPages . '">Last &raquo;</a></li>
+        </ul>
+    </nav>';
+  ?>
+</div>
+
+
+</div>
+<!-- ADD STAFF MODAL -->
+<div class="modal fade" id="staffModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Add Referral Field</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="staticBackdropLabel">Staff's Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
-      <form id="addField">
-        <div class="modal-body">
-          <div class="alert alert-warning d-none" id="errorMessage"></div>
-          <div class="mb-3">
-            <label for="field_name">Field Name</label>
-            <input class="form-control" type="text" name="field_name" id="field_name" placeholder="Enter name">
+      <div class="modal-body">
+        <form id="addStaff" class="needs-validation" novalidate enctype="multipart/form-data">
+          <div class="image-profile">
+            <div class="image-content shadow">
+              <img src="../dashboard/assets/patient.png" alt="Logo" class="profile-icon" id="staffimagePreview">
+            </div>
+            <div class="edit-button">
+              <button type="button" class="btn btn-primary" id="staffuploadButton">Upload Image</button>
+              <input style="display: none;" type="file" id="staffformFile" name="profile_image" required>
+            </div>
+            <div id="staffimage_name"></div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Add</button>
-        </div>
+          <div class="row" style="margin-top: 20px;">
+            <div class="mb-3 col-lg-6">
+              <label for="fname">First Name</label>
+              <input class="form-control" type="text" name="fname" id="fname" placeholder="First Name" required>
+              <div class="invalid-feedback">
+                Please enter first name.
+              </div>
+            </div>
+            <div class="mb-3 col-lg-6">
+              <label for="mname">Middle Name</label>
+              <input class="form-control" type="text" name="mname" id="mname" placeholder="Middle Name (optional)">
+            </div>
+            <div class="mb-3 col-lg-6">
+              <label for="lname">Last Name</label>
+              <input class="form-control" type="text" name="lname" id="lname" placeholder="Last Name" required>
+              <div class="invalid-feedback">
+                Please enter last name.
+              </div>
+            </div>
+            <div class="mb-3 col-lg-6">
+              <label for="contactNum">Contact Number</label>
+              <input class="form-control" type="text" name="contactNum" id="contactNum" placeholder="Contact Number" required>
+              <div class="invalid-feedback">
+                Please enter contact number.
+              </div>
+            </div>
+            <div class="mb-3 col-lg-6">
+              <label for="address">Address</label>
+              <input class="form-control" type="text" name="address" id="address" placeholder="Address" required>
+              <div class="invalid-feedback">
+                Please enter address.
+              </div>
+            </div>
+            <div class="mb-3 col-lg-6">
+              <label class="form-label">Role</label>
+              <select class="form-select" required name="role" id="role">
+                <option selected disabled value="">Choose...</option>
+                <option value="Nurse">Nurse</option>
+                <option value="Midwife">Midwife</option>
+                <option value="Doctor">Doctor</option>
+              </select>
+              <div class="invalid-feedback">
+                Please enter role.
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-danger d-none" id="errorMessage"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="staffsaveButton">Add Staff</button>
+        <button type="submit" class="btn btn-primary d-none" id="staffupdateButton">Update Staff</button>
+      </div>
       </form>
     </div>
   </div>
 </div>
 
-<h2 class="left-heading mb-4">Settings</h2>
 
-<!-- Referral Forms -->
-<div class="feed">
-  <h4 class="left-heading mb-4">Referral Forms</h4>
-  <div class="card">
-    <h6 class="card-header">Referrals</h6>
-    <div class="card-body">
-      <table id="referralsTable" class="table table-bordered table-hover">
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Patient's Name</th>
-            <th scope="col">Facility</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          foreach ($referrals as $referral) {
-            ?>
-            <tr>
-              <td><?= $referral['id'] ?></td>
-              <td><?= $referral['name'] ?></td>
-              <td><?= $referral['fclt_name'] ?></td>
-              <td>
-                <button type="button" value="<?= $referral['id']; ?>" class="deleteReferral btn btn-outline-danger">Delete</button>
-              </td>
-            </tr>
-            <?php
-          }
-          ?>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-
+<script src="js/ajaxStaff.js"></script>
 <?php
 require 'footer.php';
 ?>

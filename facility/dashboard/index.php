@@ -3,6 +3,7 @@ include_once 'header.php';
 include_once 'includes/referral_functions.inc.php';
 include_once 'includes/messages_functions.inc.php';
 $fclt_id = $_SESSION['fcltid'];
+$fclt_name = $_SESSION["fclttype"];
 $contacts = contacts();
 $messages = messages();
 $prenatals = prenatals();
@@ -12,8 +13,13 @@ $displayreferrals = displayAllReferralsPending();
 $getreferral = getAllReferrals();
 $getminireferral = minireferrals();
 
-$sql1 = "SELECT COUNT(*) as row_count FROM patients WHERE fclt_id = '$fclt_id'"; // Replace with your first table name
-$sql2 = "SELECT COUNT(*) as row_count FROM referral_records WHERE fclt_id = '$fclt_id'"; // Replace with your second table name
+if($fclt_name == 'Hospital' || $fclt_name == 'Provincial Hospital'){
+  $sql1 = "SELECT COUNT(*) as row_count FROM patients";
+  $sql2 = "SELECT COUNT(*) as row_count FROM referral_records";
+}else{
+  $sql1 = "SELECT COUNT(*) as row_count FROM patients WHERE fclt_id = '$fclt_id'";
+  $sql2 = "SELECT COUNT(*) as row_count FROM referral_records WHERE fclt_id = '$fclt_id'";
+}
 
 $result1 = mysqli_query($conn, $sql1);
 $result2 = mysqli_query($conn, $sql2);
@@ -142,30 +148,20 @@ if ($result1 && $result2) {
         </div>
       <div class="home-feed">
         <div class="yourDivClass">
-        <div class="contacts">
-            <?php
-            foreach ($contacts as $contact) {
-                $contact_name = $contact['fclt_name'];
-                $contact_id = $contact['fclt_id'];
-
-                // Add your condition here, for example, to skip a specific row:
-                if ($contact_id != $fclt_id) {
-            ?>
-                <div class="referral-card" id="message-contact" data-contact-name="<?php echo $contact_name; ?>" data-contact-id="<?php echo $contact_id; ?>">
-            <div class="mini-referral-logo" id="message-logo">
-                <img src="assets/person.png" alt="Logo" class="logo">
+          <div class="contacts">
+            <div class="referral-card" id="message-contact">
+                <div class="mini-referral-logo" id="message-logo">
+                    <img src="assets/person.png" alt="Logo" class="logo">
+                </div>
+                <div class="info">
+                    <div class="name">Yeah</div>
+                    <div class="description">
+                      Hey
+                    </div>
+                </div>
+                <button class="confirm-button" id="viewbtn">View</button>
             </div>
-            <div class="info">
-                <div class="name"><?php echo $contact_name; ?></div>
-                <div class="wews" id="wews-<?php echo $contact_id; ?>"></div>
-            </div>
-            <button class="confirm-button" id="viewbtn">View</button>
-        </div>
-            <?php
-                }
-            }
-            ?>
-      </div>
+          </div>
         </div>
       </div>
     </div>
@@ -186,7 +182,7 @@ if ($result1 && $result2) {
 
     <!-- STAFF LOGIN FORM -->
   <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog" id="staffModalLogin">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
       <div class="body-title">
@@ -206,7 +202,7 @@ if ($result1 && $result2) {
         <div class="alert alert-danger d-none" id="errorMessage"></div>
         <button type="submit" class="btn btn-primary">Log in</button>
         <a class="btn btn-primary" href="includes/fclt_logout.inc.php" role="button" style="margin-right:auto">Logout Facility</a>
-        <p class="button-text">Dont have an account? <a href="signup.php">Sign up now!</a></p>
+        <p class="button-text">Dont have an account? <a href="signup.php">Contact Admin.</a></p>
         </div>
         </form>
       </div>
@@ -214,7 +210,11 @@ if ($result1 && $result2) {
   </div>
 </div>
 
+<script>
+    var fclt_id = "<?php echo $fclt_id ?>";
+</script>
 
+<script src="js/ajaxIndexContacts.js"></script>
 <?php
 include_once 'footer.php'
 ?>

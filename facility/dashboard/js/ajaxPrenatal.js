@@ -1,8 +1,26 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const recordsList = document.querySelector(".records .records-list");
+
+  tooltip();
+
+  function tooltip() {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+  }
+
 $(document).on('click', '.viewPatient', function () {
-    var rffrl_id = $(this).val();
+    var patient_id = $(this).val();
+    var $tooltipTrigger = $(this);
+        var tooltipInstance = bootstrap.Tooltip.getInstance($tooltipTrigger[0]);
+        
+        if (tooltipInstance) {
+            tooltipInstance.hide();
+        }
     $.ajax({
         type: "GET",
-        url: "server/prenatal_function.php?view_patient_id=" + rffrl_id,
+        url: "server/prenatal_function.php?view_patient_id=" + patient_id,
         success: function (response) {
             var res = jQuery.parseJSON(response);
             if (res.status == 422) {
@@ -17,6 +35,19 @@ $(document).on('click', '.viewPatient', function () {
             }
         }
     });
+
+    let xhr = new XMLHttpRequest();
+        xhr.open("GET", "server/prenatal_function.php?get_patient_records=" + patient_id, true);
+        xhr.onload = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    let data = xhr.response;
+                    recordsList.innerHTML = data;
+                }
+            }
+        };
+        xhr.send();
+
 });
 
 $(document).on('click', '.viewPatientRecords', function () {
@@ -76,7 +107,7 @@ $(document).on('click', '.viewPatientRecords', function () {
 });
 
 $(document).on('click', '.createNewPrenatalRecord', function () {
-    var patients_id = $('.createNewPrenatalRecord').data('patient-id');
+  var patients_id = $(this).data('patient-id'); 
     //alert(patients_id);
     $.ajax({
     type: "POST",
@@ -140,7 +171,7 @@ $(document).on("submit", "#addPatient", function (e) {
     });
   });
 
-  $(document).on("click", "#deletePatient", function (e) {
+  $(document).on("click", ".deletePatient", function (e) {
     e.preventDefault();
   
     if (confirm("Are you sure you want to delete this patient?")) {
@@ -166,3 +197,4 @@ $(document).on("submit", "#addPatient", function (e) {
       });
     }
   });
+});

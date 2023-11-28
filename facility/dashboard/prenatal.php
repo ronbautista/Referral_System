@@ -36,7 +36,8 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Full Name</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
         <th scope="col">Address</th>
         <th scope="col">Action</th>
       </tr>
@@ -50,17 +51,21 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
         $mname = $patient['mname'];
         $lname = $patient['lname'];
         $address = $patient['address'];
+        ?>
 
-        echo "<tr>";
-        echo "<th scope='row'>" . (($page - 1) * $itemsPerPage + $key + 1) . "</th>";
-        echo "<td>$lname, $fname $mname</td>";
-        echo "<td>$address</td>";
-        echo '<td>
-                <button type="button" class="btn btn-primary viewPatient" value="' . $id . '">View</button>
-                <button type="button" class="btn btn-primary viewPatientRecords" value="' . $id . '">View Records</button>
-                <button type="button" class="btn btn-primary" value="' . $id . '" id="deletePatient">Delete</button>
-              </td>';
-        echo "</tr>";
+
+        <tr>
+          <th scope='row'><?php echo (($page - 1) * $itemsPerPage + $key + 1)?></th>
+          <td><?php echo $fname?></td>
+          <td><?php echo $lname?></td>
+          <td><?php echo $address?></td>
+          <td>
+            <a class="btn btn-primary table-btn createNewPrenatalRecord" data-toggle="tooltip" data-placement="left" title="Add Record" href="view_prenatal.php?id=<?php echo $id?>" data-patient-id="<?php echo $id?>" role="button"><i class="fi fi-rr-add-folder"></i></a>
+            <button type="button" class="btn btn-primary table-btn viewPatient" value="<?php echo $id?>" data-toggle="tooltip" data-placement="left" title="Edit (View)"><i class="fi fi-rs-pencil"></i></button>
+            <button type="button" class="btn btn-primary table-btn deletePatient" value="<?php echo $id?>" data-toggle="tooltip" data-placement="left" title="Delete"><i class="fi fi-rs-trash"></i></button>
+          </td>
+        </tr>
+        <?php
       }
       ?>
     </tbody>
@@ -128,41 +133,54 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
 
 <!-- VIEW PATIENT DETAILS -->
 <div class="modal fade" id="viewPatientModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">View Patient's Information</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
       <div class="modal-body">
-        <form id="UpdatePatient">
-          <div class="mb-3">
-            <label for="fname">First Name</label>
-            <input class="form-control" type="text" name="fname" id="view_fname">
+        <div class="row">
+          <div class="col-lg-12">
+            <form id="UpdatePatient">
+              <div class="row">
+              <div class="mb-3 col-lg-6">
+                <label for="fname">First Name</label>
+                <input class="form-control" type="text" name="fname" id="view_fname">
+              </div>
+              <div class="mb-3 col-lg-6">
+              <label for="mname">Middle Name</label>
+                <input class="form-control" type="text" name="mname" id="view_mname">
+              </div>
+              <div class="mb-3 col-lg-6">
+              <label for="lname">Last Name</label>
+                <input class="form-control" type="text" name="lname"  id="view_lname">
+              </div>
+              <div class="mb-3 col-lg-6">
+              <label for="contactNum">Contact Number</label>
+                <input class="form-control" type="tex" name="contactNum" id="view_contactNum">
+              </div>
+              <div class="mb-3 col-lg-6">
+              <label for="address">Address</label>
+                <input class="form-control" type="tex" name="address" id="view_address">
+              </div>
+              </div>
+              <div class="alert alert-danger d-none" id="errorMessage"></div>
           </div>
-          <div class="mb-3">
-          <label for="mname">Middle Name</label>
-            <input class="form-control" type="text" name="mname" id="view_mname">
+            <h5>Records</h5>
+            <div class="col-lg-12 p-3 records">
+            <div class="row row-cols-2 row-cols-lg-8 g-2 g-lg-3 records-list">
+                  <!-- PATIENT RECORDS DISPLAY -->
+            </div>
+            </div>
           </div>
-          <div class="mb-3">
-          <label for="lname">Last Name</label>
-            <input class="form-control" type="text" name="lname"  id="view_lname">
-          </div>
-          <div class="mb-3">
-          <label for="contactNum">Contact Number</label>
-            <input class="form-control" type="tex" name="contactNum" id="view_contactNum">
-          </div>
-          <div class="mb-3">
-          <label for="address">Address</label>
-            <input class="form-control" type="tex" name="address" id="view_address">
-          </div>
-          <div class="alert alert-danger d-none" id="errorMessage"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="submit">Update Patient</button>
-          </div>
-        </form>
+      </div>
+            <div class="modal-footer">
+              <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" name="submit">Update Patient</button>
+            </div>
+          </form>
+
     </div>
   </div>
 </div>
@@ -178,7 +196,6 @@ $patients = getPaginatedPatients($page, $itemsPerPage);
       </div>
       <div class="modal-body">
           <!-- DISPLAY PATIENTS RECORDS HERE -->
-        <div class="alert alert-primary d-none" id="noRecords"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>

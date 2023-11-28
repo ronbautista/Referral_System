@@ -1,94 +1,123 @@
+document.addEventListener("DOMContentLoaded", function() {
 
-// Code to View Records to Modal
-$(document).on('click', '.viewRecord', function () {
-    var rffrl_id = $(this).val();
-    $.ajax({
-        type: "GET",
-        url: "new_function.php?rffrl_id=" + rffrl_id,
-        success: function (response) {
-            var res = jQuery.parseJSON(response);
-            if (res.status == 422) {
-                alert(res.message);
-            } else if (res.status == 200) {
-                $('#fclt_name').text(res.data.fclt_name);
-                $('#rffrl_id').val(res.data.rfrrl_id);
-                $('#referralModal').modal('show');
+    var channel = pusher.subscribe(fclt_id);
+    console.log('User ID ' + fclt_id);
+    channel.bind('referral', function(data) {
+        console.log('Received referral from: ' + data);
+        $(".newReferrals").load(location.href + " .newReferrals");
+    });
 
-                var columnNames = res.column_data;
+    $(document).on('click', '.viewRecord', function () {
+        var rffrl_id = $(this).val();
+        $.ajax({
+            type: "GET",
+            url: "server/new_referrals_function.php?rffrl_id=" + rffrl_id,
+            success: function (response) {
+                var res = jQuery.parseJSON(response);
+                if (res.status == 422) {
+                    alert(res.message);
+                } else if (res.status == 200) {
+                    $('#fclt_name').text(res.data.fclt_name);
+                    $('#rffrl_id').val(res.data.rfrrl_id);
+                    $('#name').val(res.data.name);
+                    $('#age').val(res.data.age);
+                    $('.referral-reason').addClass("d-none");
+                    $('#cancel_button').addClass("d-none");
+                    $('#decline_button').addClass("d-none");
+                    $('#referralModal').modal('show');
 
-                for (var i = 0; i < columnNames.length; i++) {
-                    var columnName = columnNames[i];
-                    var columnData = res.data[columnName];
-                    $('#' + columnName).val(columnData);
+                    $(document).on('click', '#decline_referral', function () {
+                        $('.referral-reason').removeClass("d-none");
+                        $('#decline_referral').addClass("d-none");
+                        $('#accept_button').addClass("d-none");
+                        $('#decline_button').removeClass("d-none");
+                        $('#cancel_button').removeClass("d-none");
+                    });
+
+                    $(document).on('click', '#cancel_button', function () {
+                        $('.referral-reason').addClass("d-none");
+                        $('#cancel_button').addClass("d-none");
+                        $('#decline_button').addClass("d-none");
+                        $('#decline_referral').removeClass("d-none");
+                        $('#accept_button').removeClass("d-none");
+                    });
+
+                    const referralModal = document.getElementById('referralModal')
+                    referralModal.addEventListener('hidden.bs.modal', event => {
+                        $('.referral-reason').addClass("d-none");
+                        $('#cancel_button').addClass("d-none");
+                        $('#decline_button').addClass("d-none");
+                        $('#decline_referral').removeClass("d-none");
+                        $('#accept_button').removeClass("d-none");
+                    });
                 }
+            }
+        });
+    });
 
-                // Display referral transactions
-                var querytransactions_data = res.transactions;
-                var referralTransactionsDiv = $('#referral_transactions');
-                var audit = document.querySelector(".referral-audit");
-                referralTransactionsDiv.empty(); // Clear any previous data
+    $(document).on("click", "#decline_button", function () {
+        var formData = new FormData($("#referral_form")[0]);
+        formData.append("decline_referral", true);
 
-                for (var i = 0; i < querytransactions_data.length; i++) {
-                    var transactionData = querytransactions_data[i];
-                    var status = transactionData.status;
-                    var time = transactionData.time;
-                    var fclt_name = transactionData.fclt_name;
-
-                    if (status) {
-                        audit.classList.remove("d-none");
-                        var pElement = $('<p></p>'); // Create a new <p> element
-                        pElement.text(status +" by "+ fclt_name +" at "+ time); // Include the label
-                        referralTransactionsDiv.append(pElement); // Append the <p> element to the div
-                    }
+        $.ajax({
+            type: "POST",
+            url: "new_function.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $(".decline-loading").removeClass("d-none");
+                $("#decline_button").addClass("disabled");
+                $(".decline-span").addClass("d-none");
+            },
+            success: function (response) {
+                var res = jQuery.parseJSON(response);
+                if (res.status == 200) {
+                    $("#referralModal").modal("hide");
+                    $(".newReferrals").load(location.href + " .newReferrals");
+                    $('#reason').val('');
+                }else if(res.status == 422){
+                $("#errorMessage").removeClass("d-none");
+                $("#errorMessage").text(res.message);
                 }
+            },
+            complete: function () {
+                $(".decline-loading").addClass("d-none");
+                $("#decline_button").removeClass("disabled");
+                $(".decline-span").removeClass("d-none");
             }
-        }
+        });
     });
-});
 
-$(document).on("click", "#decline_button", function () {
-    var formData = new FormData($("#referral_form")[0]);
-    formData.append("decline_referral", true);
+    $(document).on("click", "#accept_button", function () {
+        var formData = new FormData($("#referral_form")[0]);
+        formData.append("accept_referral", true);
 
-    $.ajax({
-        type: "POST",
-        url: "new_function.php",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            var res = jQuery.parseJSON(response);
-            if (res.status == 200) {
-                $("#referralModal").modal("hide");
-                $("#yourDivId").load(location.href + " #yourDivId");
-                restoreButtons();
-                $('#reason').val('');
-            }else if(res.status == 422){
-              $("#errorMessage").removeClass("d-none");
-              $("#errorMessage").text(res.message);
+        $.ajax({
+            type: "POST",
+            url: "new_function.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $(".accept-loading").removeClass("d-none");
+                $("#accept_button").addClass("disabled");
+                $(".accept-span").addClass("d-none");
+            },
+            success: function (response) {
+                var res = jQuery.parseJSON(response);
+                if (res.status == 200) {
+                    $("#referralModal").modal("hide");
+                    $(".newReferrals").load(location.href + " .newReferrals");
+                    $('#reason').val('');
+                }
+            },
+            complete: function () {
+                $(".accept-loading").addClass("d-none");
+                $("#accept_button").removeClass("disabled");
+                $(".accept-span").removeClass("d-none");
             }
-        },
+        });
     });
-});
 
-$(document).on("click", "#accept_button", function () {
-    var formData = new FormData($("#referral_form")[0]);
-    formData.append("accept_referral", true);
-
-    $.ajax({
-        type: "POST",
-        url: "new_function.php",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            var res = jQuery.parseJSON(response);
-            if (res.status == 200) {
-                $("#referralModal").modal("hide");
-                $("#yourDivId").load(location.href + " #yourDivId");
-                hideReasonAndButtons();
-                $('#reason').val('');
-            }
-        },
-    });
 });

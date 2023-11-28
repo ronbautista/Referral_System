@@ -133,13 +133,6 @@ channel.bind('my-event', function (data) {
     });
 });
 
-var channel = pusher.subscribe('<?php echo $fclt_id; ?>');
-
-channel.bind('message', function(data) {
-    console.log('Received message: ' + data);
-});
-
-
 </script>
 
 </body>

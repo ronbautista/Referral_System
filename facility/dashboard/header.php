@@ -5,7 +5,7 @@ require_once 'includes/referral_functions.inc.php';
 require __DIR__ . '../../../vendor/autoload.php';
 
 if (!isset($_SESSION["facilityaccount"])) {
-  header("Location: ../login/facility-login.php"); // Redirect to the login page for the first account
+  header("Location: ../../login/facility-login.php"); // Redirect to the login page for the first account
   exit();
 }
 $secondAccountEmpty = !isset($_SESSION["second_account"]);
@@ -29,6 +29,21 @@ $secondAccountEmpty = !isset($_SESSION["second_account"]);
 
     <!-- Include Bootstrap JS -->
     <script src="../../bootstrap_cdn/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            console.log("Mobile device detected");
+            var mobile = true;
+
+            // Reduce the viewport scale for mobile devices
+            document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=0.8');
+        } else {
+            console.log("Desktop device detected");
+            var mobile = false;
+        }
+    </script>
 </head>
   <body>
 			<nav id="sidebar">

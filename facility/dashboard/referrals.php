@@ -3,10 +3,17 @@ include_once 'header.php';
 include_once 'includes/referral_functions.inc.php';
 
 // Call the function and fetch all the referrals
-$displayreferrals = myReferrals() ;
+
 $getreferral = getAllReferrals();
 $referrals_audit = referrals_audit();
 $referral_transactions = referral_transactions();
+
+$itemsPerPage = 9;
+
+// Get the current page number from the URL parameter, default to 1 if not set
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+$displayreferrals = myReferrals($page, $itemsPerPage) ;
 ?>
 
 <script src="js/ajaxFunctions.js"></script>
@@ -57,7 +64,7 @@ if (isset($_SESSION["facilityaccount"])) {
         <?php
         $count = 0;
         // Loop through the referrals and display each patient in a table row
-        foreach ($displayreferrals as $displayreferrals) {
+        foreach ($displayreferrals as $key => $displayreferrals) {
           $count++;
           $rffrl_id = $displayreferrals['rfrrl_id'];
           $rfrrd_hospital = $displayreferrals['fclt_name'];
@@ -68,7 +75,7 @@ if (isset($_SESSION["facilityaccount"])) {
 
           ?>
           <tr>
-          <th scope="row"><?php echo $count  ?></th>
+          <th scope="row"><?php echo (($page - 1) * $itemsPerPage + $key + 1) ?></th>
           <td><?php echo $rfrrd_hospital ?></td>
           <td><?php echo $Name ?></td>
           <td class="action-column" id="<?php echo $status ?>-column"><p><?php echo $status ?></p></td>
@@ -87,7 +94,20 @@ if (isset($_SESSION["facilityaccount"])) {
       </tbody>
     </table>
   </div>
+  <?php
+  // Display pagination controls
+  $totalPages = ceil(getTotalReferrals() / $itemsPerPage);
 
+  echo '<nav aria-label="Page navigation" id="nav_buttons">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>';
+  for ($i = 1; $i <= $totalPages; $i++) {
+    echo '<li class="page-item"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+  }
+  echo '<li class="page-item"><a class="page-link" href="?page=' . $totalPages . '">Last &raquo;</a></li>
+        </ul>
+    </nav>';
+  ?>
   </div>
   </div>
 
@@ -101,7 +121,7 @@ if (isset($_SESSION["facilityaccount"])) {
     <div class="accordion-item">
       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-          Facilities
+          Referred Facilities
         </button>
       </h2>
       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
@@ -265,10 +285,9 @@ if (isset($_SESSION["facilityaccount"])) {
             <div class="alert alert-danger d-none" id="referralError"></div>
           <form id="createReferral">
             <div class="row">
-
               <div class="col-sm-12 col-md-6 col-lg-2 mb-2">
               <label>Name</label>
-              <input type="text" name="name" id="name" class="form-control">
+              <input type="text" name="name" id="name" class="form-control" required>
               </div>
               <div class="col-sm-12 col-md-6 col-lg-2 mb-2">
               <label>Age</label>
@@ -387,9 +406,9 @@ if (isset($_SESSION["facilityaccount"])) {
               <div class="col-sm-12 col-md-6 col-lg-2 mb-2">
                 <label>Select Refer Hospital</label>
                 <select class="form-select" name="referred_hospital" required>
-                <option value="NULL"></option>
+                <option selected disabled value=""></option>
                 <?php 
-                $query = "SELECT * FROM facilities WHERE fclt_id != '" . $_SESSION["id"] . "'";
+                $query = "SELECT * FROM facilities WHERE fclt_id != '" . $_SESSION["fcltid"] . "'";
                   $query_run = mysqli_query($conn, $query);
 
                   if (mysqli_num_rows($query_run) > 0) {

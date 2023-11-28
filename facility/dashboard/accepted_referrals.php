@@ -11,7 +11,6 @@ $getreferral = getAllReferrals();
 <h2 class="left-heading mb-4">Accepted Referrals</h2>
 </div>
 
-
 <div id="yourDivId" class="yourDivClass">
 <div class="table-responsive">
     <table class="table equal-width-table">
@@ -130,6 +129,7 @@ $getreferral = getAllReferrals();
   </div>
 </div>
 
+<script src="js/ajaxAcceptedReferrals.js"></script>
 
 <?php
 include_once 'footer.php'

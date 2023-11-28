@@ -9,9 +9,12 @@
 @import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
+@import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css');
+@import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css');
+@import url('https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: url('/Referral_System/System/fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf');
+  src: url('../../../fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf');
 }
 
 body {
@@ -59,10 +62,7 @@ body {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 .footer {
-  position: absolute;
-  bottom: 50px;
-  width: 200px;
-  border-top: 1px solid rgba(151, 151, 151, 0.5);
+  margin-top: auto;
 }
 .wrapper {
   min-height: 100vh;
@@ -99,11 +99,15 @@ body {
   margin-left: 250px; /* Width of the sidebar */
   transition: margin-left 0.3s;
   min-height: 100vh;
-  padding: 0 40px 40px 40px;
+  padding: 0 20px 0 20px;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: margin-left 0.3s ease;
   background-color: #f3f3f8;
+}
+
+#toggleButton{
+  margin-left: -11px;
 }
 .user-login{
   margin-top: -10px;
@@ -205,6 +209,15 @@ body {
   align-items: center;
 }
 
+.head .btn {
+  align-items: center;
+  padding: 7px 15px;
+}
+
+.head .btn i{
+  padding-left: 3px;
+}
+
 .head_buttons {
   margin-left: auto;
   display: flex;
@@ -215,9 +228,6 @@ body {
   margin-left: auto;
 }
 
-.head h2{
-  margin-top: 10px; 
-}
 .head a{
   text-decoration: none;
 }
@@ -277,11 +287,11 @@ body {
   color: #fff;
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1100px) {
   #sidebar {
-    left: -250px; /* Hide the sidebar on smaller screens */
+    left: -250px;
   }#content {
-    margin-left: 0; /* Reset the margin on smaller screens */
+    margin-left: auto;
   }
 }
 .navbar i {
@@ -406,23 +416,22 @@ a.btn.btn-primary {
 
 .modal-footer {
   display: flex;
-  justify-content: space-between; /* Distribute space between the children */
-  align-items: center; /* Center-align vertically */
+  justify-content: space-between;
+  align-items: center;
 }
 
 .referral-buttons {
-  display: flex; /* Make the buttons inside referral-buttons flex */
-  gap: 10px; /* Add some space between the buttons */
+  display: flex;
+  gap: 10px;
 }
 
 .referral-reason {
-  width: 100%; /* Make it take the full width of the parent container */
-  display: none;
+  width: 100%;
   transition: all 0.3s;
 }
 .referral-audit {
   color: rgba(0, 0, 0, 0.6);
-  width: 100%; /* Make it take the full width of the parent container */
+  width: 100%;
   transition: all 0.3s;
 }
 
@@ -508,7 +517,7 @@ h1 h2 h3 h4 h5 h6 {
   transition: all 0.3s;
   border-radius: 10px;
 }
-#message-contact:hover{
+.message-contact:hover{
   cursor: pointer;
   background-color: rgb(211, 211, 211, 0.3);
   transition: all 0.3s;
@@ -549,6 +558,20 @@ h1 h2 h3 h4 h5 h6 {
 .name {
   font-size: 1rem;
   font-weight: bold;
+}
+
+.message-contact .name{
+  font-weight: 500;
+}
+.message-description{
+  display: flex;
+  gap: 10px;
+  color: #666666;
+}
+
+.Sent{
+  color: #000;
+  font-weight: 700;
 }
 
 .description {
@@ -740,10 +763,9 @@ label{
 }
 .modal-content input{
   color: rgba(0, 0, 0, 0.6);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 8px 15px;
   border-radius: 4px;
 }
 .modal-content select{
@@ -832,6 +854,38 @@ label{
 }
 
 #staffEdit .image-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image fills the circular container */
+  object-position: center center; /* Center the image within the circle */
+}
+
+
+#addStaff .edit-button{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#addStaff .image-profile {
+  flex: 1; /* Make the image-profile div expand to fill the modal body */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#addStaff .image-content {
+  width: 120px; /* Set a specific width for the circular container */
+  height: 120px; /* Set a specific height for the circular container */
+  border-radius: 50%; /* Create a circular shape */
+  overflow: hidden; /* Hide any content outside the circle */
+  margin: 0 auto; /* Center the circle horizontally (optional) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#addStaff .image-content img {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Ensure the image fills the circular container */
@@ -985,4 +1039,89 @@ margin-top: 8px;
 }
 .records_alert .btn{
   margin-left: auto;
-  }
+}
+
+#staffTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#staffTable td {
+  vertical-align: middle;
+  padding: 10px;
+}
+#staffTable th {
+  width: 10%;
+}
+
+#staffTable img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin: 0 auto;
+}
+
+.table .table-btn{
+  background-color: transparent;
+  color: #000;
+  border: none;
+  padding: 10px 15px;
+}
+.table .table-btn i{
+  margin: auto;
+  font-size: 16px;
+}
+
+#staffTable th{
+  padding: 10px;
+}
+
+#staffTable .btn:hover{
+  background-color: #0B5ED7;
+  color: #ffff;
+}
+
+#staffTable .Doctor{
+  background-color: rgba(35, 169, 249, 0.2);
+  color: #1ba5f5;
+  width: 90px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 6px 22px;
+  margin: auto 0;
+  border-radius: 100px;
+}
+
+#staffTable .Nurse{
+  background-color: rgba(32, 159, 133, 0.2);
+  color: #209f85;
+  width: 90px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: auto 0;
+  padding: 6px 26px;
+  border-radius: 100px;
+}
+
+#staffTable .Midwife{
+  background-color: rgba(138, 32, 159, 0.2);
+  color: #81209f;
+  width: 90px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: auto 0;
+  padding: 6px 19px;
+  border-radius: 100px;
+}
+#yourDivId .card img{
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.newReferrals .card img{
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}

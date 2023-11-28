@@ -616,46 +616,6 @@ if (isset($_POST['add_patient'])) {
     $conn->close();
 }
 
-if (isset($_GET['view_patient_id'])) {
-    $patients_id = $_GET['view_patient_id'];
-
-    // Use prepared statements to prevent SQL injection
-    $query = "SELECT * FROM patients WHERE id = ?";
-    $stmt = mysqli_prepare($conn, $query);
-
-    // Assuming 'i' is the correct type for patients_id; adjust if needed
-    mysqli_stmt_bind_param($stmt, "i", $patients_id);
-    mysqli_stmt_execute($stmt);
-
-    $result = mysqli_stmt_get_result($stmt);
-
-    // Check for errors in the query execution
-    if (!$result) {
-        die('Error in query: ' . mysqli_error($conn));
-    }
-
-    // Check the number of rows
-    if (mysqli_num_rows($result) == 1) {
-        $data = mysqli_fetch_array($result);
-
-        $res = [
-            'status' => 200,
-            'message' => 'Data fetched',
-            'data' => $data
-        ];
-    } else {
-        $res = [
-            'status' => 404,
-            'message' => 'Data not found'
-        ];
-    }
-
-    // Close the prepared statement
-    mysqli_stmt_close($stmt);
-
-    echo json_encode($res);
-}
-
 if (isset($_POST['patients_details_insert'])) {
     $patient_id = $_POST['patient_id'];
     $records_count = $_POST['selected_row'];
@@ -748,6 +708,83 @@ if (isset($_POST['patients_details_update'])) {
 
 if (isset($_GET['view_patient_records_id'])) {
     $patients_id = $_GET['view_patient_records_id'];
+
+    // Use prepared statements to prevent SQL injection
+    $query = "SELECT * FROM patients WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Assuming 'i' is the correct type for patients_id; adjust if needed
+    mysqli_stmt_bind_param($stmt, "i", $patients_id);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Check for errors in the query execution
+    if (!$result) {
+        die('Error in query: ' . mysqli_error($conn));
+    }
+
+    // Check the number of rows
+    if (mysqli_num_rows($result) == 1) {
+        $data = mysqli_fetch_array($result);
+
+        $res = [
+            'status' => 200,
+            'message' => 'Data fetched',
+            'data' => $data
+        ];
+    } else {
+        $res = [
+            'status' => 404,
+            'message' => 'Data not found'
+        ];
+    }
+
+    // Close the prepared statement
+    mysqli_stmt_close($stmt);
+
+    echo json_encode($res);
+}
+
+if (isset($_GET['get_patient_records'])) {
+    $patients_id = mysqli_real_escape_string($conn, $_GET['get_patient_records']);
+    $output = "";
+
+    $sql = "SELECT * FROM prenatal_records WHERE patients_id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    
+    // Bind the parameter
+    mysqli_stmt_bind_param($stmt, "s", $patients_id);
+
+    // Execute the query
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if(mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $output .=  '<div class="col">' .
+                        '<div class="alert alert-primary d-flex records_alert" role="alert">' .
+                        '<h6>Record ' . $row['records_count'] . ' • ' . $row['date'] . '</h6>' .
+                        '<a class="btn btn-primary" href="view_prenatal.php?id=' . $row['patients_id'] . '&record=' . $row['records_count'] . '" role="button">View</a>' .
+                        '</div>' .
+                        '</div>';
+        }
+        echo $output;
+    } else {
+        $output .= '<div class="alert alert-primary d-flex records_alert" role="alert">' .
+                    '<h6>No Records</h6>' .
+                    '</div>';
+        echo $output;
+    }
+
+    // Close the statement
+    mysqli_stmt_close($stmt);
+}
+
+
+if (isset($_GET['view_patient_id'])) {
+    $patients_id = $_GET['view_patient_id'];
 
     // Use prepared statements to prevent SQL injection
     $query = "SELECT * FROM patients WHERE id = ?";
@@ -897,7 +934,8 @@ if (isset($_POST['new_record'])) {
     if ($stmt->execute()) {
         $res = [
             'status' => 200,
-            'message' => 'Patient added successfully'
+            'message' => 'Patient added successfully',
+            'patients id' => $patient_id
         ];
         echo json_encode($res);
     } else {

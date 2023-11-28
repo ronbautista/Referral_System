@@ -16,6 +16,9 @@ $output = "";
         if(mysqli_num_rows($query) > 0){
         $row = mysqli_fetch_assoc($query);
             $output .= '<div class="messages-head">
+                            <button type="button" class="btn btn-primary" id="back-btn">
+                                <i class="fi fi-ts-arrow-circle-left"></i>
+                            </button>
                             <div class="messages-head-logo" id="message-logo">
                                 <img src="assets/person.png" alt="Logo" class="logo">
                             </div>
