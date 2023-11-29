@@ -1,14 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-    tooltip();
-
-    function tooltip() {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    }
-
+    
     const form = document.getElementById('addStaff');
     const input = document.getElementById('staffformFile');
     const imagePreview = document.getElementById('staffimagePreview');
@@ -20,96 +11,87 @@ document.addEventListener("DOMContentLoaded", function () {
         form.classList.remove('was-validated');
     });
 
-    form.addEventListener('submit', function (event) {
-        // Prevent the form from submitting if it fails validation
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
+    tooltip();
+
+    function tooltip() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
+
+    input.addEventListener('change', function () {
+        // Get the selected file
+        const file = input.files[0];
+
+        // Check if a file is selected
+        if (file) {
+            // Check if the file type is an image
+            if (!file.type.startsWith('image/')) {
+                alert('Please select a valid image file (JPEG, PNG, GIF).');
+                input.value = ''; // Clear the file input
+                return;
+            }
+
+            // Read the file as a data URL
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                // Update the image preview with the data URL
+                imagePreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
         }
-    
-        // Add validation styling to the form
-        form.classList.add('was-validated');
-    
-        // If the form is valid, proceed with additional client-side validation
-        if (form.checkValidity()) {
-            const fname = document.getElementById('fname').value;
-            const lname = document.getElementById('lname').value;
-            const contactNum = document.getElementById('contactNum').value;
-            const address = document.getElementById('address').value;
-            const role = document.getElementById('role').value;
-    
-            // Perform additional validation
-            if (!fname || !lname || !contactNum || !address || !role) {
+    });
+
+    $("#staffuploadButton").on("click", function(){
+        input.click();
+      });
+
+    $(document).on("submit", "#addStaff", function (e) {
+        e.preventDefault();
+        
+            const formData = new FormData(form);
+            formData.append('add_staff', true);
+
+            // Get the file input element
+            const fileInput = document.getElementById('staffformFile');
+
+            // Check if a file is selected
+            if (fileInput.files.length > 0) {
+                // Append the file to the FormData object
+                formData.append('staffformFile', fileInput.files[0]);
+            } else {
+                // If no file is selected, show an error message and prevent form submission
+                $('#errorMessage').text('Please choose an image file.').removeClass('d-none');
                 return;
             }
     
-            // If all validations pass, proceed with form submission
-            const formData = new FormData(form);
-            formData.append('add_staff', true);
-            formData.append('profile_image', input.files[0]);
-    
-            fetch('server/staff_function.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+            $.ajax({
+                type: "POST",
+                url: "server/staff_function.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    var res = jQuery.parseJSON(response);
+                    if (res.status == 404) {
+                        console.log(res); 
+                        alert('Error: ' + res.message);
+                    } else if (res.status == 200) {
+                        staffModal.modal('hide');
+                        $("#staffTable").load(location.href + " #staffTable");
+                        $("#addStaff")[0].reset();
                     }
-                    return response.text();
-                })
-                .then(data => {
-                    console.log(data);
-    
-                    try {
-                        const jsonData = JSON.parse(data);
-                        if (jsonData.success) {
-                            // Reset the form and remove validation styling
-                            form.classList.remove('was-validated');
-                            staffModal.modal('hide');
-                            $("#staffTable").load(location.href + " #staffTable");
-                            $("#addStaff")[0].reset();
-                        } else {
-                            alert('Error: ' + jsonData.error);
-                        }
-                    } catch (error) {
-                        alert('Error parsing JSON: ' + error.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error.message);
-                    alert('Error uploading file.');
-                });
-        }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    alert('Error: Something went wrong. Please try again.');
+                }
+            });
     });    
 
-    document.getElementById('staffuploadButton').addEventListener('click', function () {
-        input.click();
-    });
-
-    input.addEventListener('change', function () {
-        staffDisplaySelectedImage();
-    });
-
-    function staffDisplaySelectedImage() {
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    imageName.textContent = file.name;
-                };
-
-                reader.readAsDataURL(file);
-            } else {
-                alert('Please select a valid image file.');
-                input.value = '';
-            }
-        }
-    }
 
     $(document).on('click', '.editStaff', function () {
         var staff_id = $(this).val();

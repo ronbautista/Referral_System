@@ -5,54 +5,80 @@ require_once '../../../config/pusher.php';
 
 $fclt_id = $_SESSION['fcltid'];
 $uploadDirectory = '../assets/';
-if (isset($_POST['add_staff']) && $_POST['add_staff'] === 'true') {
 
-    if ($_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-        $originalFilename = $_FILES['profile_image']['name'];
 
-        $randomNumbers = bin2hex(random_bytes(4));
-        $newFilename = $randomNumbers . '_' . $originalFilename;
+if (isset($_POST['add_staff'])) {
+    $fname = $_POST['fname'];
+    $mname = $_POST['mname'];
+    $lname = $_POST['lname'];
+    $contactNum = $_POST['contactNum'];
+    $address = $_POST['address'];
+    $role = $_POST['role'];
+    $fclt_id;
 
-        $tempFile = $_FILES['profile_image']['tmp_name'];
-        $targetFile = $uploadDirectory . $newFilename;
+    // Check if a file was uploaded
+    if(isset($_FILES['staffformFile']) && $_FILES['staffformFile']['error'] == 0) {
+        $uploadDir = '../assets/'; // Choose your upload directory
+        $originalFileName = basename($_FILES['staffformFile']['name']);
+        
+        // Generate a random string (you can use any suitable method)
+        $randomString = bin2hex(random_bytes(8));
 
-        // Check if the file already exists, and generate a new filename if needed
-        $counter = 1;
-        while (file_exists($targetFile)) {
-            $newFilename = $randomNumbers . '_' . $counter . '_' . $originalFilename;
-            $targetFile = $uploadDirectory . $newFilename;
-            $counter++;
-        }
+        // Combine the random string and original file name
+        $newFileName = $randomString . '_' . $originalFileName;
+        $uploadFile = $uploadDir . $newFileName;
 
-        if (move_uploaded_file($tempFile, $targetFile)) {
-
-            $fname = mysqli_real_escape_string($conn, $_POST['fname']);
-            $mname = mysqli_real_escape_string($conn, $_POST['mname']);
-            $lname = mysqli_real_escape_string($conn, $_POST['lname']);
-            $contactNum = mysqli_real_escape_string($conn, $_POST['contactNum']);
-            $address = mysqli_real_escape_string($conn, $_POST['address']);
-            $role = mysqli_real_escape_string($conn, $_POST['role']);
-
-            // Check if required fields are empty (except for middle name)
-            if (empty($fname) || empty($lname) || empty($contactNum) || empty($address) || empty($role)) {
-                echo json_encode(['error' => 'Required fields cannot be empty.']);
-            } else {
-                $img = $newFilename;
-
-                $sql = "INSERT INTO staff (fname, mname, lname, contact_num, address, role, img, fclt_id) VALUES ('$fname', '$mname', '$lname', '$contactNum', '$address', '$role', '$img', '$fclt_id')";
-                if ($conn->query($sql) === TRUE) {
-                    echo json_encode(['success' => true]);
-                } else {
-                    echo json_encode(['error' => 'Failed to add entry to the database: ' . $conn->error]);
-                }
-            }
+        // Move the uploaded file to the specified directory
+        if (move_uploaded_file($_FILES['staffformFile']['tmp_name'], $uploadFile)) {
+            // File has been successfully uploaded
+            $fileName = basename($_FILES['staffformFile']['name']); // Extract just the file name
         } else {
-            echo json_encode(['error' => 'Failed to move the file.']);
+            // Handle file upload error
+            $res = [
+                'status' => 500,
+                'message' => 'Error uploading file'
+            ];
+            echo json_encode($res);
+            exit; // Stop further execution
         }
     } else {
-        echo json_encode(['error' => 'File upload error.']);
+        // No file was uploaded
+        $uploadFile = null; // Set to a default value or handle as needed
     }
+
+    // Create a prepared statement for the stored procedure
+    $sql = "CALL insert_staff(?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    // Bind the parameters
+    $stmt->bind_param("ssssssis", $fname, $mname, $lname, $contactNum, $address, $role, $fclt_id, $newFileName);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        $res = [
+            'status' => 200,
+            'message' => 'Patient added successfully'
+        ];
+        echo json_encode($res);
+    } else {
+        $error = $stmt->error;
+        $res = [
+            'status' => 500,
+            'message' => 'Patient not created successfully',
+            'error' => $error
+        ];
+        echo json_encode($res);
+    }
+
+    // Close the statement and the database connection
+    $stmt->close();
+    $conn->close();
 }
+
 
 if (isset($_GET['view_staff'])) {
     $staff_id = $_GET['view_staff'];

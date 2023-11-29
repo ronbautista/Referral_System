@@ -17,13 +17,23 @@ $staff = getPaginatedStaff($page, $itemsPerPage);
 
 <!-- Referral Forms -->
 <div class="feed">
-  <div class="head">
-      <h2>Staff List</h2>
-      <div class="head_buttons">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staffModal"><i class="fi fi-br-plus"></i> Add Staff</button>
-      </div>  
-    </div>
-    <div class="table-header">
+<div class="head"><h2>Settings</h2></div>
+
+<ul class="nav nav-underline" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Facility Profile</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Staff List</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">...</div>
+  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+  <div class="table-header">
  <div class="col-2">
   <input type="text" name="address" id="address " class="form-control" placeholder="Search">
   </div>
@@ -31,6 +41,7 @@ $staff = getPaginatedStaff($page, $itemsPerPage);
   <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fi fi-rr-settings-sliders"></i> Filter</button>
   </div>
   <button type="button" class="btn btn-primary" id="report"><i class="fi fi-rr-upload"></i> Export</button>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staffModal"><i class="fi fi-br-plus"></i> Add Staff</button>
  </div>
   <div class="prenatal_table">
   <table class="table table-hover" id="staffTable">
@@ -93,10 +104,14 @@ $staff = getPaginatedStaff($page, $itemsPerPage);
         </ul>
     </nav>';
   ?>
+  </div>
+  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+  <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
+</div>
+
 </div>
 
 
-</div>
 <!-- ADD STAFF MODAL -->
 <div class="modal fade" id="staffModal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -106,16 +121,15 @@ $staff = getPaginatedStaff($page, $itemsPerPage);
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme="custom"></button>
       </div>
       <div class="modal-body">
-        <form id="addStaff" class="needs-validation" novalidate enctype="multipart/form-data">
-          <div class="image-profile">
+        <form id="addStaff">
+        <div class="image-profile">
             <div class="image-content shadow">
               <img src="../dashboard/assets/patient.png" alt="Logo" class="profile-icon" id="staffimagePreview">
             </div>
             <div class="edit-button">
               <button type="button" class="btn btn-primary" id="staffuploadButton">Upload Image</button>
-              <input style="display: none;" type="file" id="staffformFile" name="profile_image" required>
+              <input class="form-control d-none" type="file" name="staffformFile" id="staffformFile">
             </div>
-            <div id="staffimage_name"></div>
           </div>
           <div class="row" style="margin-top: 20px;">
             <div class="mb-3 col-lg-6">
@@ -169,7 +183,6 @@ $staff = getPaginatedStaff($page, $itemsPerPage);
       <div class="modal-footer">
         <button type="button" class="btn close" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary" id="staffsaveButton">Add Staff</button>
-        <button type="submit" class="btn btn-primary d-none" id="staffupdateButton">Update Staff</button>
       </div>
       </form>
     </div>
